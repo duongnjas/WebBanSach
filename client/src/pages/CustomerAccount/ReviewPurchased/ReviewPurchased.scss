@@ -1,0 +1,13 @@
+.reviewpurchased {
+    &__name {
+        display: -webkit-box !important;
+        -webkit-line-clamp: 3 !important;
+        -webkit-box-orient: vertical !important;
+        overflow: hidden !important;
+        -o-text-overflow: ellipsis !important;
+        text-overflow: ellipsis !important;
+        line-height: 22px;
+        min-height: 62px;
+        padding: 0 4px;
+    }
+}

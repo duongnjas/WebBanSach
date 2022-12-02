@@ -1,0 +1,31 @@
+.btn {
+    &__Update {
+        border: 0px;
+        width: 176px;
+        height: 40px;
+        border-radius: 4px;
+        color: rgb(74, 74, 74) !important;
+        font-size: 13px;
+        background-color: rgb(253, 216, 53) !important;
+        cursor: pointer;
+    }
+}
+
+.create-address {
+    background-color: #fff;
+    flex: 1;
+    border-radius: 4px;
+    &__heading {
+        font-size: 19px;
+        line-height: 21px;
+        font-weight: 300;
+        margin: 20px 0px 15px;
+    }
+    &__label {
+        width: 10rem !important;
+        margin: auto 0 !important;
+    }
+    &__input {
+        flex: 0.65;
+    }
+}

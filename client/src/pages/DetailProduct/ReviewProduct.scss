@@ -1,0 +1,126 @@
+
+.BackgroundAvatar {
+    position: relative;
+    border-radius: 50%;
+    & span {
+        position: absolute;
+        inset: 0px;
+        display: flex;
+        -webkit-box-pack: center;
+        justify-content: center;
+        -webkit-box-align: center;
+        align-items: center;
+        font-size: 50%;
+        font-weight: 500;
+        color: rgb(153, 153, 153);
+    }
+}
+
+.SliderReview {
+    flex: 1;
+    max-width: 136px;
+    background-color: rgb(245, 245, 250);
+    height: 6px;
+    border-radius: 3px;
+    position: relative;
+    & div {
+        background-color: #888;
+        border-radius: 3px;
+        height: 6px;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+}
+
+.imgReview {
+    position: relative;
+    display: flex;
+    width: 120px;
+    height: 120px;
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: pointer;
+    & img {
+        width: 100%;
+        object-fit: cover;
+    }
+}
+
+.IconWritten {
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+}
+
+.imgReview--lastimg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    font-size: 17px;
+    background-color: rgba(#000, 0.5);
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.ReviewProduct {
+    &__Filter {
+        display: flex;
+        align-items: center;
+        height: 30px;
+        font-size: 14px;
+        font-weight: 500;
+        color: #333;
+        gap: 4px;
+        padding: 0px 8px;
+        cursor: pointer;
+        &.Selected {
+            background: rgb(240, 248, 255);
+            border: 1px solid rgb(26, 148, 255);
+            border-radius: 15px;
+            color: rgb(26, 148, 255)
+        }
+    }
+}
+
+.Feedback {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    height: 30px;
+    font-size: 14px;
+    font-weight: 500;
+    color: rgb(11, 116, 229);
+    cursor: pointer;
+    &.Selected {
+        background: #fff;
+        border: 1px solid rgb(26, 148, 255);
+        border-radius: 5px;
+        padding: 0px 8px;
+        color: rgb(11, 116, 229);
+    }
+}
+
+.TimeReview {
+    position: relative;
+    padding: 0 8px;
+    margin-left: 8px !important;
+    &::before {
+        content: "";
+        height: 2px;
+        width: 2px;
+        background-color: rgb(128, 128, 137);
+        border-radius: 50%;
+        position: absolute;
+        top: 50%;
+        left: 0px;
+        margin: -1px 0px 0px;
+    }
+}

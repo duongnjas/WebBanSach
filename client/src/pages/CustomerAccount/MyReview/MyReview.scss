@@ -1,0 +1,19 @@
+.myreview {
+    &__avt {
+        background-size: 90%;
+        background-repeat: no-repeat;
+        border: 0.5px solid rgb(238, 238, 238);
+        height: 80px;
+        width: 80px;
+        border-radius: 4px;
+        background-position: center center;
+    }
+
+    &__picture {
+        height: 150px;
+        width: 150px;
+        border-radius: 4px;
+        background-size: cover;
+        background-position: center center;
+    }
+}

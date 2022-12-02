@@ -1,0 +1,18 @@
+.tableBrand{
+    & td{
+        font-size: 13px !important;
+    }
+    & p{
+        font-size: 13px !important;
+    }
+}
+
+.brand{
+    &__iconSearch{
+        position:absolute;
+        top:50%;
+        transform:translateY(-50%);
+        right:12px;
+        cursor:pointer;
+    }
+}
