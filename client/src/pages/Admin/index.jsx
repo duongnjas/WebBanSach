@@ -53,6 +53,7 @@ import CreateProduct from "./Product/CreateProduct";
 import Review from "./Review";
 import User from "./User";
 import DetailUser from "./User/DetailUser";
+import logo from "../../assets/img/book.png";
 
 import { useSelector } from "react-redux";
 
@@ -193,7 +194,8 @@ function Admin() {
                   <Stack width="56px" height="56px">
                     <img
                       style={{ borderRadius: "8px" }}
-                      src="https://salt.tikicdn.com/ts/sellercenterFE/bb/d5/88/7898a8f9179435d5cf3f28bb3d99a82c.jpeg"
+                      src={logo}
+                      
                     />
                   </Stack>
                   <Stack sx={{ overflow: "auto" }}>
@@ -282,7 +284,7 @@ function Admin() {
                 onClick={() => setOpenNotify(true)}
                 sx={{ border: "1px solid silver" }}
               >
-                <Badge color="info" badgeContent={3}>
+                <Badge>
                   <NotificationsNoneOutlinedIcon />
                 </Badge>
               </IconButton>
@@ -316,7 +318,7 @@ function Admin() {
                     borderRadius="50%"
                     alt=""
                     component="img"
-                    src="https://salt.tikicdn.com/cache/w32/ts/sellercenterFE/93/76/03/2a08fa4ae6a024a752fbba87d145bce8.png"
+                    src={logo}
                     onClick={handleClickAccount}
                     sx={{ width: "24px", height: "24px" }}
                   />
@@ -383,7 +385,8 @@ function Admin() {
         <DrawerHeader>
           <IconButton onClick={handleDrawerClose}>
             <img
-              src="https://salt.tikicdn.com/cache/w32/ts/sellercenterFE/93/76/03/2a08fa4ae6a024a752fbba87d145bce8.png"
+              src={logo}
+              style={{ width: "39px", height: "39px" }}
               alt=""
             />
           </IconButton>
