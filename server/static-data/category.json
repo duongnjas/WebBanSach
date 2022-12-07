@@ -1,0 +1,83 @@
+[
+    {
+        "id": 1,
+        "name": "Quẩn áo",
+        "options": [
+            {
+                "id": 1,
+                "name": "colors",
+                "display": "Màu sắc",
+                "list": [
+                    {
+                        "id": 1,
+                        "name": "Đen",
+                        "imgUrl":"https://salt.tikicdn.com/cache/400x400/ts/product/2f/7d/e9/b75eebee250c724320b77b4bd0988829.png.webp"
+                    },
+                    {
+                        "id": 2,
+                        "name": "Đỏ",
+                        "imgUrl": "https://salt.tikicdn.com/cache/400x400/ts/product/db/0d/18/b460d35d1dae8eb71150eee8ab2f9191.png.webp"
+                    }
+                ]
+            },
+            {
+                "id": 2,
+                "name": "sizes",
+                "display": "Kích cỡ",
+                "list": [
+                    {
+                        "id": 1,
+                        "name": "M"
+                    },
+                    {
+                        "id": 2,
+                        "name": "L"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "name": "Điện thoại",
+        "options": [
+             {
+                "id": 1,
+                "name": "colors",
+                "display": "Màu sắc",
+                "list": [
+                    {
+                        "id": 1,
+                        "name": "Trắng",
+                        "imgUrl":"https://salt.tikicdn.com/cache/400x400/ts/product/98/e6/b8/657eca11baf1bc21508e46784fbb2c03.jpg.webp"
+                    },
+                    {
+                        "id": 2,
+                        "name": "Xanh lá",
+                        "imgUrl":"https://salt.tikicdn.com/cache/400x400/ts/product/19/b5/e5/4020f57bfbb70f43e45f9e4ad76ea758.jpg.webp"
+                    },
+                    {
+                        "id": 3,
+                        "name": "Đen",
+                        "imgUrl": "https://salt.tikicdn.com/cache/400x400/ts/product/da/5d/2d/ee9651b82b63e4d21229c6116da84c5a.jpg.webp"
+                    }
+                ]
+            },
+            {
+                "id": 2,
+                "name": "capacity",
+                "display": "Dung lượng",
+                "list": [
+                    {
+                        "id": 1,
+                        "name": "128Gb"
+                    },
+                    {
+                        "id": 2,
+                        "name": "256GB"
+                    }
+                ]
+            }
+        ]
+    }
+]

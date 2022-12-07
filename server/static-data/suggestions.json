@@ -1,0 +1,50 @@
+[
+    {
+        "id": 1,
+        "image": "https://salt.tikicdn.com/cache/w100/ts/personalish/f9/27/b5/3a8e2286a1c8fb91b67acc5ee35f82f0.png.webp",
+        "alt": "Dành cho bạn",
+        "link": ""
+    },
+    {
+        "id": 2,
+        "image": "https://salt.tikicdn.com/cache/w100/ts/tikimsp/3d/cc/b6/92908056ddb7e83897fba102bf39c248.png.webp",
+        "alt": "Flash Voucher 300k",
+        "link": ""
+    },
+    {
+        "id": 3,
+        "image": "https://salt.tikicdn.com/cache/w100/ts/personalish/b7/aa/f3/bcff08097ead36826d2c9daf7c2debd5.png.webp",
+        "alt": "Đi chợ siêu Sale",
+        "link": ""
+    },
+    {
+        "id": 4,
+        "image": "https://salt.tikicdn.com/cache/w100/ts/personalish/41/99/9a/8898607d7fca4b79775a708c57a8152f.png.webp",
+        "alt": "Deal Siêu Hot",
+        "link": ""
+    },
+    {
+        "id": 5,
+        "image": "https://salt.tikicdn.com/cache/w100/ts/personalish/0f/59/9d/215fa18ef72e430eefcbfe5355cab8e2.png.webp",
+        "alt": "Rẻ vô đối",
+        "link": ""
+    },
+    {
+        "id": 6,
+        "image": "https://salt.tikicdn.com/cache/w100/ts/personalish/7d/8a/6e/d8b76e2c43cbd06b7e1aa3ab8c54df64.png.webp",
+        "alt": "Hàng mới",
+        "link": ""
+    },
+    {
+        "id": 7,
+        "image": "https://salt.tikicdn.com/cache/w100/ts/personalish/dc/f1/b1/6ba9e529785de3ad1a81b9c569d05aa0.png.webp",
+        "alt": "Xu hướng thời trang",
+        "link": ""
+    },
+    {
+        "id": 8,
+        "image": "https://salt.tikicdn.com/cache/w100/ts/personalish/b9/e1/a9/65ad8ac4e167c5009ae3f7c80395a5a4.png.webp",
+        "alt": "Trending",
+        "link": ""
+    }
+]

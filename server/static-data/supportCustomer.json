@@ -1,0 +1,37 @@
+[
+    {
+        "id": 1,
+        "link": "https://hotro.tiki.vn/s/",
+        "display": "Các câu hỏi thường gặp"
+    },
+    {
+        "id": 2,
+        "link": "https://tiki.vn/lien-he/gui-yeu-cau",
+        "display": "Gửi yêu cầu hỗ trợ"
+    },
+    {
+        "id": 3,
+        "link": "https://hotro.tiki.vn/s/article/lam-the-nao-de-toi-dat-hang-qua-website-tiki",
+        "display": "Hướng dẫn đặt hàng"
+    },
+    {
+        "id": 4,
+        "link": "https://hotro.tiki.vn/s/article/dich-vu-giao-hang-tiet-kiem",
+        "display": "Phương thức vận chuyển"
+    },
+    {
+        "id": 5,
+        "link": "https://hotro.tiki.vn/s/article/chinh-sach-doi-tra-san-pham-tai-tiki-nhu-the-nao",
+        "display": "Chính sách đổi trả"
+    },
+    {
+        "id": 6,
+        "link": "https://tiki.vn/khuyen-mai/huong-dan-tra-gop",
+        "display": "Hướng dẫn trả góp"
+    },
+    {
+        "id": 7,
+        "link": "https://hotro.tiki.vn/s/article/dich-vu-giao-hang-tu-nuoc-ngoai",
+        "display": "Chính sách hàng nhập khẩu"
+    }
+]
