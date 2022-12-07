@@ -246,7 +246,7 @@ function Header() {
             <DebounceInput
               style={{ height: "100%", flex: 1 }}
               id="input-search"
-              placeholder="Tìm sản phẩm, danh mục hay thương hiệu mong muốn ..."
+              placeholder="Tìm kiếm sách, ..."
               onFocus={() => setFocusSearch(true)}
               value={searchText}
               onChange={onChangeSearch}
@@ -325,38 +325,6 @@ function Header() {
 
                   <Link to={"/customer/account/edit"}>Tài khoản của tôi</Link>
 
-                  <Link to="/customer/coupons">
-                    <Stack direction="row" spacing={1} alignItems="center">
-                      <img
-                        className="header__dropdown-img"
-                        alt=""
-                        src="https://frontend.tikicdn.com/_desktop-next/static/img/mycoupon/coupon_code.svg"
-                      />
-                      <Stack>
-                        <Box>Mã giảm giá </Box>
-                        <Box>
-                          Bạn đang có <b>2</b> mã giảm giá
-                        </Box>
-                      </Stack>
-                    </Stack>
-                  </Link>
-
-                  <Link to="/">
-                    <Stack direction="row" spacing={1} alignItems="center">
-                      <img
-                        className="header__dropdown-img"
-                        alt=""
-                        src="https://frontend.tikicdn.com/_desktop-next/static/img/icons/TopUpXu/xu-icon.svg"
-                      />
-                      <Stack>
-                        <Box>Thông tin Tiki xu</Box>
-                        <Box>
-                          Bạn đang có <b>0</b> Tiki xu
-                        </Box>
-                      </Stack>
-                    </Stack>
-                  </Link>
-
                   <Box onClick={handleLogout}>
                     Thoát tài khoản
                   </Box>
@@ -399,7 +367,6 @@ function Header() {
               <Typography fontSize="12px">Giỏ hàng</Typography>
             </Stack>
           </Link>
-
           <a href="/admin">
             <Button
               sx={{

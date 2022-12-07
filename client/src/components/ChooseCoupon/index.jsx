@@ -39,7 +39,7 @@ function ChooseCoupon(props) {
         >
             <Box className='choose-coupon'>
                 <Stack direction='row' className="choose-coupon__heading">
-                    <span>Tiki Khuyến mãi</span>
+                    <span>Khuyến mãi</span>
                     <CloseIcon onClick={props.handleClose} height="24px" />
                 </Stack>
                 <Box className="choose-coupon__search">

@@ -158,7 +158,7 @@ const navigate = useNavigate()
           </Box>
           <Box className='cart-coupon'>
             <Box className="cart-coupon__title">
-              Tiki Khuyến mãi
+              Khuyến mãi
             </Box>
             {
               coupon &&

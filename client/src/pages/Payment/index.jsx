@@ -423,28 +423,28 @@ const paymentMethods = [
   },
   {
     id: '2',
-    display: "Thanh toán bằng Viettel Money",
-    value: '2',
-    image: "https://frontend.tikicdn.com/_desktop-next/static/img/icons/checkout/icon-payment-method-viettelmoney.png"
-  },
-  {
-    id: '3',
     display: "Thanh toán bằng Momo",
     value: '3',
     image: "https://frontend.tikicdn.com/_desktop-next/static/img/icons/checkout/icon-payment-method-momo.svg"
   },
   {
-    id: '4',
-    display: "Thanh toán bằng ZaloPay",
+    id: '3',
+    display: "Thanh toán bằng ZaloPay (chưa phát triển)",
     value: '4',
     image: "https://frontend.tikicdn.com/_desktop-next/static/img/icons/checkout/icon-payment-method-zalo-pay.svg"
-  },
-  {
-    id: '5',
-    display: "Thanh toán bằng VNPay",
-    value: '5',
-    image: "https://frontend.tikicdn.com/_desktop-next/static/img/icons/checkout/icon-payment-method-vnpay.png"
-  },
+  },  
+  // {
+  //   id: '4',
+  //   display: "Thanh toán bằng Viettel Money",
+  //   value: '2',
+  //   image: "https://frontend.tikicdn.com/_desktop-next/static/img/icons/checkout/icon-payment-method-viettelmoney.png"
+  // },
+  // {
+  //   id: '5',
+  //   display: "Thanh toán bằng VNPay",
+  //   value: '5',
+  //   image: "https://frontend.tikicdn.com/_desktop-next/static/img/icons/checkout/icon-payment-method-vnpay.png"
+  // },
 ]
 
 export default Payment

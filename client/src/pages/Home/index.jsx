@@ -62,15 +62,15 @@ function Home() {
         <Box id="section8">
           <Box className="banner__wrap2">
             <img
-              src=""
+              src="https://canhcoupon.com/images/khuyen-mai/2017/02/thang-3-sach-tre-giam-gia-den-49-tiki-banner.jpg"
               alt=""
             />
             <img
-              src=""
+              src="https://canhcoupon.com/images/khuyen-mai/2017/04/hoi-sach-gia-bia-mua-1-tang-1-tiki-banner.jpg"
               alt=""
             />
             <img
-              src=""
+              src="https://canhcoupon.com/images/khuyen-mai/2017/02/dai-tiec-sach-hay-giam-gia-den-50-tiki-banner.jpg"
               alt=""
             />
           </Box>

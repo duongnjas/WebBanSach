@@ -4,11 +4,19 @@ import queryString from 'query-string';
 import { axiosClient, axiosInstance } from "./axiosClient";
 
 // create axiosProducts to test favorite product
-//const baseURL='https://playerhostedapitest.herokuapp.com/api/'
-const baseURL='http://localhost:5000/api'
+const baseURL='https://playerhostedapitest.herokuapp.com/api/'
+const baseURL2='http://localhost:5000/api/'
 //const baseURL='https://nhom3-tiki.herokuapp.com/api'
 export const axiosProducts = axios.create({
     baseURL: baseURL,
+    headers: {
+        "Content-Type": "application/json"
+    },
+    withCredentials: true,
+    paramsSerializer: (params) => queryString.stringify(params)
+});
+export const axiosProducts2 = axios.create({
+    baseURL: baseURL2,
     headers: {
         "Content-Type": "application/json"
     },
@@ -20,7 +28,7 @@ const apiMain = {
 
     ///authentication
     getProducts: async (params) => {
-        const res = await axiosProducts.get('/products', {params})
+        const res = await axiosProducts2.get('/products', {params})
         return res.data;
     },
 
