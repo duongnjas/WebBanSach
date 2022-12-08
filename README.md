@@ -8,11 +8,11 @@
 - mk: 12345678
 
 ** Test user
-- đổi thông tin tk
+- đổi thông tin tk(test đổi mk xong cần đổi lại như cũ, hoặc tạo acc mới test đổi mk)
 - thêm giỏ hàng
 - thêm địa chỉ
 - đặt hàng
-- 
+- tạo tk
 
 ** Test admin(đang sửa)
 
