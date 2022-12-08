@@ -7,4 +7,14 @@
 - sdt: 0399526640
 - mk: 12345678
 
+** Test user
+- đổi thông tin tk
+- thêm giỏ hàng
+- thêm địa chỉ
+- đặt hàng
+- 
+
+** Test admin(đang sửa)
+
+
             
