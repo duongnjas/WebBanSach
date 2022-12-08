@@ -14,7 +14,7 @@
 - đặt hàng
 - tạo tk
 
-** Test admin(đang sửa)
-
+** Test admin(1 số đang sửa)
+- phân quyền (dùng acc admin mới có thể vô được trang admin)
 
             
