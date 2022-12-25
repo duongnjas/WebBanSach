@@ -1,19 +1,29 @@
-const jwt = require("jsonwebtoken");
+const userModel = require('../models/user.model');
 
-const verifyToken = (req, res, next) => {
-  const token =
-    req.body.token || req.query.token || req.headers["x-access-token"];
+const authController = require('../controllers/auth.controller');
 
-  if (!token) {
-    return res.status(403).send("A token is required for authentication");
-  }
-  try {
-    const decoded = jwt.verify(token, process.env.TOKEN_KEY);
-    req.user = decoded;
-  } catch (err) {
-    return res.status(401).send("Invalid Token");
-  }
-  return next();
+exports.isAuth = async (req, res, next) => {
+	// Lấy access token từ header
+	const accessTokenFromHeader = req.headers.x_authorization;
+	if (!accessTokenFromHeader) {
+		return res.status(401).send('Không tìm thấy access token!');
+	}
+
+	const accessTokenSecret =
+		process.env.ACCESS_TOKEN_SECRET;
+
+	const verified = await authController.verifyToken(
+		accessTokenFromHeader,
+		accessTokenSecret,
+	);
+	if (!verified) {
+		return res
+			.status(401)
+			.send('Bạn không có quyền truy cập vào tính năng này!');
+	}
+
+	const user = await userModel.getUser(verified.payload.username);
+	req.user = user;
+
+	return next();
 };
-
-module.exports = verifyToken;

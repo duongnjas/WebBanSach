@@ -28,30 +28,15 @@ async function FindUserWithId (req, res) {
 
 async function CreateNewUser (req, res) {
     const newUser = {
-        name: req.body.name,
-        dob: req.body.dob,
+        fullName: req.body.fullName,
+        birth_day: req.body.birth_day,
         gender: req.body.gender,
-        address: {
-            street: req.body.address.street,
-            town: req.body.address.town,
-            province: req.body.address.province
-        },
         email: req.body.email,
         phone: req.body.phone,
         password: req.body.password,
         isAdmin: req.body.isAdmin,
     }    
-    
     const user = await User.create(newUser);
-    const token = jwt.sign(
-        { user_id: user._id, phone: user.phone },
-        process.env.TOKEN_KEY,
-        {
-          expiresIn: "2h",
-        }
-      );
-      // save user token
-      user.token = token;
     if(user) {
         return res.status(201).json(user);
     }

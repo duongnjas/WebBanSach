@@ -7,34 +7,20 @@ const bcrypt = require('bcrypt');
 const SALT_WORK_FACTOR = 10;
 
 const userSchema = mongoose.Schema({
-    name: {
-        type: String, 
+    fullName: {
+        type: String,
         required: true
     },
-    dob: {
+    birth_day: {
         type: Date,
         //required: true
     },
     gender: {
         type: String,
         enum: ['male', 'female', 'other'],
-        required: true
+        required: false
     },
-    address: {
-        street: {
-            type: String,
-            required: true
-        },
-        town: {
-            type: String,
-            required: true
-        },
-        province: {
-            type: String,
-            required: true
-        }
-    },
-    avatar: {
+    img: {
         data: Buffer,
         contentType: String,
         required: false
@@ -54,12 +40,34 @@ const userSchema = mongoose.Schema({
         required: true,
         minLength: [8, 'Your password length must larger than 8 characters!']
     },
+    status: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
+    active: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
     isAdmin: {
         type: Boolean,
         required: true,
         default: false
     },
-    token: {
+    facebookAuth: {
+        type: String,
+        required: false
+    },
+    googleAuth: {
+        type: String,
+        required: false
+    },
+    accessToken: {
+        type: String,
+        required: false
+    },
+    refreshToken: {
         type: String,
         required: false
     }
@@ -77,7 +85,7 @@ userSchema.pre('save', function(next) {
         bcrypt.hash(user.password, salt, (err, hash) => {
             if (err) return next(err);
             user.password = hash;
-            next();            
+            next();
         })
     })
 });
