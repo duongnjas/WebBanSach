@@ -6,12 +6,13 @@ const productSchema = mongoose.Schema({
         required: true,
     },
     images: [{
-        data: Buffer,
-        contentType: String
+        type: String,
+        required: true,
     }],
     rate: {
         type: Number, 
         required: true,
+        min: 0
     },
     price: {
         type: Number,
@@ -21,6 +22,7 @@ const productSchema = mongoose.Schema({
     discount: {
         type: Number, 
         required: true,
+        min: 0
     },
     slug: {
         type: String, 
@@ -29,6 +31,7 @@ const productSchema = mongoose.Schema({
     sold: {
         type: Number, 
         required: true,
+        min: 0
     },
     description: {
         type: String,
@@ -41,12 +44,48 @@ const productSchema = mongoose.Schema({
             required: true   
         },
         images: [{
-            data: Buffer,
-            contentType: String
+            type: String,
+            required: true
         }],
         options: [{
+            id: {
+                type: mongoose.Schema.Types.ObjectId,
+                required: true
+            },
+            name: {
+                type: String,
+                required: true
+            },
+            values: [{
+                id: {
+                    type: mongoose.Schema.Types.ObjectId,
+                    required: true
+                },
+                idType: {
+                    type: mongoose.Schema.Types.ObjectId,
+                    required: true
+                },
+                value: {
+                    type: String,
+                    required: true
+                }
+            }]
         }]
-    }]    
+    }],
+    specifications: [{
+        id: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true
+        },
+        name: {
+            type: String,
+            required: true
+        },
+        value: {
+            type: String,
+            required: true
+        }
+    }]
 }, {
     timestamps: true
 });
