@@ -19,17 +19,13 @@ import { addItem } from "../../slices/searchSlice";
 import { logoutSuccess } from "../../slices/authSlice";
 
 import apiProduct from "../../apis/apiProduct";
-import apiHome from "../../apis/apiHome";
 import logo from "../../assets/img/logo.png";
 import SearchIcon from "@mui/icons-material/Search";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import ArrowDropDownOutlinedIcon from "@mui/icons-material/ArrowDropDownOutlined";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import StorefrontOutlinedIcon from "@mui/icons-material/StorefrontOutlined";
-const privatePath = [
-  '/customer/', '/admin/', '/payment',
-]
-
+const privatePath = ["/customer/", "/admin/", "/payment"];
 
 function Header() {
   const navigate = useNavigate();
@@ -93,20 +89,9 @@ function Header() {
         }
       });
     };
-
-    const getDataCategorySpecify = async () => {
-      let param = {};
-      const response = await apiHome.getCategorySpecify(param);
-      if (response) {
-        setCategorySpecify(response);
-      }
-    };
-
     getSuggestions();
     getTrendingSearch();
-    getDataCategorySpecify();
   }, []);
-
 
   var englishText = /^[A-Za-z0-9]*$/;
 
@@ -156,9 +141,12 @@ function Header() {
 
   const handleLogout = () => {
     dispatch(logoutSuccess());
-    const isPrivate = privatePath.findIndex(e => location.pathname.includes(e)) >= 0 ? true : false
-    if(isPrivate){
-      navigate('/')
+    const isPrivate =
+      privatePath.findIndex((e) => location.pathname.includes(e)) >= 0
+        ? true
+        : false;
+    if (isPrivate) {
+      navigate("/");
     }
   };
 
@@ -229,12 +217,8 @@ function Header() {
           margin: "0 auto",
         }}
       >
-        <Link className="header__logo" to={"/"}>   
-            <img
-              alt=""
-              style={{ width: "150px", height: "60px" }}
-              src={logo}
-            />
+        <Link className="header__logo" to={"/"}>
+          <img alt="" style={{ width: "150px", height: "60px" }} src={logo} />
         </Link>
 
         <Box sx={{ flex: 1 }} className="header__search">
@@ -268,7 +252,7 @@ function Header() {
               sx={{
                 height: "100%",
                 width: "8rem",
-                backgroundColor: "ff7337" ,
+                backgroundColor: "ff7337",
                 borderTopLeftRadius: "0",
                 borderBottomLeftRadius: "0",
                 color: "white",
@@ -317,17 +301,11 @@ function Header() {
                 </Stack>
 
                 <Box className="header__dropdown">
-                  <Link to={"/customer/order/history"}>Đơn hàng của tôi</Link>
-
-                  <Link to={"/customer/wishlist"}>Sản phẩm yêu thích</Link>
-
-                  <Link to={"/customer/notification"}>Thông báo của tôi</Link>
-
                   <Link to={"/customer/account/edit"}>Tài khoản của tôi</Link>
-
-                  <Box onClick={handleLogout}>
-                    Thoát tài khoản
-                  </Box>
+                  <Link to={"/customer/order/history"}>Đơn hàng của tôi</Link>
+                  {/* <Link to={"/customer/wishlist"}>Sản phẩm yêu thích</Link>
+                  <Link to={"/customer/notification"}>Thông báo của tôi</Link> */}
+                  <Box onClick={handleLogout}>Thoát tài khoản</Box>
                 </Box>
               </>
             ) : (
@@ -367,7 +345,7 @@ function Header() {
               <Typography fontSize="12px">Giỏ hàng</Typography>
             </Stack>
           </Link>
-          <a href="/admin">
+          {/* <a href="/admin">
             <Button
               sx={{
                 color: "white",
@@ -380,7 +358,7 @@ function Header() {
             >
               <Typography fontSize="10px">Admin</Typography>
             </Button>
-          </a>
+          </a> */}
         </Stack>
       </Stack>
 
