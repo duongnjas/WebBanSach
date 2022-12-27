@@ -16,6 +16,7 @@ import {
   Button,
   TextField,
   Input,
+  Typography,
 } from "@mui/material";
 
 import Visibility from "@mui/icons-material/Visibility";
@@ -26,7 +27,6 @@ import { toast } from "react-toastify";
 
 function Login(props) {
   const dispatch = useDispatch();
-  const client_url = "https://tiki-web.vercel.app/"
 
   const {
     register,
@@ -83,8 +83,8 @@ function Login(props) {
   return (
     <Stack direction="row">
       <Stack direction="column" sx={{ flex: 5 }} spacing={2}>
-        <h4 style={{ fontSize: "24px" }}>Xin chào,</h4>
-        <p style={{ fontSize: "15px" }}>Đăng nhập hoặc tạo tài khoản</p>
+        <Typography variant="h5" sx={{ fontSize: "24px", textAlign: "center",}}>ĐĂNG NHẬP</Typography>
+        <p style={{ fontSize: "15px" }}>Đăng nhập bằng số điện thoại</p>
 
         <form>
           <Stack spacing={2}>
@@ -154,8 +154,6 @@ function Login(props) {
             </Button>
           </Stack>
         </form>
-
-        <p style={{ textAlign: "center" }}>Đăng nhập bằng mail</p>
         <Stack alignItems="center">
           <span
             style={{ color: "#1890ff", cursor: "pointer" }}
@@ -175,7 +173,7 @@ function Login(props) {
             Đăng ký
           </span>
         </p>
-        <p style={{ textAlign: "center", marginTop: "3rem" }}>Tiếp tục bằng</p>
+        {/* <p style={{ textAlign: "center", marginTop: "3rem" }}>Tiếp tục bằng</p>
         <Stack
           direction="row"
           justifyContent="center"
@@ -201,7 +199,7 @@ function Login(props) {
         <p style={{ textAlign: "center" }}>
           Bằng việc tiếp tục, bạn đã chấp nhận{" "}
           <a href="/">điều khoản sử dụng</a>
-        </p>
+        </p> */}
       </Stack>
       <span style={{ position: "absolute", top: 0, right: 0 }}>
         <IconButton onClick={props.closeModalLogin}>

@@ -46,7 +46,6 @@ import Category from "./Category";
 import CreateCategory from "./Category/CruCategory/index";
 import CouponAdmin from "./Coupon";
 import Dashboard from "./Dashboard";
-import GrowthCenter from "./GrowthCenter";
 import Order from "./Order";
 import Product from "./Product";
 import CreateProduct from "./Product/CreateProduct";
@@ -482,8 +481,6 @@ function Admin() {
               </Routes>
             }
           />
-
-          <Route path="develop" element={<GrowthCenter />} />
           <Route
             path="coupon/*"
             element={

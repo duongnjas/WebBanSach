@@ -31,7 +31,7 @@ import Addresses from "./Addresses/index";
 import CreateAddress from "./Addresses/CreateAddress/index";
 import PayInfo from "./PayInfo/index";
 import ReviewPurchased from "./ReviewPurchased/index";
-import FavoriteProduct from "./FavoriteProduct/index";
+//import FavoriteProduct from "./FavoriteProduct/index";
 import MyReview from "./MyReview/index";
 import DiscountCode from "./Coupon/index";
 import DetailOrder from "./Orders/DetailOrder";
@@ -192,7 +192,7 @@ function CustomerAccount() {
               element={<ReviewPurchased />}
             />
 
-            <Route path="/wishlist" element={<FavoriteProduct />} />
+            {/* <Route path="/wishlist" element={<FavoriteProduct />} /> */}
 
             <Route path="/review" element={<MyReview />} />
 

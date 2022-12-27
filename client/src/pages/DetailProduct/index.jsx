@@ -1,7 +1,7 @@
 import React, { useState, useRef, useCallback, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import imgDefault from '../../assets/img/img_default.jpg'
+import imgDefault from "../../assets/img/img_default.jpg";
 import ReviewProduct from "./ReviewProduct";
 
 import {
@@ -41,7 +41,7 @@ import { toast } from "react-toastify";
 
 import SliderImage from "./SliderImage";
 
-import apiAccount from "../../apis/apiAccount";
+// import apiAccount from "../../apis/apiAccount";
 
 function DetailProduct() {
   const user = useSelector((state) => state.auth.user);
@@ -53,7 +53,7 @@ function DetailProduct() {
     const getProduct = async () => {
       const response = await apiProduct.getProductsBySlug(slug);
       if (response) {
-        if (response.length !== 0) setProduct(prev => prev=response[0]);
+        if (response.length !== 0) setProduct((prev) => (prev = response[0]));
       }
     };
     getProduct();
@@ -61,62 +61,61 @@ function DetailProduct() {
 
   const [isFavorite, setIsFavorite] = useState(false);
 
-  console.log(slug)
+  console.log(slug);
 
-  useEffect(() => {
-    const checkFavorite = async () => {
-      let param = {
-        userId: user.id,
-        productSlug: slug,
-      };
-      await apiAccount.checkWishItem(param).then((res) => {
-        console.log(res);
-        if (res.length > 0) {
-          setIsFavorite(true);
-        }
-      }).catch(err => console.log(err));
-    };
+  // useEffect(() => {
+  //   const checkFavorite = async () => {
+  //     let param = {
+  //       userId: user.id,
+  //       productSlug: slug,
+  //     };
+  //     await apiAccount.checkWishItem(param).then((res) => {
+  //       console.log(res);
+  //       if (res.length > 0) {
+  //         setIsFavorite(true);
+  //       }
+  //     }).catch(err => console.log(err));
+  //   };
+  //   checkFavorite();
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
-    checkFavorite();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // const handleClickFavorite = async () => {
+  //   if (user === null) {
+  //     toast.warning("Vui lòng đăng nhập để thực hiện chức năng này");
+  //   } else {
+  //     let param = {
+  //       userId: user.id,
+  //       productId: product.id,
+  //       productImg: product.image,
+  //       productName: product.name,
+  //       productPrice: product.price,
+  //       productDiscount: product.discount,
+  //       productRate: product.rate,
+  //       productSold: product.sold,
+  //       productSlug: product.slug,
+  //     };
+  //     setIsFavorite((prev) => !prev);
 
-  const handleClickFavorite = async () => {
-    if (user === null) {
-      toast.warning("Vui lòng đăng nhập để thực hiện chức năng này");
-    } else {
-      let param = {
-        userId: user.id,
-        productId: product.id,
-        productImg: product.image,
-        productName: product.name,
-        productPrice: product.price,
-        productDiscount: product.discount,
-        productRate: product.rate,
-        productSold: product.sold,
-        productSlug: product.slug,
-      };
-      setIsFavorite((prev) => !prev);
+  //     if (isFavorite === false) {
+  //       await apiAccount
+  //         .postWishItem(param)
+  //         .then(toast.success("Đã thêm vào danh sách yêu thích"))
+  //         .catch((err) => toast.error(err));
+  //     } else {
+  //       var itemId;
 
-      if (isFavorite === false) {
-        await apiAccount
-          .postWishItem(param)
-          .then(toast.success("Đã thêm vào danh sách yêu thích"))
-          .catch((err) => toast.error(err));
-      } else {
-        var itemId;
+  //       await apiAccount.checkWishItem(param).then((res) => {
+  //         itemId = res[0].id;
+  //       });
 
-        await apiAccount.checkWishItem(param).then((res) => {
-          itemId = res[0].id;
-        });
-
-        await apiAccount
-          .deleteWishItem(itemId)
-          .then(toast.info("Đã xóa khỏi danh sách yêu thích"))
-          .catch((err) => toast.error(err));
-      }
-    }
-  };
+  //       await apiAccount
+  //         .deleteWishItem(itemId)
+  //         .then(toast.info("Đã xóa khỏi danh sách yêu thích"))
+  //         .catch((err) => toast.error(err));
+  //     }
+  //   }
+  // };
 
   const [expandContent, setExpandContent] = useState(false);
   const [productSimilars, setProductSimilars] = useState([]);
@@ -266,16 +265,14 @@ function DetailProduct() {
   useEffect(() => {
     //xử lý hiển thị nội dung mô tả sản phẩm
     descriptionRef.current.innerHTML = product?.details?.description || "";
-    document.title =
-      product?.name ||
-      "Web bán sách";
-      if(product){
-        let newChoose = {}
-        product.details.options.forEach(item => {
-          newChoose[item.name] = item.values[0].id
-        })
-        setChoose(newChoose)
-      }
+    document.title = product?.name || "Web bán sách";
+    if (product) {
+      let newChoose = {};
+      product.details.options.forEach((item) => {
+        newChoose[item.name] = item.values[0].id;
+      });
+      setChoose(newChoose);
+    }
   }, [product]);
 
   // const color = [
@@ -304,7 +301,7 @@ function DetailProduct() {
                 onLoad={() => setLoading(false)}
                 src={product?.details.images[indexImg]}
                 alt=""
-                onError={err=>err.target.src=imgDefault}
+                onError={(err) => (err.target.src = imgDefault)}
               />
             </Box>{" "}
             <Stack
@@ -324,7 +321,11 @@ function DetailProduct() {
                             indexImg === index ? "selected" : ""
                           }`}
                         >
-                          <img src={imgs} alt="" onError={err=>err.target.src= imgDefault} />
+                          <img
+                            src={imgs}
+                            alt=""
+                            onError={(err) => (err.target.src = imgDefault)}
+                          />
                         </Box>
                       ) : (
                         <Box
@@ -419,10 +420,10 @@ function DetailProduct() {
                           key={item.id}
                           onClick={() => onChangeOption(itemOpt.id, item.id)}
                           className={`product-option__item ${
-                                              itemOpt.name === "Màu sắc"
-                                                ? "product-option__item--color"
-                                                : "product-option__item--size"
-                                            } ${selected ? "selected" : ""}`}
+                            itemOpt.name === "Màu sắc"
+                              ? "product-option__item--color"
+                              : "product-option__item--size"
+                          } ${selected ? "selected" : ""}`}
                         >
                           {/* {itemOpt.name === "colors" && (
                             <img src={item.imgUrl} alt="" />
@@ -504,7 +505,7 @@ function DetailProduct() {
                 sx={{ border: "1px solid silver" }}
                 color="error"
                 size="large"
-                onClick={handleClickFavorite}
+                //onClick={handleClickFavorite}
               >
                 {isFavorite ? (
                   <Tooltip title="Xóa khỏi danh sách yêu thích">
@@ -634,7 +635,7 @@ function DetailProduct() {
         </Box>
       </Modal>
 
-      <ReviewProduct product={product}/>
+      <ReviewProduct product={product} />
     </>
   );
 }
