@@ -53,7 +53,7 @@ const userSchema = mongoose.Schema({
     roleNames: {
         type: String,
         enum: ['USER', 'ADMIN'],
-        required: false
+        default: 'USER'
     },
     facebookAuth: {
         type: String,
