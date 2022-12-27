@@ -83,7 +83,6 @@ async function register(req, res) {
 
 async function login(req, res) {
 	const { phone, password } = req.body;
-
 	const user = await User.findOne({ phone });
 	if (!user) {
 		return res.status(401).send('Tên đăng nhập không tồn tại.');
@@ -100,7 +99,12 @@ async function login(req, res) {
 		process.env.ACCESS_TOKEN_SECRET;
 
 	const dataForAccessToken = {
-		phone: user.phone,
+		user_id: user._id,
+		roleNames: user.roleNames,
+		rolePermissions: [
+			"user:read",
+    		"user:write"
+		],
 	};
 	const accessToken = await generateToken(
 		dataForAccessToken,
@@ -124,7 +128,9 @@ async function login(req, res) {
         success: true,
         status: 200,
 		message: 'Login successful',
+		accessToken,
         data: user,
+		refreshToken
 	});
 };
 
@@ -170,7 +176,7 @@ async function refreshToken (req, res) {
 	const accessToken = await generateToken(
 		dataForAccessToken,
 		accessTokenSecret,
-		accessTokenLife,
+		accessTokenLife
 	);
 	if (!accessToken) {
 		return res
@@ -187,5 +193,5 @@ module.exports = {
     decodeToken,
     register,
     login,
-    refreshToken,
+    refreshToken
 }

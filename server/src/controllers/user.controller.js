@@ -34,7 +34,7 @@ async function CreateNewUser (req, res) {
         email: req.body.email,
         phone: req.body.phone,
         password: req.body.password,
-        isAdmin: req.body.isAdmin,
+        roleNames: req.body.roleNames,
     }    
     const user = await User.create(newUser);
     if(user) {

@@ -53,7 +53,8 @@ async function CreateNewProduct(req, res) {
         name: req.body.name,
         images: req.body.images || [],
         description: req.body.description,
-        price: req.body.price
+        price: req.body.price,
+        specifications: req.body.specifications
     };
 
     try {
