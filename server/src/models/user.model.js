@@ -50,10 +50,10 @@ const userSchema = mongoose.Schema({
         required: true,
         default: false
     },
-    isAdmin: {
-        type: Boolean,
-        required: true,
-        default: false
+    roleNames: {
+        type: String,
+        enum: ['USER', 'ADMIN'],
+        default: 'USER'
     },
     facebookAuth: {
         type: String,
