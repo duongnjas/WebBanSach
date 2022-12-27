@@ -5,7 +5,8 @@ import "./style/App.scss";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import ConfigRoute from "./ConfigRoute";
-
+import { useRef } from "react";
+import TawkMessengerReact from "@tawk.to/tawk-messenger-react";
 import { useDispatch, useSelector } from "react-redux";
 import { axiosInstance } from "./apis/axiosClient";
 import { loginSuccess, logoutSuccess } from "./slices/authSlice";
@@ -19,6 +20,10 @@ function App() {
   if (user) {
     axiosInstance(user, dispatch, loginSuccess, logoutSuccess);
   }
+  const tawkMessengerRef = useRef();
+  const onLoad = () => {
+    console.log("onLoad works!");
+  };
 
   return (
     <>
@@ -41,7 +46,14 @@ function App() {
       </BrowserRouter>
 
       {isAdmin ? null : (
-      <></>
+        <div className="App">
+          <TawkMessengerReact
+            propertyId="63aaa7a747425128790a3c1d"
+            widgetId="1gl99tpkc"
+            onLoad={onLoad}
+            ref={tawkMessengerRef}
+          />
+        </div>
       )}
     </>
   );
