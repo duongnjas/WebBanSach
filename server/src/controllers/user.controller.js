@@ -72,17 +72,11 @@ async function UpdateUser (req, res) {
     }
 
     const newUser = {
-        name: req.body.name,
-        dob: req.body.dob,
+        fullName: req.body.name,
+        birth_day: req.body.dob,
         gender: req.body.gender,
-        address: {
-            street: req.body.address.street,
-            town: req.body.address.town,
-            province: req.body.address.province
-        },
         email: req.body.email,
         phone: req.body.phone,
-        isAdmin: req.body.isAdmin
     }
 
     try {
