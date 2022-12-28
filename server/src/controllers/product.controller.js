@@ -61,10 +61,7 @@ async function CreateNewProduct(req, res) {
             images : req.body.details.images,
             options : {
                 name : req.body.details.options.name,
-                values : {
-                    idType: req.body.details.options.values.idType,
-                    value: req.body.details.options.values.value
-                }
+                values : req.body.details.options.values
             },
             specifications: [{
                 name: req.body.details.specifications.name,
