@@ -7,7 +7,7 @@ const express = require('express');
 // const commentRouter = require('./comment.route');
 // const messageRouter = require('./message.route');
 // const notificationRouter = require('./notification.route');
-// const productRouter = require('./product.route');
+const productRouter = require('./product.route');
 const userRouter = require('./user.route');
 const authRouter = require('./auth.route');
 
@@ -20,7 +20,7 @@ const api = express.Router();
 // api.use('/comments', commentRouter);
 // api.use('/messages', messageRouter);
 // api.use('/notifications', notificationRouter);
-// api.use('/products', productRouter);
+api.use('/products', productRouter);
 api.use('/users', userRouter);
 api.use('/auth',authRouter);
 

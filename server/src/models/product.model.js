@@ -33,59 +33,46 @@ const productSchema = mongoose.Schema({
         required: true,
         min: 0
     },
-    description: {
-        type: String,
-        required: [true, 'Some information has a big data!']
-    },
-    details: [{
+    details: {
         category: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref : "Category",
-            required: true   
+            // type: mongoose.Schema.Types.ObjectId,
+            // ref : "Category",
+            // required: true
+            name: {
+                type: String,
+                required: true
+            }
+                
         },
         images: [{
             type: String,
             required: true
         }],
-        options: [{
-            id: {
-                type: mongoose.Schema.Types.ObjectId,
-                required: true
-            },
+        options: {
             name: {
                 type: String,
-                required: true
+                required: false
             },
-            values: [{
-                id: {
-                    type: mongoose.Schema.Types.ObjectId,
-                    required: true
-                },
-                idType: {
-                    type: mongoose.Schema.Types.ObjectId,
-                    required: true
-                },
-                value: {
-                    type: String,
-                    required: true
-                }
-            }]
-        }]
-    }],
-    specifications: [{
-        id: {
-            type: mongoose.Schema.Types.ObjectId,
-            required: true
+            values: {
+                type: String,
+                required: false
+            }
         },
-        name: {
+        specifications: [{
+            name: {
+                type: String,
+                required: false
+            },
+            value: {
+                type: String,
+                required: false
+            }
+        }],
+        description: {
             type: String,
-            required: true
-        },
-        value: {
-            type: String,
-            required: true
+            required: false
         }
-    }]
+    },
 }, {
     timestamps: true
 });

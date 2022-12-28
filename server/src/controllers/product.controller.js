@@ -38,7 +38,7 @@ async function GetProductImages (req, res) {
 async function GetProductByCategory (req, res) {
     const categoryId = req.params.id;
     const products = await Product.findById(categoryId, { images: 0 });
-    
+
     if(products) {
         return res.status(200).json(products);
     }
@@ -49,27 +49,44 @@ async function CreateNewProduct(req, res) {
     const files = req.files;
 
     const newProduct = {
-        categoryId: req.body.categoryId,
         name: req.body.name,
-        images: req.body.images || [],
-        description: req.body.description,
+        images: req.body.images,
+        rate: req.body.rate,
         price: req.body.price,
-        specifications: req.body.specifications
+        discount: req.body.discount,
+        slug: req.body.slug,
+        sold: req.body.sold,
+        details: {
+            category : req.body.details.category,
+            images : req.body.details.images,
+            options : {
+                name : req.body.details.options.name,
+                values : {
+                    idType: req.body.details.options.values.idType,
+                    value: req.body.details.options.values.value
+                }
+            },
+            specifications: [{
+                name: req.body.details.specifications.name,
+                value: req.body.details.specifications.value
+            }],
+            description: req.body.details.description
+        }
     };
 
-    try {
-        files.forEach((file) => {
-            newProduct.images.push(
-                {
-                    data: fs.readFileSync(path.join(__dirname, '..', '..', '/uploads/' + file.filename)),
-                    contentType: 'image/png' 
-                }
-            )
-        })
-    }
-    catch(err) {
-        console.log(err);
-    }
+    // try {
+    //     files.forEach((file) => {
+    //         newProduct.images.push(
+    //             {
+    //                 data: fs.readFileSync(path.join(__dirname, '..', '..', '/uploads/' + file.filename)),
+    //                 contentType: 'image/png'
+    //             }
+    //         )
+    //     })
+    // }
+    // catch(err) {
+    //     console.log(err);
+    // }
 
     const result = await Product.create(newProduct);
     if(result) {
@@ -83,32 +100,54 @@ async function UpdateProduct (req, res) {
 
     const productId = req.params.id;
     const products = await Product.findById(productId, { images: 0 });
-    
+
     if(!products) {
         return res.status(404).json({ error: "Product not found!"});
     }
 
     const newProduct = {
-        categoryId: req.body.categoryId,
         name: req.body.name,
-        images: req.body.images || [],
+        images: req.body.images,
+        rate: req.body.rate,
+        price: req.body.price,
+        discount: req.body.discount,
+        slug: req.body.slug,
+        sold: req.body.sold,
         description: req.body.description,
-        price: req.body.price
+        details: {
+            category : req.body.details.category,
+            images : req.body.details.images,
+            options : [{
+                id : req.body.details.options.id,
+                name : req.body.details.options.name,
+                values : {
+                    id: req.body.details.options.values.id,
+                    idType: req.body.details.options.values.idType,
+                    value: req.body.details.options.values.value
+                }
+            }],
+            specifications: {
+                id: req.body.specifications.id,
+                name: req.body.specifications.name,
+                value: req.body.specifications.value
+            },
+            description: req.body.description
+        }
     };
 
-    try {
-        files.forEach((file) => {
-            newProduct.images.push(
-                {
-                    data: fs.readFileSync(path.join(__dirname, '..', '..', '/uploads/' + file.filename)),
-                    contentType: 'image/png' 
-                }
-            )
-        })
-    }
-    catch(err) {
-        console.log(err);
-    }
+    // try {
+    //     files.forEach((file) => {
+    //         newProduct.images.push(
+    //             {
+    //                 data: fs.readFileSync(path.join(__dirname, '..', '..', '/uploads/' + file.filename)),
+    //                 contentType: 'image/png'
+    //             }
+    //         )
+    //     })
+    // }
+    // catch(err) {
+    //     console.log(err);
+    // }
 
     const result = await Product.updateOne({ _id: productId }, newProduct);
     if(result) {
@@ -120,7 +159,7 @@ async function UpdateProduct (req, res) {
 async function DeleteProduct (req, res) {
     const productId = req.params.id;
     const products = await Product.findById(productId, { images: 0 });
-    
+
     if(!products) {
         return res.status(404).json({ error: "Product not found!"});
     }
