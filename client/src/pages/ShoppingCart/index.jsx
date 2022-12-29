@@ -8,7 +8,6 @@ import InfoIcon from '@mui/icons-material/Info';
 import DiscountIcon from '@mui/icons-material/Discount';
 import { numWithCommas } from "../../constraints/Util"
 import { useSelector, useDispatch } from 'react-redux'
-import ChooseCoupon from '../../components/ChooseCoupon';
 import { unchooseAll, chooseAll, deleteAll } from '../../slices/cartSlice'
 import { useNavigate } from "react-router-dom"
 import ChooseAddress from '../../components/ChooseAddress';
@@ -218,7 +217,6 @@ const navigate = useNavigate()
         </Grid>
       </Grid>
     </Box>
-    <ChooseCoupon handleOpen={handleOpen} handleClose={handleClose}  open={open} />
     {user&&<ChooseAddress handleOpen={handleOpenAddress} handleClose={handleCloseAddress} open={openAddress} />}
     {dialogDelete &&
       <Dialog onClose={closeDialogDeleteAll} open={dialogDelete}>

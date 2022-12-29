@@ -14,11 +14,7 @@ import Loading from "../../components/Loading";
 
 function Home() {
   const [products, setProducts] = useState([]);
-
-  const [Suggestions, setSuggestions] = useState([]);
   const [loadingShowmore, setLoadingShowmore] = useState(false);
-  const [chooseSuggestion, setChooseSuggestion] = useState(0);
-
   const [page, setPage] = useState(1);
   const size = 30;
 
@@ -65,7 +61,6 @@ function Home() {
             />
           </Box>
         </Box>
-
         <Box id="section9">
           <Box className="suggestion">
             <Box className="section__heading">

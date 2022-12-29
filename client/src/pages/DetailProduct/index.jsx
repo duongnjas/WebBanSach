@@ -1,23 +1,18 @@
-import React, { useState, useRef, useCallback, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import imgDefault from "../../assets/img/img_default.jpg";
-import ReviewProduct from "./ReviewProduct";
-
 import {
   Rating,
   Button,
   Grid,
   Box,
   Stack,
-  Typography,
   Modal,
-  FormControlLabel,
   IconButton,
   Tooltip,
   Skeleton,
-} from "@mui/material";
-
+}from "@mui/material";
 import "./DetailProduct.scss";
 import CheckIcon from "@mui/icons-material/Check";
 import RemoveIcon from "@mui/icons-material/Remove";
@@ -25,28 +20,19 @@ import AddIcon from "@mui/icons-material/Add";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-
 import CardProduct from "../../components/CardProduct";
 import apiProduct from "../../apis/apiProduct";
 import { addItem } from "../../slices/cartSlice";
 import apiMain from "../../apis/apiMain";
-import apiAddress from "../../apis/apiAddress";
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
-
 import { numWithCommas, roundPrice } from "../../constraints/Util";
-import SelectBoxAddress from "../../components/SelectBoxAddress";
-
 import { toast } from "react-toastify";
-
 import SliderImage from "./SliderImage";
+import ReviewProduct from "./ReviewProduct";
 
 function DetailProduct() {
-  const user = useSelector((state) => state.auth.user);
-
+  // const user = useSelector((state) => state.auth.user);
   const [product, setProduct] = useState(null);
   const { slug } = useParams();
-  console.log(slug);
 
   useEffect(() => {
     const getProduct = async () => {
@@ -65,10 +51,8 @@ function DetailProduct() {
   const [productSimilars, setProductSimilars] = useState([]);
   const [quantity, setQuantity] = useState(1);
   const descriptionRef = useRef(null);
-  const [value, setValue] = React.useState("0");
   const [modalSlider, setModelSlider] = useState(false);
   const [loading, setLoading] = React.useState(true);
-  const [choose, setChoose] = useState({});
   const [indexImg, setIndexImg] = useState(0);
   const dispatch = useDispatch();
 
@@ -80,10 +64,10 @@ function DetailProduct() {
 
   useEffect(() => {
     const getData = async () => {
-      let param = {
-        _page: 1,
-        _limit: 6,
-      };
+      // let param = {
+      //   _page: 1,
+      //   _limit: 6,
+      // };
       const response = await apiMain.getProducts();
       if (response) {
         setProductSimilars(response);
@@ -96,10 +80,10 @@ function DetailProduct() {
     dispatch(
       addItem({
         choose: false,
-        id: product.id,
+        id: product._id,
         name: product.name,
         slug: product.slug,
-        image: product.image,
+        images: product.images,
         price: product.price,
         quantity,
       })
@@ -130,13 +114,6 @@ function DetailProduct() {
     //xử lý hiển thị nội dung mô tả sản phẩm
     descriptionRef.current.innerHTML = product?.details?.description || "";
     document.title = product?.name || "Web bán sách";
-    if (product) {
-      let newChoose = {};
-      product.details.options.forEach((item) => {
-        newChoose[item.name] = item.values[0].id;
-      });
-      setChoose(newChoose);
-    }
   }, [product]);
 
   return (
@@ -257,19 +234,19 @@ function DetailProduct() {
                 <Skeleton animation="wave" height={40} width="100%" />
               )}
             </Box>
-            {/* <Box className="product-option">
-              <Box className="product-option__title">
-                {product.details.options?.name}
+            <Box className="product-option">
+              <Box className="product-option__title" >
+                {product?.details?.options?.name}
               </Box>
               <Box className="product-option__list">
                 <Box className="product-option__item">
-                  {product.details.options?.values}
+                  {product?.details?.options?.values}
                   <span>
                     <CheckIcon sx={{ fontSize: "12px", color: "#fff" }} />
                   </span>
                 </Box>
               </Box>
-            </Box> */}
+            </Box>
             <Box className="product-coupon">
               <Box className="product-coupon__title">8 Mã giảm giá</Box>
               <Box className="product-coupon__list">
