@@ -15,6 +15,7 @@ import {
 }from "@mui/material";
 import "./DetailProduct.scss";
 import CheckIcon from "@mui/icons-material/Check";
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
@@ -56,6 +57,7 @@ function DetailProduct() {
   const [indexImg, setIndexImg] = useState(0);
   const dispatch = useDispatch();
 
+  //xem hinh ảnh
   const openModalSlider = () => setModelSlider(true);
 
   const closeModalSlider = () => {
@@ -84,7 +86,7 @@ function DetailProduct() {
         name: product.name,
         slug: product.slug,
         images: product.images,
-        price: product.price,
+        price: product.price*(1-product.discount/100),
         quantity,
       })
     );
@@ -248,11 +250,11 @@ function DetailProduct() {
               </Box>
             </Box>
             <Box className="product-coupon">
-              <Box className="product-coupon__title">8 Mã giảm giá</Box>
+              <Box className="product-coupon__title">Chương trình giảm giá của sản phẩm:</Box>
               <Box className="product-coupon__list">
-                <Box className="product-coupon__item">Giảm 80k</Box>
-                <Box className="product-coupon__item">Giảm 20k</Box>
-                <ArrowForwardIosIcon sx={{ color: "#1890ff" }} />
+                <ArrowBackIosNewIcon sx={{ color: "#ff7337" }} />
+                <Box className="product-coupon__item">Giảm {product?.discount}%</Box>   
+                <ArrowForwardIosIcon sx={{ color: "#ff7337" }} />
               </Box>
             </Box>
 
