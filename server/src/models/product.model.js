@@ -38,6 +38,10 @@ const productSchema = mongoose.Schema({
             // type: mongoose.Schema.Types.ObjectId,
             // ref : "Category",
             // required: true
+            id : {
+                type: String,
+                required: true
+            },
             name: {
                 type: String,
                 required: true
@@ -58,16 +62,6 @@ const productSchema = mongoose.Schema({
                 required: false
             }
         },
-        specifications: [{
-            name: {
-                type: String,
-                required: false
-            },
-            value: {
-                type: String,
-                required: false
-            }
-        }],
         description: {
             type: String,
             required: false

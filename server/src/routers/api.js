@@ -10,6 +10,7 @@ const express = require('express');
 const productRouter = require('./product.route');
 const userRouter = require('./user.route');
 const authRouter = require('./auth.route');
+const orderRouter = require('./order.route');
 
 const api = express.Router();
 
@@ -23,5 +24,6 @@ const api = express.Router();
 api.use('/products', productRouter);
 api.use('/users', userRouter);
 api.use('/auth',authRouter);
+api.use('/orders',orderRouter);
 
 module.exports = api;
