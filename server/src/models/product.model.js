@@ -5,10 +5,10 @@ const productSchema = mongoose.Schema({
         type: String, 
         required: true,
     },
-    images: [{
+    images: {
         type: String,
         required: true,
-    }],
+    },
     rate: {
         type: Number, 
         required: true,
@@ -58,16 +58,6 @@ const productSchema = mongoose.Schema({
                 required: false
             }
         },
-        specifications: [{
-            name: {
-                type: String,
-                required: false
-            },
-            value: {
-                type: String,
-                required: false
-            }
-        }],
         description: {
             type: String,
             required: false

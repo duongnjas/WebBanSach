@@ -8,7 +8,7 @@ const {
 } = require('../services/query')
 
 async function GetAllProducts (req, res) {
-    const products = await Product.find({}, { images: 0 });
+    const products = await Product.find({});
     if(products) {
         return res.status(200).json(products);
     }
@@ -17,12 +17,26 @@ async function GetAllProducts (req, res) {
 
 async function FindProductWithId (req, res) {
     const productId = req.params.id;
-    const product = await Product.findById(productId, { images: 0 });
+    // console.log(req.params);
+    // console.log(req.params.id);
+    const product = await Product.findById(productId);
 
     if(product) {
         return res.status(200).json(product);
     }
     return res.status(404).json({ error: "Not found product with id=" + productId });
+}
+
+async function GetProductBySlug (req, res) {
+    const getslug = req.params.slug;
+    // console.log(req.params);
+    // console.log(req.params.slug);
+    const products = await Product.findOne({ slug: getslug});
+
+    if(products) {
+        return res.status(200).json(products);
+    }
+    return res.status(404).json({ error: "Not found any product!" });
 }
 
 async function GetProductImages (req, res) {
@@ -35,9 +49,10 @@ async function GetProductImages (req, res) {
     return res.status(404).json({ error: "Not found images of product with id=" + productId });
 }
 
+
 async function GetProductByCategory (req, res) {
     const categoryId = req.params.id;
-    const products = await Product.findById(categoryId, { images: 0 });
+    const products = await Product.findById(categoryId);
 
     if(products) {
         return res.status(200).json(products);
@@ -63,11 +78,7 @@ async function CreateNewProduct(req, res) {
                 name : req.body.details.options.name,
                 values : req.body.details.options.values
             },
-            specifications: [{
-                name: req.body.details.specifications.name,
-                value: req.body.details.specifications.value
-            }],
-            description: req.body.details.description
+            description: req.body.details.description,
         }
     };
 
@@ -175,5 +186,6 @@ module.exports = {
     GetProductByCategory,
     CreateNewProduct,
     UpdateProduct,
-    DeleteProduct
+    DeleteProduct,
+    GetProductBySlug,
 }

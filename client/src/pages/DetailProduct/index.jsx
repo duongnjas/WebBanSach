@@ -41,98 +41,30 @@ import { toast } from "react-toastify";
 
 import SliderImage from "./SliderImage";
 
-// import apiAccount from "../../apis/apiAccount";
-
 function DetailProduct() {
   const user = useSelector((state) => state.auth.user);
 
   const [product, setProduct] = useState(null);
   const { slug } = useParams();
+  console.log(slug);
 
   useEffect(() => {
     const getProduct = async () => {
       const response = await apiProduct.getProductsBySlug(slug);
+      console.log(response);
       if (response) {
-        if (response.length !== 0) setProduct((prev) => (prev = response[0]));
+        if (response.length !== 0) setProduct(response);
       }
     };
     getProduct();
+    console.log(`Product: ${product}`);
   }, [slug]);
 
   const [isFavorite, setIsFavorite] = useState(false);
-
-  console.log(slug);
-
-  // useEffect(() => {
-  //   const checkFavorite = async () => {
-  //     let param = {
-  //       userId: user.id,
-  //       productSlug: slug,
-  //     };
-  //     await apiAccount.checkWishItem(param).then((res) => {
-  //       console.log(res);
-  //       if (res.length > 0) {
-  //         setIsFavorite(true);
-  //       }
-  //     }).catch(err => console.log(err));
-  //   };
-  //   checkFavorite();
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
-
-  // const handleClickFavorite = async () => {
-  //   if (user === null) {
-  //     toast.warning("Vui lòng đăng nhập để thực hiện chức năng này");
-  //   } else {
-  //     let param = {
-  //       userId: user.id,
-  //       productId: product.id,
-  //       productImg: product.image,
-  //       productName: product.name,
-  //       productPrice: product.price,
-  //       productDiscount: product.discount,
-  //       productRate: product.rate,
-  //       productSold: product.sold,
-  //       productSlug: product.slug,
-  //     };
-  //     setIsFavorite((prev) => !prev);
-
-  //     if (isFavorite === false) {
-  //       await apiAccount
-  //         .postWishItem(param)
-  //         .then(toast.success("Đã thêm vào danh sách yêu thích"))
-  //         .catch((err) => toast.error(err));
-  //     } else {
-  //       var itemId;
-
-  //       await apiAccount.checkWishItem(param).then((res) => {
-  //         itemId = res[0].id;
-  //       });
-
-  //       await apiAccount
-  //         .deleteWishItem(itemId)
-  //         .then(toast.info("Đã xóa khỏi danh sách yêu thích"))
-  //         .catch((err) => toast.error(err));
-  //     }
-  //   }
-  // };
-
   const [expandContent, setExpandContent] = useState(false);
   const [productSimilars, setProductSimilars] = useState([]);
-
   const [quantity, setQuantity] = useState(1);
-  const [address, setAddress] = useState("");
-  const [listAddress, setListAddress] = useState([
-    { id: 0, text: "Chọn địa chỉ khác" },
-  ]);
-  const [addressCustom, setAddressCustom] = useState("");
-
   const descriptionRef = useRef(null);
-
-  const [province, setProvince] = useState("");
-  const [district, setDistrict] = useState("");
-  const [commune, setCommune] = useState("");
-
   const [value, setValue] = React.useState("0");
   const [modalSlider, setModelSlider] = useState(false);
   const [loading, setLoading] = React.useState(true);
@@ -146,74 +78,15 @@ function DetailProduct() {
     setModelSlider(false);
   };
 
-  const handleChangeAddress = (event) => {
-    setValue(event.target.value);
-  };
-
-  const [modal, setModal] = useState(false);
-  const openModal = () => setModal(true);
-
-  const closeModal = () => {
-    setModal(false);
-  };
-
-  useEffect(() => {
-    const onChangeValue = () => {
-      if (value === "0") {
-        setAddress(addressCustom);
-      } else {
-        let addressSelect = listAddress.find((item) => item.id === value);
-        if (addressSelect) {
-          setAddress(
-            `${addressSelect.commune.name}, ${addressSelect.district.name}, ${addressSelect.province.name}`
-          );
-        }
-      }
-    };
-    onChangeValue();
-  }, [value, addressCustom, listAddress]);
-
-  useEffect(() => {
-    const getListAddress = async () => {
-      if (user)
-        apiAddress
-          .getUserAddress()
-          .then((response) => {
-            setListAddress((pre) => [...response.data.addressList, ...pre]);
-          })
-          .catch((err) => {
-            setListAddress((pre) => [...pre]);
-          });
-      else setListAddress((pre) => [...pre]);
-    };
-    getListAddress();
-  }, [user]);
-
-  const setAddressDetails = useCallback((newAddress) => {
-    setAddressCustom(newAddress);
-  }, []);
-
-  const handleChangeProvince = useCallback((value) => {
-    setProvince(value);
-  }, []);
-
-  const handleChangeDistrict = useCallback((value) => {
-    setDistrict(value);
-  }, []);
-
-  const handleChangeCommune = useCallback((value) => {
-    setCommune(value);
-  }, []);
-
   useEffect(() => {
     const getData = async () => {
       let param = {
         _page: 1,
         _limit: 6,
       };
-      const response = await apiMain.getProducts(param);
+      const response = await apiMain.getProducts();
       if (response) {
-        setProductSimilars((pre) => [...pre, ...response.data]);
+        setProductSimilars(response);
       }
     };
     getData();
@@ -249,15 +122,6 @@ function DetailProduct() {
     setExpandContent((pre) => !pre);
   };
 
-  const onChangeOption = (optionId, itemId) => {
-    let optionSelect = product.details.options.find(
-      (item) => item.id === optionId
-    );
-    let newChoose = { ...choose };
-    newChoose[optionSelect.name] = itemId;
-    setChoose(newChoose);
-  };
-
   const onChangeimg = (index) => {
     setIndexImg(index);
   };
@@ -274,16 +138,6 @@ function DetailProduct() {
       setChoose(newChoose);
     }
   }, [product]);
-
-  // const color = [
-  //   { name: "đỏ", value: "#FF0000" },
-  //   { name: "cam", value: "#FFA500" },
-  //   { name: "vàng", value: "#FFFF00" },
-  //   { name: "xanh lá", value: "#00FF00" },
-  //   { name: "xanh dương", value: "#00FFFF" },
-  //   { name: "trắng", value: "#FFFFFF" },
-  //   { name: "đen", value: "#000000" },
-  // ];
 
   return (
     <>
@@ -403,44 +257,19 @@ function DetailProduct() {
                 <Skeleton animation="wave" height={40} width="100%" />
               )}
             </Box>
-            {product?.details.options.map((itemOpt) => {
-              let select = itemOpt.values.find(
-                (item) => choose[itemOpt.name] === item.id
-              );
-              return (
-                <Box className="product-option">
-                  <Box className="product-option__title">
-                    {itemOpt.name} : <span>{select && select.name}</span>
-                  </Box>
-                  <Box className="product-option__list">
-                    {itemOpt.values.map((item) => {
-                      let selected = choose[itemOpt.name] === item.id;
-                      return (
-                        <Box
-                          key={item.id}
-                          onClick={() => onChangeOption(itemOpt.id, item.id)}
-                          className={`product-option__item ${
-                            itemOpt.name === "Màu sắc"
-                              ? "product-option__item--color"
-                              : "product-option__item--size"
-                          } ${selected ? "selected" : ""}`}
-                        >
-                          {/* {itemOpt.name === "colors" && (
-                            <img src={item.imgUrl} alt="" />
-                          )} */}
-                          {item.value}
-                          <span>
-                            <CheckIcon
-                              sx={{ fontSize: "12px", color: "#fff" }}
-                            />
-                          </span>
-                        </Box>
-                      );
-                    })}
-                  </Box>
+            {/* <Box className="product-option">
+              <Box className="product-option__title">
+                {product.details.options?.name}
+              </Box>
+              <Box className="product-option__list">
+                <Box className="product-option__item">
+                  {product.details.options?.values}
+                  <span>
+                    <CheckIcon sx={{ fontSize: "12px", color: "#fff" }} />
+                  </span>
                 </Box>
-              );
-            })}
+              </Box>
+            </Box> */}
             <Box className="product-coupon">
               <Box className="product-coupon__title">8 Mã giảm giá</Box>
               <Box className="product-coupon__list">
@@ -448,17 +277,6 @@ function DetailProduct() {
                 <Box className="product-coupon__item">Giảm 20k</Box>
                 <ArrowForwardIosIcon sx={{ color: "#1890ff" }} />
               </Box>
-            </Box>
-
-            <Box className="detailProduct__address">
-              <span>Giao đến </span>
-              <span>
-                {address ? address : "TP. Nha Trang, P. Vĩnh Trường, Khánh Hòa"}
-              </span>
-              <span> - </span>
-              <span onClick={openModal} style={{ cursor: "pointer" }}>
-                Đổi địa chỉ
-              </span>
             </Box>
 
             <Box className="product-quanlity">
@@ -531,29 +349,6 @@ function DetailProduct() {
             ))}
           </Grid>
         </Box>
-
-        <Box
-          className="productSpecification"
-          bgcolor="white"
-          p={2}
-          borderRadius="4px"
-          mb={1}
-        >
-          <Box className="productSpecification__title">Thông Tin Chi Tiết</Box>
-          <Box className="productSpecification__table">
-            <table>
-              <tbody>
-                {product?.details.specifications.map((spec) => (
-                  <tr>
-                    <td>{spec.name}</td>
-                    <td>{spec.value}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </Box>
-        </Box>
-
         <Box
           className="descriptionProduct"
           bgcolor="white"
@@ -576,56 +371,6 @@ function DetailProduct() {
           </Box>
         </Box>
       </Box>
-
-      <Modal sx={{ overflowY: "scroll" }} open={modal} onClose={closeModal}>
-        <Box className="modal-login" width="800px">
-          <Stack spacing="16px">
-            <Typography style={{ fontSize: "24px" }}>
-              {" "}
-              Địa chỉ giao hàng
-            </Typography>
-            <Typography>
-              {" "}
-              Hãy chọn địa chỉ nhận hàng để được dự báo thời gian giao hàng cùng
-              phí đóng gói, vận chuyển một cách chính xác nhất.
-            </Typography>
-
-            <RadioGroup
-              aria-labelledby="demo-controlled-radio-buttons-group"
-              name="radio-buttons-group"
-              value={value}
-              onChange={handleChangeAddress}
-            >
-              {listAddress.map((addr) => (
-                <FormControlLabel
-                  value={addr.id}
-                  control={<Radio />}
-                  label={
-                    addr.id === 0
-                      ? addr.text
-                      : `${addr.commune.name}, ${addr.district.name}, ${addr.province.name}`
-                  }
-                />
-              ))}
-            </RadioGroup>
-            <Stack
-              sx={{ display: `${value === "0" ? "flex" : "none"}` }}
-              spacing={2}
-            >
-              <SelectBoxAddress
-                province={province}
-                district={district}
-                commune={commune}
-                onChangeProvince={handleChangeProvince}
-                onChangeDistrict={handleChangeDistrict}
-                onChangeCommune={handleChangeCommune}
-                setAddressDetails={setAddressDetails}
-              />
-            </Stack>
-          </Stack>
-        </Box>
-      </Modal>
-
       <Modal open={modalSlider} onClose={closeModalSlider}>
         <Box className="modal-images" sx={{ width: "100%" }}>
           <SliderImage

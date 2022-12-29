@@ -57,8 +57,8 @@ function Header() {
   useEffect(() => {
     const getSuggestions = async () => {
       apiProduct.getProducts().then((res) => {
-        const sugg = res.map((item) => ({
-          id: item.id,
+        const sugg = res?.map((item) => ({
+          id: item._id,
           text: item.name,
           slug: item.slug,
           lowerCaseName: item.name.toLowerCase(),
@@ -70,8 +70,8 @@ function Header() {
 
     const getTrendingSearch = async () => {
       apiProduct.getProducts().then((res) => {
-        const products = res.map((item) => ({
-          id: item.id,
+        const products = res?.map((item) => ({
+          id: item._id,
           name: item.name,
           imgUrl: item.image,
         }));
@@ -89,8 +89,8 @@ function Header() {
         }
       });
     };
-    getSuggestions();
-    getTrendingSearch();
+    // getSuggestions();
+    // getTrendingSearch();
   }, []);
 
   var englishText = /^[A-Za-z0-9]*$/;

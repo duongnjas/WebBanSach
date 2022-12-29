@@ -26,7 +26,7 @@ function CardProduct({ data }) {
                     component="img"
                         alt="green iguana"
                         onLoad={()=>setLoading(false)}
-                    image={data?.image}
+                    image={data?.images}
                     onError={err=>err.target.src=imgDefault}
                 />
                 </Box>
