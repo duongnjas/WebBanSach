@@ -34,15 +34,10 @@ const productSchema = mongoose.Schema({
         min: 0
     },
     details: {
-        category: {
-            // type: mongoose.Schema.Types.ObjectId,
-            // ref : "Category",
-            // required: true
-            name: {
-                type: String,
-                required: true
-            }
-                
+        categoryId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref : "Category",
+            required: true 
         },
         images: [{
             type: String,

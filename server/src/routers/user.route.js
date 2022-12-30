@@ -8,7 +8,11 @@ const {
     FindUserWithId,
     UpdateUser,
     DeleteUser,
-    UpdatePassword
+    UpdatePassword,
+    CreateNewAddress,
+    UpdateAddress,
+    DeleteAddress,
+    FindAddressWithUserId
 } = require('../controllers/user.controller');
 
 const userRouter = express.Router();
@@ -20,5 +24,10 @@ userRouter.post('/login', UserLogin);
 userRouter.put('/:id', upload.single('avatar'), UpdateUser);
 userRouter.patch('/:id', UpdatePassword);
 userRouter.delete('/:id', DeleteUser);
+
+userRouter.get('/address/:userid',FindAddressWithUserId);
+userRouter.post('/address/',CreateNewAddress);
+userRouter.post('/address/:id',UpdateAddress);
+userRouter.delete('/address/:id', DeleteAddress);
 
 module.exports = userRouter;

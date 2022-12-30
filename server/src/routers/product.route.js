@@ -6,7 +6,9 @@ const {
     CreateNewProduct,
     UpdateProduct,
     DeleteProduct,
-    GetProductBySlug
+    GetProductBySlug,
+    SearchProduct,
+
 } = require('../controllers/product.controller');
 const upload = require('../middlewares/uploadFile');
 
@@ -16,6 +18,7 @@ productRouter.get('/', GetAllProducts);
 productRouter.get('/:id', FindProductWithId);
 productRouter.get('/slug/:slug', GetProductBySlug);
 productRouter.get('/:id/images', GetProductImages);
+productRouter.get('/search/:name', SearchProduct);
 productRouter.post('/', CreateNewProduct);
 productRouter.put('/:id', upload.array('images', 10), UpdateProduct);
 productRouter.delete('/:id', DeleteProduct);
