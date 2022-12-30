@@ -2,48 +2,34 @@ import axios from 'axios';
 import queryString from 'query-string';
 //const baseURL='https://playerhostedapitest.herokuapp.com/api/'
 // const baseURL='https://nhom3-tiki.herokuapp.com/api'
-const baseURL='http://localhost:5000/api'
-export const axiosClient = axios.create({
-    baseURL: baseURL,
-    headers: {
-        "Content-Type": "application/json"
-    },
-    withCredentials: true,
-    paramsSerializer: (params) => queryString.stringify(params)
-});
+import { BASE_URL, handleResponse } from "./apiconfig";
+
+var config = {
+    method: 'get',
+    url:  `${BASE_URL}/products`,
+    headers: { }
+  };
 const apiHome = {
+  getProducts : async () => {
+    const response = await fetch(
+        `${BASE_URL}/products`,
+        {
+            method: 'GET',
+        }
+    );
+    console.log(response);
+    return handleResponse(response);
+},
 
-    getSlideKhuyenMai: async (params) => {
-        const res = await axiosClient.get('/sliderkhuyenmai', {params})
-        return res.data;
-    },
-
-    getSlideThuongHieu: async (params) => {
-        const res = await axiosClient.get('/sliderthuonghieu', {params})
-        return res.data;
-    },
-
-    getQuickLink: async (params) => {
-        const res = await axiosClient.get('/quicklink', {params})
-        return res.data;
-    },
-
-    getCategorySpecify: async (params) => {
-        const res = await axiosClient.get('/categoryspecify', {params})
-        return res.data;
-    },
-
-    getSuggestions: async (params) => {
-        const res = await axiosClient.get('/suggestions', {params})
-        return res.data;
-    },
-    getProducts: async (params) => {
-        const res = await axiosClient.get('/products', {params})
-        return res.data;
-    }, 
-    getCategories: async (params) => {
-        const res = await axiosClient.get('/categories', {params})
-        return res.data;
-    }, 
+    // getProducts: async () => {
+    //     axios(config)
+    //     .then(function (response) {
+    //       console.log(JSON.stringify(response.data));
+    //       return JSON.stringify(response.data)
+    //     })
+    //     .catch(function (error) {
+    //       console.log(error);
+    //     });
+    // }, 
 }
 export default apiHome;
