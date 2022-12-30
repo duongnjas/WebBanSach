@@ -193,7 +193,7 @@ async function DeleteAddress (req, res) {
 
 async function FindAddressWithUserId (req, res) {
     const userId = req.params.userid;
-    const address = await Address.findOne( { userId: userId } )
+    const address = await Address.find( { userId: userId } )
     if(address) {
         return res.status(200).json(address);
     }
