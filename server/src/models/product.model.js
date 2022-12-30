@@ -5,10 +5,10 @@ const productSchema = mongoose.Schema({
         type: String, 
         required: true,
     },
-    images: [{
+    images: {
         type: String,
         required: true,
-    }],
+    },
     rate: {
         type: Number, 
         required: true,
