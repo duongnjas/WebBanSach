@@ -64,10 +64,7 @@ async function CreateNewProduct(req, res) {
         slug: req.body.slug,
         sold: req.body.sold,
         details: {
-            category :{
-                id : req.body.details.category.id,
-                name : req.body.details.category.name
-            },
+            categoryId : req.body.details.categoryId,
             images : req.body.details.images,
             options : {
                 name : req.body.details.options.name,
