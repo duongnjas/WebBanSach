@@ -1,45 +1,23 @@
-const { OrderModel } = require("../models/order.model");
+const OrderModel = require("../models/order.model");
 const axios = require("axios");
 
 require("dotenv").config();
 
 async function createOrder (req, res) {
-  if (req.body.orderItems.length === 0) {
-    res.status(400).send({ message: "cart is emty" });
-  } else {
-    const order = new OrderModel({
-      order_code: "",
-      to_ward_code: req.body.to_ward_code,
-      to_district_id: req.body.to_district_id,
-      cancelOrder: false,
-
-      orderItems: req.body.orderItems,
-      shippingAddress: {
-        province: req.body.shippingAddress.province,
-        district: req.body.shippingAddress.district,
-        ward: req.body.shippingAddress.ward,
-        detail: req.body.shippingAddress.more,
-        name: req.body.shippingAddress.name,
-        phone: req.body.shippingAddress.phone,
-      },
-      paymentMethod: req.body.paymentMethod,
-      paymentResult: req.body.paymentResult
-        ? {
-            id: req.body.paymentResult.id,
-            status: req.body.paymentResult.status,
-            update_time: req.body.paymentResult.update_time,
-            email_address: req.body.paymentResult.payer.email_address,
-          }
-        : "",
-      totalPrice: req.body.totalPrice,
-      status: req.body.status ? req.body.status : "pendding",
-      name: req.body.name,
-      user: req.body.user,
-    });
-
-    const createOrder = await order.save();
-    res.status(201).send({ message: "new order created", order: createOrder });
+    const newOrder = {
+        choose : req.body.choose,
+        option : req.body.option,
+        name : req.body.name,
+        image : req.body.image,
+        productId : req.body.productId,
+        price : req.body.price,
+        quantity : req.body.quantity
+    };
+    const createOrder = await OrderModel.create(newOrder);
+    if(createOrder) {
+      return res.status(201).json(createOrder);
   }
+  return res.status(501).json({ error: "Invalid data!" });
 }
 
 async function clientCancelOrder (req, res){

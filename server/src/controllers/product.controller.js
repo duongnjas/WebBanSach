@@ -25,6 +25,13 @@ async function FindProductWithId (req, res) {
     return res.status(404).json({ error: "Not found product with id=" + productId });
 }
 
+async function SearchProduct (req, res) {
+    const name = req.params.name
+    const product = await Product.find({name: {$regex: name, $options: '$i'}})
+    
+    product.length > 0 ? res.send(product) : res.send({message: ' khong tim thay sp'})
+}
+
 async function GetProductImages (req, res) {
     const productId = req.params.id;
     const product = await Product.findById(productId, { images: 1 });
@@ -57,16 +64,12 @@ async function CreateNewProduct(req, res) {
         slug: req.body.slug,
         sold: req.body.sold,
         details: {
-            category : req.body.details.category,
+            categoryId : req.body.details.categoryId,
             images : req.body.details.images,
             options : {
                 name : req.body.details.options.name,
                 values : req.body.details.options.values
             },
-            specifications: [{
-                name: req.body.details.specifications.name,
-                value: req.body.details.specifications.value
-            }],
             description: req.body.details.description
         }
     };
@@ -110,25 +113,17 @@ async function UpdateProduct (req, res) {
         discount: req.body.discount,
         slug: req.body.slug,
         sold: req.body.sold,
-        description: req.body.description,
         details: {
-            category : req.body.details.category,
-            images : req.body.details.images,
-            options : [{
-                id : req.body.details.options.id,
-                name : req.body.details.options.name,
-                values : {
-                    id: req.body.details.options.values.id,
-                    idType: req.body.details.options.values.idType,
-                    value: req.body.details.options.values.value
-                }
-            }],
-            specifications: {
-                id: req.body.specifications.id,
-                name: req.body.specifications.name,
-                value: req.body.specifications.value
+            category :{
+                id : req.body.details.category.id,
+                name : req.body.details.category.name
             },
-            description: req.body.description
+            images : req.body.details.images,
+            options : {
+                name : req.body.details.options.name,
+                values : req.body.details.options.values
+            },
+            description: req.body.details.description
         }
     };
 
@@ -175,5 +170,6 @@ module.exports = {
     GetProductByCategory,
     CreateNewProduct,
     UpdateProduct,
-    DeleteProduct
+    DeleteProduct,
+    SearchProduct
 }

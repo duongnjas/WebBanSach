@@ -5,6 +5,7 @@ const fs = require('fs');
 const path = require('path');
 
 const User = require("../models/user.model");
+const Address = require("../models/address.model");
 const auth = require("../middlewares/auth");
 
 require("dotenv").config();
@@ -72,28 +73,11 @@ async function UpdateUser (req, res) {
     }
 
     const newUser = {
-        name: req.body.name,
-        dob: req.body.dob,
+        fullName: req.body.name,
+        birth_day: req.body.dob,
         gender: req.body.gender,
-        address: {
-            street: req.body.address.street,
-            town: req.body.address.town,
-            province: req.body.address.province
-        },
         email: req.body.email,
-        phone: req.body.phone,
-        isAdmin: req.body.isAdmin
     }
-
-    try {
-        newUser.avatar = {
-            data: fs.readFileSync(path.join(__dirname, '..', '..', '/uploads/' + req.file.filename)),
-            contentType: 'image/png'  
-        }
-    }  
-    catch(err) {
-        console.log(err);
-    }  
 
     const result = await User.updateOne({ _id: userId }, newUser);
     if(result) {
@@ -151,6 +135,72 @@ async function DeleteUser (req, res) {
     return res.status(501).json({ error: "Failed to delete!" });
 }
 
+async function CreateNewAddress (req, res) {
+    const newAddress = {
+        name: req.body.name,
+        userId: req.body.userId,
+        phone: req.body.phone,
+        province: req.body.province,
+        district: req.body.district,
+        ward: req.body.ward,
+        details: req.body.details,
+    }    
+    const address = await Address.create(newAddress);
+    if(address) {
+        return res.status(201).json(address);
+    }
+    return res.status(501).json({ error: "Invalid data!" });
+}
+
+async function UpdateAddress (req, res) {
+    const addressId = req.params.id;
+    const oldAddress = await Address.findOne( { _id: addressId } ) 
+    if(!oldAddress) {
+        return res.status(404).json({ error: "Address not found!"});
+    }
+
+    const newAddress = {
+        name: req.body.name,
+        userId: req.body.userId,
+        phone: req.body.phone,
+        province: req.body.province,
+        district: req.body.district,
+        ward: req.body.ward,
+        details: req.body.details
+    }
+
+    const result = await Address.updateOne({ _id: addressId }, newAddress);
+    if(result) {
+        return res.status(200).json(result);
+    }
+    return res.status(501).json({ error: "Failed to update!" });
+}
+
+async function DeleteAddress (req, res) {
+    const addressId = req.params.id;
+    const oldAddress = await Address.findOne( { _id: addressId } );
+    
+    if(!oldAddress) {
+        return res.status(404).json({ error: "Address not found!"});
+    }
+
+    const result = await Address.remove({ _id: addressId });
+    if(result) {
+        return res.status(200).json(result);
+    }
+    return res.status(501).json({ error: "Failed to delete!" });
+}
+
+async function FindAddressWithUserId (req, res) {
+    const userId = req.params.userid;
+    const address = await Address.findOne( { userId: userId } )
+    if(address) {
+        return res.status(200).json(address);
+    }
+    return res.status(404).json({ error: 'Cannot find address with userid=' + userId });
+}
+
+
 module.exports = {
     CreateNewUser,
     UserLogin,
@@ -158,6 +208,10 @@ module.exports = {
     FindUserWithId,
     UpdateUser,
     DeleteUser,
-    UpdatePassword
+    UpdatePassword,
+    CreateNewAddress,
+    UpdateAddress,
+    DeleteAddress,
+    FindAddressWithUserId
 }
 

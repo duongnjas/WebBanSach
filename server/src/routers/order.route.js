@@ -18,7 +18,7 @@ const {
   updateOrder,
   PrintOrderGhn,
   clientCancelOrder,
-} = require("../controllers/OrderController.js");
+} = require("../controllers/order.controller.js");
 
 const orderRouter = express.Router();
 
