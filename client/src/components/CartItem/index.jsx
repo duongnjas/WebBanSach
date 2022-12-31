@@ -7,7 +7,7 @@ import { useDispatch } from "react-redux";
 import { removeItem, updateItem } from "../../slices/cartSlice";
 import {Link} from "react-router-dom";
 
-function CartItem(props) {
+function CartItem(props) { //các item của cart
   const [data, setData] = useState(props.data);
   const [quantity, setQuantity] = useState(props.data.quantity);
 

@@ -15,53 +15,53 @@ export const sidebarTab = [
         text: 'Thông tin tài khoản',
         link: '/customer/account/edit',
     },
+    // {
+    //     id: 2,
+    //     icon: NotificationsIcon,
+    //     text: 'Thông báo của tôi',
+    //     link: '/customer/notification'
+    // },
     {
         id: 2,
-        icon: NotificationsIcon,
-        text: 'Thông báo của tôi',
-        link: '/customer/notification'
-    },
-    {
-        id: 3,
         icon: ListAltIcon,
         text: 'Quản lý đơn hàng',
         link: '/customer/order/history'
     },
     {
-        id: 4,
+        id: 3,
         icon: LocationOnIcon,
         text: 'Sổ địa chỉ',
         link: '/customer/address'
     },
-    {
-        id: 5,
-        icon: CreditCardIcon,
-        text: 'Thông tin thanh toán',
-        link: '/customer/paymentcard'
-    },
-    {
-        id: 6,
-        icon: RateReviewIcon,
-        text: 'Nhận xét sản phẩm đã mua',
-        link: '/customer/nhan-xet-san-pham-ban-da-mua'
-    },
-    {
-        id: 7,
-        icon: FavoriteIcon,
-        text: 'Sản phẩm yêu thích',
-        link: '/customer/wishlist'
-    },
-    {
-        id: 8,
-        icon: StarHalfIcon,
-        text: 'Nhận xét của tôi',
-        link: '/customer/review'
-    },
-    {
-        id: 9,
-        icon: DiscountIcon,
-        text: 'Mã giảm giá',
-        link: '/customer/coupons'
-    },
+    // {
+    //     id: 5,
+    //     icon: CreditCardIcon,
+    //     text: 'Thông tin thanh toán',
+    //     link: '/customer/paymentcard'
+    // },
+    // {
+    //     id: 6,
+    //     icon: RateReviewIcon,
+    //     text: 'Nhận xét sản phẩm đã mua',
+    //     link: '/customer/nhan-xet-san-pham-ban-da-mua'
+    // },
+    // {
+    //     id: 7,
+    //     icon: FavoriteIcon,
+    //     text: 'Sản phẩm yêu thích',
+    //     link: '/customer/wishlist'
+    // },
+    // {
+    //     id: 8,
+    //     icon: StarHalfIcon,
+    //     text: 'Nhận xét của tôi',
+    //     link: '/customer/review'
+    // },
+    // {
+    //     id: 9,
+    //     icon: DiscountIcon,
+    //     text: 'Mã giảm giá',
+    //     link: '/customer/coupons'
+    // },
 
 ]

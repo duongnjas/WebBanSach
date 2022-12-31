@@ -24,7 +24,6 @@ import SearchIcon from "@mui/icons-material/Search";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import ArrowDropDownOutlinedIcon from "@mui/icons-material/ArrowDropDownOutlined";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
-import StorefrontOutlinedIcon from "@mui/icons-material/StorefrontOutlined";
 const privatePath = ["/customer/", "/admin/", "/payment"];
 
 function Header() {
@@ -303,6 +302,7 @@ function Header() {
                 <Box className="header__dropdown">
                   <Link to={"/customer/account/edit"}>Tài khoản của tôi</Link>
                   <Link to={"/customer/order/history"}>Đơn hàng của tôi</Link>
+                  <Link to={"/customer/address"}>Sổ địa chỉ</Link>
                   {/* <Link to={"/customer/wishlist"}>Sản phẩm yêu thích</Link>
                   <Link to={"/customer/notification"}>Thông báo của tôi</Link> */}
                   <Box onClick={handleLogout}>Thoát tài khoản</Box>

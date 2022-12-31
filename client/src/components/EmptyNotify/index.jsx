@@ -5,7 +5,7 @@ import {
   Typography
 } from "@mui/material";
 
-function EmptyNotify(props) {
+function EmptyNotify(props) { //icon empty
   return (
     <Stack
       sx={{
@@ -17,8 +17,9 @@ function EmptyNotify(props) {
       p="2rem"
     >
       <img
+        width="200px" height="200px"
         alt=""
-        src="https://frontend.tikicdn.com/_desktop-next/static/img/mascot_fail.svg"
+        src="https://cdn-icons-png.flaticon.com/512/782/782763.png"
       />
       <Typography variant="body1">{props.title}</Typography>
 
