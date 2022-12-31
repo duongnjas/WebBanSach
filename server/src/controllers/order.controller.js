@@ -5,13 +5,34 @@ require("dotenv").config();
 
 async function createOrder (req, res) {
     const newOrder = {
-        choose : req.body.choose,
-        option : req.body.option,
-        name : req.body.name,
-        image : req.body.image,
-        productId : req.body.productId,
-        price : req.body.price,
-        quantity : req.body.quantity
+      idUser : req.body.idUser,
+      feeShip : req.body.feeShip,
+      totalPrice : req.body.totalPrice,
+      type : req.body.type,
+      payment : req.body.payment,
+      shipping : req.body.shipping,
+      address:{
+        id : req.body.address.id,
+        name : req.body.address.name,
+        userId : req.body.address.userId,
+        phone : req.body.address.phone,
+        province : req.body.address.province,
+        updatedAt : req.body.address.updatedAt,
+        ward : req.body.address.ward,
+        createdAt : req.body.address.createdAt,
+        details : req.body.address.details,
+        district : req.body.address.district
+      },
+      products:{
+        choose: req.body.products.choose,
+        discount: req.body.products.discount,
+        id : req.body.products.id,
+        name : req.body.products.name,
+        slug : req.body.products.slug,
+        images : req.body.products.images,
+        price : req.body.products.price,
+        quantity : req.body.products.quantity
+      }
     };
     const createOrder = await OrderModel.create(newOrder);
     if(createOrder) {
@@ -189,7 +210,6 @@ async function GetAllOrderPaid (req, res) {
 
 async function DeleteOrder (req, res) {
   const deleteOrder = await OrderModel.findById({_id: req.params.id});
-
   if (deleteOrder) {
     await deleteOrder.remove();
     res.send({ message: "product deleted" });
