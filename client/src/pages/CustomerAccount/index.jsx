@@ -25,15 +25,9 @@ import Info from "./Info/index";
 import PhoneNumber from "./Info/PhoneNumber/index";
 import Email from "./Info/Email/index";
 import Password from "./Info/Password/index";
-import Notify from "./Notify/index";
 import Orders from "./Orders/index";
 import Addresses from "./Addresses/index";
 import CreateAddress from "./Addresses/CreateAddress/index";
-import PayInfo from "./PayInfo/index";
-import ReviewPurchased from "./ReviewPurchased/index";
-//import FavoriteProduct from "./FavoriteProduct/index";
-import MyReview from "./MyReview/index";
-import DiscountCode from "./Coupon/index";
 import DetailOrder from "./Orders/DetailOrder";
 import { useSelector } from "react-redux";
 import apiNotify from "../../apis/apiNotify";
@@ -152,15 +146,11 @@ function CustomerAccount() {
               element={
                 <Routes>
                   <Route index element={<Info />} />
-                  <Route path="phone" element={<PhoneNumber />} />
                   <Route path="email" element={<Email />} />
                   <Route path="pass" element={<Password />} />
                 </Routes>
               }
             />
-
-            <Route path="notification" element={<Notify getData={getData} />} />
-
             <Route
               path="order/*"
               element={
@@ -184,24 +174,10 @@ function CustomerAccount() {
                 </Routes>
               }
             />
-
-            <Route path="/paymentcard" element={<PayInfo />} />
-
-            <Route
-              path="/nhan-xet-san-pham-ban-da-mua"
-              element={<ReviewPurchased />}
-            />
-
-            {/* <Route path="/wishlist" element={<FavoriteProduct />} /> */}
-
-            <Route path="/review" element={<MyReview />} />
-
-            <Route path="/coupons" element={<DiscountCode />} />
           </Routes>
         </Box>
       </Box>
     </Box>
   );
-}
-
+};
 export default CustomerAccount;

@@ -13,7 +13,7 @@ import ChooseAddress from '../../components/ChooseAddress';
 import {toast} from 'react-toastify'
 import { clearCoupon } from '../../slices/paymentSlice';
 
-function ShoppingCart() {
+function ShoppingCart() { //Cart
   const [open, setOpen] = useState(false);
   const [openAddress, setOpenAddress] = useState(false);
   const [dialogDelete, setDialogDelete] = useState(false);
@@ -150,7 +150,7 @@ const navigate = useNavigate()
             {user?
               addressShip && <>
                 <Typography mb={0.25} fontWeight={500}>{addressShip.name}&nbsp;&nbsp;&nbsp;{addressShip.phone}</Typography>
-                <Typography color="#888">{`${addressShip.addressDetail}, ${addressShip.commune.name}, ${addressShip.district.name}, ${addressShip.province.name}`}</Typography></>
+                <Typography color="#888">{`${addressShip.details}, ${addressShip.ward}, ${addressShip.district}, ${addressShip.province}`}</Typography></>
             :<Typography mb={0.25} fontWeight={500}>Vui lòng đăng nhập để chọn địa chỉ</Typography>
             }
           </Box>
