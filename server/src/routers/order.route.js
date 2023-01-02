@@ -18,12 +18,14 @@ const {
   updateOrder,
   PrintOrderGhn,
   clientCancelOrder,
+  UpdateOrderType
 } = require("../controllers/order.controller");
 
 const orderRouter = express.Router();
 
 
 orderRouter.post("/create", createOrder);
+orderRouter.put("/:id",UpdateOrderType);
 // orderRouter.post("/update/:id", updateOrder);
 // orderRouter.post("/cancel/:id", clientCancelOrder);
 // orderRouter.get("/print/:id", PrintOrderGhn);

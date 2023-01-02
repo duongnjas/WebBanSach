@@ -18,7 +18,8 @@ const orderSchema = new mongoose.Schema({
     },
     type: {
         type: String,
-        required: true,
+        enum: ['Chưa xử lý', 'Đã xử lý', 'Đã hủy'],
+        default: 'Chưa xử lý'
     },
     payment: {
         type: String,
@@ -75,15 +76,15 @@ const orderSchema = new mongoose.Schema({
         choose: {
             type: Boolean,
             required: true,
-            default: false
+            default: true
         },
         discount: {
             type: Number,
-            required: false,
+            required: true,
         },
         id: {
             type: mongoose.Schema.Types.ObjectId,
-            required: false,
+            required: true,
         },
         name: {
             type: String,
@@ -91,11 +92,11 @@ const orderSchema = new mongoose.Schema({
         },
         slug: {
             type: String,
-            required: false,
+            required: true,
         },
         images: {
             type: String,
-            required: false,
+            required: true,
         },
         price: {
             type: Number,
