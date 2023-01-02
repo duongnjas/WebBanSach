@@ -16,7 +16,6 @@ async function createOrder (req, res) {
       address:{
         id : req.body.address.id,
         name : req.body.address.name,
-        userId : req.body.address.userId,
         phone : req.body.address.phone,
         province : req.body.address.province,
         updatedAt : req.body.address.updatedAt,

@@ -18,8 +18,8 @@ const orderSchema = new mongoose.Schema({
     },
     type: {
         type: String,
-        enum: ['Chưa xử lý', 'Đã xử lý', 'Đã hủy'],
-        default: 'Chưa xử lý'
+        enum: ['Đang xử lý', 'Đã xử lý', 'Đã hủy'],
+        default: 'Đang xử lý'
     },
     payment: {
         type: String,
@@ -36,11 +36,6 @@ const orderSchema = new mongoose.Schema({
         },
         name: {
             type: String, 
-            required: true,
-        },
-        userId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref : "User",
             required: true,
         },
         phone: {
@@ -77,10 +72,6 @@ const orderSchema = new mongoose.Schema({
             type: Boolean,
             required: true,
             default: true
-        },
-        discount: {
-            type: Number,
-            required: true,
         },
         id: {
             type: mongoose.Schema.Types.ObjectId,

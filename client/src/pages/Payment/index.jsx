@@ -115,11 +115,23 @@ function Payment() {
     const payload = {
       idUser: user?._id,
       type:state.type,
-      address: addressShip,
-      shipping: shippingMethods.find((item) => item.id === ship),
-      payment: paymentMethods.find((item) => item.id === payment),
       feeShip,
       totalPrice,
+      address: {
+        createdAt:addressShip.createdAt,
+        details:addressShip.details,
+        district:addressShip.district,
+        name:addressShip.name,
+        phone:addressShip.phone,
+        province:addressShip.province,
+        updatedAt:addressShip.updatedAt,
+        ward:addressShip.ward,
+        id:addressShip._id,
+        
+      },
+      shipping: shippingMethods.find((item) => item.id === ship).display,
+      payment: paymentMethods.find((item) => item.id === payment).display,
+
       products: CartItems.filter((item) => item.choose).map((item) => {
         return { ...item};
       }),

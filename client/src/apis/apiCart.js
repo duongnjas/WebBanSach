@@ -1,6 +1,9 @@
+import { BASE_URL, handleResponse } from "./apiconfig";
+
 import axios from 'axios';
 import queryString from 'query-string';
-const baseURL='https://playerhostedapitest.herokuapp.com/api/'
+const baseURL='https://playerhostedapitest.herokuapp.com/api/';
+
 // const baseURL='https://nhom3-tiki.herokuapp.com/api'
 export const axiosClient = axios.create({
     baseURL: baseURL,
@@ -21,14 +24,25 @@ export const axiosClientWithPayment = axios.create({
 });
 
 const apiCart = {
+    saveOrder: async (params) => {
+        const response = await fetch(
+            `${BASE_URL}/orders/create`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(params)
+            }
+        );
+        return handleResponse(response);
+    },
+
     getOrders: async (params) => {
         const res = await axiosClient.get('/myorders', {params})
         return res.data;
     },
-    saveOrder: async (params) => {
-        const res = await axiosClient.post('/myorders',params)
-        return res.data;
-    },
+    
     changeTypeOrder: async (params, id) => {
         const res = await axiosClient.patch(`/myorders/${id}`,params)
         return res.data;
