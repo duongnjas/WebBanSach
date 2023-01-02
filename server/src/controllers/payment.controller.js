@@ -11,6 +11,33 @@ const returnUrl = process.env.VNP_RETURN_URL;
 
 require("dotenv").config();
 
+function to2DigitNumber(number) {
+	if (isNaN(number)) {
+		throw new Error('to2DigitNumber:param must be a number');
+	}
+	if (!number) {
+		return '00';
+	}
+
+	return `0${number}`.substr(-2, 2);
+}
+
+function vnPayDateFormat(date) {
+	if (date.constructor.name !== 'Date') {
+		throw new Error('vnPayDateFormat:param must be a date');
+	}
+
+	let result = '';
+	result += date.getFullYear().toString();
+	result += to2DigitNumber(date.getMonth() + 1);
+	result += to2DigitNumber(date.getDate());
+	result += to2DigitNumber(date.getHours());
+	result += to2DigitNumber(date.getMinutes());
+	result += to2DigitNumber(date.getSeconds());
+
+	return result;
+}
+
 async function createPayment (req, res) {
   let ipAddr =
     req.headers["x-forwarded-for"] ||
@@ -45,7 +72,7 @@ async function createPayment (req, res) {
   let vnpUrl = url;
   const date = new Date();
 
-  const createDate = dateFormat(date, "yyyymmddHHmmss");
+  const createDate = vnPayDateFormat(new Date());
   const orderId = order._id.toString();
 
   var locale = "vn";
@@ -58,9 +85,9 @@ async function createPayment (req, res) {
   vnp_Params["vnp_Locale"] = locale;
   vnp_Params["vnp_CurrCode"] = currCode;
   vnp_Params["vnp_TxnRef"] = orderId;
-  vnp_Params["vnp_OrderInfo"] = "Nap tien cho thue bao 0123456789";
+  vnp_Params["vnp_OrderInfo"] = "Nap tien cho thue bao 0383185619";
   vnp_Params["vnp_OrderType"] = "billpayment";
-  vnp_Params["vnp_Amount"] = 10000000;
+  vnp_Params["vnp_Amount"] = req.body.totalPrice * 100;
   vnp_Params["vnp_ReturnUrl"] = returnUrl;
   vnp_Params["vnp_IpAddr"] = ipAddr;
   vnp_Params["vnp_CreateDate"] = createDate;
