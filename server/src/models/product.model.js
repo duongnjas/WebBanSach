@@ -31,7 +31,7 @@ const productSchema = mongoose.Schema({
     sold: {
         type: Number, 
         required: true,
-        min: 0
+        min: 0,
     },
     details: {
         categoryId: {

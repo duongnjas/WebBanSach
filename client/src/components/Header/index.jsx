@@ -1,24 +1,16 @@
 import React, { useEffect, useState, useCallback } from "react";
-
 import { useSelector, useDispatch } from "react-redux";
-
 import { Link, useNavigate, useLocation } from "react-router-dom";
-
 import { DebounceInput } from "react-debounce-input";
-
 import { Stack, Button, Typography, Badge, Box, Modal } from "@mui/material";
-
 import "./Header.scss";
 
 import Login from "../Login";
 import SignUp from "../SignUp";
-import Search from "../Search";
 import ForgetPassword from "../ForgetPassword";
-
-import { addItem } from "../../slices/searchSlice";
+import FilterProductSearch from "../../pages/FilterProductSearch";
 import { logoutSuccess } from "../../slices/authSlice";
 
-import apiProduct from "../../apis/apiProduct";
 import logo from "../../assets/img/logo.png";
 import SearchIcon from "@mui/icons-material/Search";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
@@ -31,96 +23,18 @@ function Header() {
   const location = useLocation();
   const dispatch = useDispatch();
 
-  const searchedItems = useSelector((state) => state.search.items);
-
   const [searchText, setSearchText] = useState("");
 
-  const [suggestions, setSuggestions] = useState([]);
-
-  const [filteredSuggestions, setFilteredSuggestions] = useState([]);
-
-  const [trendingSearch, setTrendingSearch] = useState([]);
-
-  const [categorySpecify, setCategorySpecify] = useState([]);
-
   const handleSubmitSearch = () => {
-    // dispatch(removeAll());
-    let obj = {
-      text: searchText,
-      slug: searchText.replace(/\s/g, "-"),
-    };
-    handleSaveSearch(obj);
-    navigate(`search/${obj.slug}`);
+    console.log(`input: ${searchText}`);
+    // let obj = searchText.replace(/\s/g, "-");
+    // FilterProductSearch(searchText);
+    navigate(`search/${searchText}`);
   };
-
-  useEffect(() => {
-    const getSuggestions = async () => {
-      apiProduct.getProducts().then((res) => {
-        const sugg = res?.map((item) => ({
-          id: item._id,
-          text: item.name,
-          slug: item.slug,
-          lowerCaseName: item.name.toLowerCase(),
-        }));
-
-        setSuggestions(sugg);
-      });
-    };
-
-    const getTrendingSearch = async () => {
-      apiProduct.getProducts().then((res) => {
-        const products = res?.map((item) => ({
-          id: item._id,
-          name: item.name,
-          imgUrl: item.image,
-        }));
-
-        var randomIndex = [];
-        let i = 0;
-        while (i < 6) {
-          const number = Math.floor(Math.random() * 188);
-          if (randomIndex.includes(number) === false) {
-            randomIndex.push(number);
-
-            setTrendingSearch((prev) => [...prev, products[number]]);
-            i++;
-          }
-        }
-      });
-    };
-    // getSuggestions();
-    // getTrendingSearch();
-  }, []);
-
-  var englishText = /^[A-Za-z0-9]*$/;
 
   const onChangeSearch = (event) => {
     setSearchText(event.target.value);
   };
-
-  useEffect(() => {
-    const checkIsVNese = () => {
-      for (const item of searchText.replace(/\s/g, "")) {
-        if (englishText.test(item) === false) {
-          return true;
-        }
-        return false;
-      }
-    };
-    const filter = suggestions.filter((item) =>
-      item.slug.includes(searchText.replace(/\s/g, "-"))
-    );
-    const filterVN = suggestions.filter((item) =>
-      item.lowerCaseName.includes(searchText)
-    );
-    if (checkIsVNese() === true) {
-      setFilteredSuggestions(filterVN);
-    } else {
-      setFilteredSuggestions(filter);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchText]);
-
   const [modalLogin, setModalLogin] = useState(false);
   const openModalLogin = () => setModalLogin(true);
 
@@ -128,15 +42,9 @@ function Header() {
   const [isRegister, setIsRegister] = useState(false);
   const [isForgetPwd, setIsForgetPwd] = useState(false);
 
-  const [focusSearch, setFocusSearch] = useState(false);
-
   const cart = useSelector((state) => state.cart.items);
 
   const user = useSelector((state) => state.auth.user); //lấy user từ store
-
-  const handleSaveSearch = (data) => {
-    dispatch(addItem(data));
-  };
 
   const handleLogout = () => {
     dispatch(logoutSuccess());
@@ -187,21 +95,6 @@ function Header() {
     setIsLoginForm(false);
   }, []);
 
-  useEffect(() => {
-    document.addEventListener("click", (event) => {
-      const searchResultElement = document.getElementById(
-        "input-search-result"
-      );
-      if (searchResultElement) {
-        const isClickInsideElement = searchResultElement.contains(event.target);
-        if (!isClickInsideElement && event.target.id !== "input-search") {
-          setFocusSearch(false);
-        }
-      }
-    });
-    return () => document.removeEventListener("click", () => {});
-  }, []);
-
   return (
     <header className="header">
       <Stack
@@ -230,23 +123,10 @@ function Header() {
               style={{ height: "100%", flex: 1 }}
               id="input-search"
               placeholder="Tìm kiếm sách, ..."
-              onFocus={() => setFocusSearch(true)}
               value={searchText}
               onChange={onChangeSearch}
               debounceTimeout={500}
             />
-
-            {focusSearch && (
-              <Search
-                trendingCategory={categorySpecify}
-                trendingSearch={trendingSearch}
-                handleSaveSearch={handleSaveSearch}
-                setSearchText={setSearchText}
-                suggestions={filteredSuggestions}
-                searchedItems={searchedItems}
-                searchText={searchText}
-              />
-            )}
             <Button
               sx={{
                 height: "100%",
@@ -345,20 +225,6 @@ function Header() {
               <Typography fontSize="12px">Giỏ hàng</Typography>
             </Stack>
           </Link>
-          {/* <a href="/admin">
-            <Button
-              sx={{
-                color: "white",
-                borderRadius: "50px",
-                padding: "0.25rem 1rem ",
-                fontSize: "small",
-              }}
-              variant="outlined"
-              startIcon={<StorefrontOutlinedIcon />}
-            >
-              <Typography fontSize="10px">Admin</Typography>
-            </Button>
-          </a> */}
         </Stack>
       </Stack>
 
