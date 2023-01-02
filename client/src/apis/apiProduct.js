@@ -38,7 +38,18 @@ const apiProduct = {
                 redirect: 'follow',
             }
         );
-        console.log(response);
+        //console.log(response);
+        return handleResponse(response);
+    },
+    getProductsBySearch : async (name) => {
+        const response = await fetch(
+            `${BASE_URL}/products/search/${name}`,
+            {
+                method: 'GET',
+                redirect: 'follow',
+            }
+        );
+        //console.log(response);
         return handleResponse(response);
     },
 
@@ -61,10 +72,7 @@ const apiProduct = {
         return res.data;
     },
 
-    getProductsBySearch: async (params) => {
-        const res = await axiosClient.get('/products' + params)
-        return res.data
-    }
+ 
 
 
 

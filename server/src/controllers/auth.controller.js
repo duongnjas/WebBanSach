@@ -55,7 +55,7 @@ async function decodeToken(token, secretKey) {
 async function register(req, res) {
   const phone = req.body.phone;
   const user = await User.findOne({ phone: phone });
-  if (user) res.status(409).send("Tên tài khoản đã tồn tại.");
+  if (user) res.status(501).send("Tên tài khoản đã tồn tại.");
   else {
     const hashPassword = await bcrypt.hashSync(req.body.password, SALT_ROUNDS);
     const newUser = {
@@ -65,7 +65,7 @@ async function register(req, res) {
     const createUser = await User.create(newUser);
     if (!createUser) {
       return res
-        .status(400)
+        .status(501)
         .send("Có lỗi trong quá trình tạo tài khoản, vui lòng thử lại.");
     }
     return res.send({

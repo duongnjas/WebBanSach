@@ -1,5 +1,3 @@
-
-import { axiosClient, axiosClientWithToken } from "./axiosClient";
 import { BASE_URL, handleResponse } from "./apiconfig";
 
 const apiAddress = {
@@ -55,22 +53,5 @@ const apiAddress = {
         );
         return handleResponse(response);
     },
-    getAddressById: async (params) => {
-        const res = await axiosClientWithToken.get('/address', { params })
-        return res.data;
-    },
-    getCommuneInDistrictById: async (params) => {
-        const res = await axiosClient.get(`address/commune/${params.id}`)
-        return res.data;
-    },
-    getDistrictInProvinceById: async (params)=>{
-        const res= await axiosClient.get(`address/district/${params.id}`)
-        return res.data;
-    },
-    getAllProvince : async (params)=>{
-        const res = await axiosClient.get('address/province')
-        return res.data;
-    },
-
 }
 export default apiAddress;

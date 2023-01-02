@@ -1,10 +1,7 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-
 import apiAuth from "../../apis/apiAuth";
-
 import { ErrorInput, ErrorAfterSubmit } from "../ErrorHelper";
-
 import {
   Stack,
   IconButton,
@@ -20,9 +17,7 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import InputAdornment from "@mui/material/InputAdornment";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
-import FacebookRoundedIcon from "@mui/icons-material/FacebookRounded";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
-
 import { toast } from "react-toastify";
 
 function SignUp(props) {
@@ -47,39 +42,28 @@ function SignUp(props) {
       return true;
     }
   };
-
-  const handleCheckPhone = async () => {
-    let param = {
-      phone: watch("phoneNumber"),
-    };
-    await apiAuth
-      .postCheckPhone(param)
-      .then((res) => {
-        setInvalidPhone(false);
-      })
-      .catch((error) => {
-        setInvalidPhone(true);
-      });
-  };
-
   const onSubmit = async () => {
-    if (loading) {
-      toast.warning(
-        "Thao tác đang thực hiện. Vui lòng không thao tác quá nhanh"
-      );
-      return;
-    }
+    // if (loading) {
+    //   toast.warning(
+    //     "Thao tác đang thực hiện. Vui lòng không thao tác quá nhanh"
+    //   );
+    //   return;
+    // }
     setLoading(true);
-    if (handleCheckPhone() && handleCheckPass()) {
-      if (invalidPhone === false && isDiffPass === false) {
+     if (handleCheckPass()) {
+      if (isDiffPass === false) {
         let param = {
           password: watch("pass"),
           phone: watch("phoneNumber"),
+          fullName: watch("name"),
         };
-        apiAuth
-          .postRegister(param)
-          .then(setIsSuccess(true))
-          .finally(() => setLoading(false));
+        console.log(param);
+        apiAuth.postRegister(param)
+          .then(()=>{
+            setIsSuccess(true);
+            toast.success(`Bạn đã đăng ký thành công`);
+          })
+          .catch(() => toast.warning(`Số diện thoại đã tồn tại`))
       }
     }
   };
@@ -114,6 +98,17 @@ function SignUp(props) {
                 <ErrorInput message={errors.phoneNumber.message} />
               )}
             </Stack>
+
+            <FormControl sx={{ width: "100%" }} variant="standard">
+              <InputLabel htmlFor="outlined-adornment-password">
+                Họ và tên
+              </InputLabel>
+              <Input
+                {...register("name", {
+                  required: "Hãy nhập họ và tên",
+                })}
+              />
+            </FormControl>
 
             <FormControl sx={{ width: "100%" }} variant="standard">
               <InputLabel htmlFor="outlined-adornment-password">
@@ -180,7 +175,7 @@ function SignUp(props) {
                 <ErrorAfterSubmit message="Số điện thoại đã được đăng ký" />
               )}
               {isDiffPass ? (
-                <ErrorAfterSubmit message="Nhập mật khẩu trùng nhau dùm cái" />
+                <ErrorAfterSubmit message="Nhập mật khẩu trùng nhau" />
               ) : null}
             </Stack>
 

@@ -35,7 +35,7 @@ function ConfigRoute() {
       <Route path="product/:slug" element={<DetailProduct />} />
       <Route path="/oauth2/redirect" element={<OAuth2RedirectHandler />} />
       <Route path="*" element={<Error />} />
-      <Route path="search/:slug" element={<FilterProductSearch />} />
+      <Route path="search/:name" element={<FilterProductSearch />} />
       <Route path="reset" element={<ChangePassword />} />
       <Route path="result-payment" element={<SuccessPayment/>} />
 
