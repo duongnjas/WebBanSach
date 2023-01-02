@@ -3,6 +3,8 @@ const axios = require("axios");
 
 require("dotenv").config();
 
+
+
 async function createOrder (req, res) {
     const newOrder = {
       idUser : req.body.idUser,
@@ -23,22 +25,31 @@ async function createOrder (req, res) {
         details : req.body.address.details,
         district : req.body.address.district
       },
-      products:{
-        choose: req.body.products.choose,
-        discount: req.body.products.discount,
-        id : req.body.products.id,
-        name : req.body.products.name,
-        slug : req.body.products.slug,
-        images : req.body.products.images,
-        price : req.body.products.price,
-        quantity : req.body.products.quantity
-      }
+      products: req.body.products
     };
     const createOrder = await OrderModel.create(newOrder);
     if(createOrder) {
       return res.status(201).json(createOrder);
   }
   return res.status(501).json({ error: "Invalid data!" });
+}
+
+async function UpdateOrderType (req, res) {
+  const orderId = req.params.id;
+  const oldOrder = await OrderModel.findOne( { _id: orderId }) 
+  if(!oldOrder) {
+      return res.status(404).json({ error: "Order not found!"});
+  }
+
+  const newOrder = {
+      type: req.body.type,
+  }
+
+  const result = await OrderModel.updateOne({ _id: orderId }, newOrder);
+  if(result) {
+      return res.status(200).json(result);
+  }
+  return res.status(501).json({ error: "Failed to update!" });
 }
 
 async function clientCancelOrder (req, res){
@@ -336,5 +347,6 @@ module.exports = {
     GetOrderPenddingByUser,
     GetOrderShippingByUser,
     GetOrderPaidByUser,
-    GetAllOrderInAMonth
+    GetAllOrderInAMonth,
+    UpdateOrderType
 }
