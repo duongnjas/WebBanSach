@@ -28,6 +28,10 @@ async function FindUserWithId (req, res) {
 }
 
 async function CreateNewUser (req, res) {
+  const phone = req.body.phone;
+  const user = await User.findOne({ phone: phone });
+  if (user) res.status(501).send("Tên tài khoản đã tồn tại.");
+  else {
     const newUser = {
         fullName: req.body.fullName,
         birth_day: req.body.birth_day,
@@ -42,6 +46,8 @@ async function CreateNewUser (req, res) {
         return res.status(201).json(user);
     }
     return res.status(501).json({ error: "Invalid data!" });
+  }
+    
 }
 
 async function UserLogin (req, res) {
@@ -212,6 +218,6 @@ module.exports = {
     CreateNewAddress,
     UpdateAddress,
     DeleteAddress,
-    FindAddressWithUserId
+    FindAddressWithUserId,
 }
 

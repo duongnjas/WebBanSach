@@ -22,7 +22,6 @@ import {
 
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import Info from "./Info/index";
-import PhoneNumber from "./Info/PhoneNumber/index";
 import Email from "./Info/Email/index";
 import Password from "./Info/Password/index";
 import Orders from "./Orders/index";
@@ -30,7 +29,6 @@ import Addresses from "./Addresses/index";
 import CreateAddress from "./Addresses/CreateAddress/index";
 import DetailOrder from "./Orders/DetailOrder";
 import { useSelector } from "react-redux";
-import apiNotify from "../../apis/apiNotify";
 
 function CustomerAccount() {
   const location = useLocation();
@@ -56,20 +54,6 @@ function CustomerAccount() {
     </Typography>,
   ];
 
-  const getData = React.useCallback(async () => {
-    let count = 0;
-    let param = {
-      userId: userId,
-    };
-    const response = await apiNotify.getNotification(param);
-    for (let i = 0; i < response.length; i++) {
-      if (response[i].seen === false) {
-        count++;
-      }
-    }
-    setBadge(count);
-  }, [userId]);
-
   React.useEffect(() => {
     const handleChangePath = () => {
       const tabId = sidebarTab.find((item) =>
@@ -78,9 +62,7 @@ function CustomerAccount() {
       if (tabId) setSelectedTabId(tabId?.id || 0);
     };
     handleChangePath();
-
-    getData();
-  }, [location.pathname, getData]);
+  }, [location.pathname]);
 
   React.useEffect(() => {
     document.title =

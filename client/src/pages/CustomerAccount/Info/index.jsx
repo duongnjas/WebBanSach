@@ -18,6 +18,8 @@ import {
   Radio,
   FormControlLabel,
   Divider,
+  InputBase,
+  Box,
 } from "@mui/material";
 
 import LocalPhoneOutlinedIcon from "@mui/icons-material/LocalPhoneOutlined";
@@ -46,6 +48,20 @@ function Info() {
   const [gender, setGender] = useState(user.gender)
   const [fullname, setFullName] = useState(user.fullName)
   const [updating, setUpdating] = useState(false);
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+  const [fcolor, setColor] = useState("#ee0033");
+
+  const onChangeEmail = (event) => {
+    setEmail(event.target.value);
+    const regex =
+      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    if (regex.test(event.target.value)) {
+      setMessage("");
+    } else {
+      setMessage("*Email không hợp lệ");
+    }
+  };
 
   const handleChangeDay = (event) => {
     setDay(event.target.value);
@@ -94,6 +110,7 @@ function Info() {
       birthDay: birth_day,
       fullName: fullname,
       gender: gender,
+      email: email,
     };
     setUpdating(true)
     apiProfile
@@ -135,9 +152,20 @@ function Info() {
                   onChange={onChangeFullName}
                 />
               </Stack>
-            </Stack>
+              <Stack
+                direction="row"
+                spacing={5}
+                alignItems="center"
+                justifyContent="space-between"
+              >
+                <label>Email</label>
+                <input id="input-name" placeholder="Thêm email" type="text"
+                  value={email}
+                  onChange={onChangeEmail}
+                />
+              </Stack>
+            </Stack>         
           </Stack>
-
           <Stack direction="row" spacing={9} alignItems="center">
             <label>Ngày sinh</label>
             <Stack direction="row" spacing={2} alignItems="center">
@@ -226,33 +254,12 @@ function Info() {
               <ListItemText primary="Số điện thoại" secondary={user.phone} />
             </Stack>
           </Stack>
-          <Stack
-            direction="row"
-            spacing={15}
-            alignItems="center"
-            justifyContent="space-between"
-          >
-            <Stack direction="row" spacing={1}>
-              <EmailOutlinedIcon color="disabled" />
-
-              <ListItemText
-                primary="Địa chỉ email"
-                secondary={user.email}
-              />
-            </Stack>
-
-            <Link to="/customer/account/edit/email">
-              <Button size="small" variant="outlined">
-                Cập nhật
-              </Button>
-            </Link>
-          </Stack>
-
           <Typography>Bảo mật</Typography>
           <Stack
             direction="row"
             alignItems="center"
             justifyContent="space-between"
+            spacing={2}
           >
             <Stack direction="row" spacing={1}>
               <LockIcon color="disabled" />
