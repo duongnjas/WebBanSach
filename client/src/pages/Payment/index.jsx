@@ -36,8 +36,8 @@ function Payment() {
   const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const feeShip = ship === "shipping1" ? 40000 : 23000;
-  const discountFeeShip = 10000;
+  const feeShip = ship === "shipping1" ? 30000 : 23000;
+  const discountFeeShip = 0;
 
   useEffect(() => { //trang thanh toan
     const calcPrice = () => {

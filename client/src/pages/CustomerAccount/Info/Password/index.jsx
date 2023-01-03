@@ -8,11 +8,13 @@ import {
   InputAdornment,
   IconButton,
 } from "@mui/material";
+import { useSelector } from "react-redux";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 import apiProfile from "../../../../apis/apiProfile"; 
 
 function Password() {
+  const user = useSelector(state => state.auth.user)
   const [showPass, setShowPass] = React.useState(false);
   const [confirmPassword, setconfirmPassword] = React.useState("");
   const [newPassword, setnewPassword] = React.useState("");
@@ -27,7 +29,9 @@ function Password() {
   const [color, setColor] = React.useState("");
   const [newcolor, setNColor] = React.useState("");
   
-  const strongRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})");//regex kiểm tra mật khẩu hợp lệ
+  
+  // const strongRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})");//regex kiểm tra mật khẩu hợp lệ
+  const strongRegex = new RegExp("^(?=.{8,})");//regex kiểm tra mật khẩu hợp lệ
   
   const onChangeoldPassword = (event) => {
       setoldPassword(event.target.value)
@@ -42,7 +46,8 @@ function Password() {
     }
     else {
       setColor(Fcolor)
-      setNewMessage("*Mật khẩu phải có ít nhất 8 kí tự. Chứa kí tự thường, kí tự hoa và số")
+      // setNewMessage("*Mật khẩu phải có ít nhất 8 kí tự. Chứa kí tự thường, kí tự hoa và số")
+      setNewMessage("*Mật khẩu phải có ít nhất 8 kí tự.")
       //setValid(pre => { return { ...pre, new: false } })
     }
   }
@@ -65,11 +70,10 @@ function Password() {
   const handleChangePassword = () => {
     //if (valid.new && valid.cf){
       const params = {
-        "confirmPassword": confirmPassword,
         "newPassword": newPassword,
         "oldPassword": oldPassword
       }
-      apiProfile.putChangePassword(params)
+      apiProfile.putChangePassword(params, user?._id)
         .then(response => {
           setFontSizeMessage("16px")
           setNColor(Rcolor)

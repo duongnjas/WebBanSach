@@ -22,7 +22,6 @@ import {
 
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import Info from "./Info/index";
-import Email from "./Info/Email/index";
 import Password from "./Info/Password/index";
 import Orders from "./Orders/index";
 import Addresses from "./Addresses/index";
@@ -128,7 +127,6 @@ function CustomerAccount() {
               element={
                 <Routes>
                   <Route index element={<Info />} />
-                  <Route path="email" element={<Email />} />
                   <Route path="pass" element={<Password />} />
                 </Routes>
               }
