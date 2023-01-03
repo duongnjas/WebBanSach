@@ -18,7 +18,9 @@ const {
   updateOrder,
   PrintOrderGhn,
   clientCancelOrder,
-  UpdateOrderType
+  UpdateOrderType,
+  GetOrderByUser
+  
 } = require("../controllers/order.controller");
 
 const orderRouter = express.Router();
@@ -32,7 +34,7 @@ orderRouter.put("/:id",UpdateOrderType);
 // orderRouter.put("/shipping/:id", ShippingProduct);
 // orderRouter.put("/paid/:id", PaidProduct);
 orderRouter.delete('/delete/:id', DeleteOrder);
-
+orderRouter.get("/:id", GetOrderByUser);
 // orderRouter.get("/", GetAllOrder);
 // orderRouter.get("/orderPaypal", GetAllOrderPaypal);
 // orderRouter.get("/orderPendding", GetAllOrderPendding);

@@ -3,8 +3,6 @@ const axios = require("axios");
 
 require("dotenv").config();
 
-
-
 async function createOrder (req, res) {
     const newOrder = {
       idUser : req.body.idUser,
@@ -51,6 +49,7 @@ async function UpdateOrderType (req, res) {
   }
   return res.status(501).json({ error: "Failed to update!" });
 }
+
 
 async function clientCancelOrder (req, res){
   const updateOrder = await OrderModel.findById({_id: req.params.id})
@@ -257,7 +256,7 @@ async function PaidProduct (req, res) {
 // --------------------    user
 
 async function GetOrderByUser (req, res) {
-  const Order = await OrderModel.find({ user: req.params.id }).sort({
+  const Order = await OrderModel.find({ idUser: req.params.id }).sort({
     createdAt: -1,
   });
   if (Order) {

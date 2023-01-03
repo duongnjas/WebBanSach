@@ -18,8 +18,8 @@ const orderSchema = new mongoose.Schema({
     },
     type: {
         type: String,
-        enum: ['Chưa xử lý', 'Đã xử lý', 'Đã hủy'],
-        default: 'Chưa xử lý'
+        enum: ['Đang xử lý', 'Đã xử lý', 'Đã hủy'],
+        default: 'Đang xử lý'
     },
     payment: {
         type: String,
