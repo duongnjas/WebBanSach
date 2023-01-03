@@ -38,11 +38,6 @@ const orderSchema = new mongoose.Schema({
             type: String, 
             required: true,
         },
-        userId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref : "User",
-            required: true,
-        },
         phone: {
             type: String, 
             required: true,
@@ -77,10 +72,6 @@ const orderSchema = new mongoose.Schema({
             type: Boolean,
             required: true,
             default: true
-        },
-        discount: {
-            type: Number,
-            required: true,
         },
         id: {
             type: mongoose.Schema.Types.ObjectId,
