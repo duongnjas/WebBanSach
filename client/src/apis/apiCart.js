@@ -39,8 +39,28 @@ const apiCart = {
     },
 
     getOrders: async (params) => {
-        const res = await axiosClient.get('/myorders', {params})
-        return res.data;
+        const response = await fetch(
+            `${BASE_URL}/orders/${params}`,
+            {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            }
+        );
+        return handleResponse(response);
+    },
+    getOrderById: async (params) => {
+        const response = await fetch(
+            `${BASE_URL}/orders/get/${params}`,
+            {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            }
+        );
+        return handleResponse(response);
     },
     
     changeTypeOrder: async (params, id) => {

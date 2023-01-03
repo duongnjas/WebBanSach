@@ -4,7 +4,7 @@ import "./OrderItem.scss";
 import { orderTabs } from "../../constraints/OrderItem";
 import { numWithCommas } from "../../constraints/Util";
 import { Link } from "react-router-dom";
-function OrderItem(props) {
+function OrderItem(props) { //item order
   const { order } = props;
   const state = getState(order.type);
   return (
@@ -34,7 +34,7 @@ function OrderItem(props) {
             direction="row"
             justifyContent="space-between"
           >
-            <img alt="" src={item.image} />
+            <img alt="" src={item.images} />
             <span className="orderItem__quantity">
               x{item.quantity}
             </span>
@@ -62,12 +62,12 @@ function OrderItem(props) {
             component="span"
             fontSize="17px" fontWeight='500' color="#333"
           >
-            {numWithCommas(order.totalPrice)} ₫
+            {numWithCommas(order.totalPrice+order.feeShip)} ₫
           </Typography>
         </Box>
         <Box className="orderItem__groupbtn">
-          <Button variant="outlined">Mua lại</Button>
-          <Link to={`/customer/order/detail/${order.id}`}><Button variant="outlined">Xem chi tiết</Button>
+          {/* <Button variant="outlined">Mua lại</Button> */}
+          <Link to={`/customer/order/detail/${order._id}`}><Button variant="outlined">Xem chi tiết</Button>
           </Link>
           
         </Box>

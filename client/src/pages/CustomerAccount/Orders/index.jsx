@@ -21,17 +21,19 @@ function Orders() {
 
   useEffect(() => {
     const getData = async () => {
-      let param = {
-        _page: page,
-        _limit: size,
-        idUser:user.id,
-        _sort:'updatedAt',
-        _order:'desc'
-      };
-      apiCart.getOrders(param)
+      // let param = {
+      //   _page: page,
+      //   _limit: size,
+      //   idUser:user.id,
+      //   _sort:'updatedAt',
+      //   _order:'desc'
+      // };
+      apiCart.getOrders(user?._id)
         .then(response=>{
-           setOrders(response.data.sort((a,b)=>a.createdAt - b.createdAt));
-          setTotalPage(Math.ceil(response.pagination._totalRows / size))
+            console.log(response);
+           setOrders(response);
+          //  setOrders(response.data.sort((a,b)=>a.createdAt - b.createdAt));
+          // setTotalPage(Math.ceil(response.pagination._totalRows / size))
         })
         .catch(setOrders([]))
     };
@@ -74,21 +76,12 @@ function Orders() {
         </Box>
 
         <Box className="myorder__search">
-          <div className="myorder__search__logo">
-            <SearchIcon />
-          </div>
-          <input
-            type="text"
-            className="myorder__search__input"
-            placeholder="Tìm đơn hàng theo Mã đơn hàng, Đơn hàng, nhà bán"
-          />
-          <div className="myorder__search__btn">Tìm đơn hàng</div>
         </Box>
 
         <Box>
           <TabPanel value={value} index={0} dir={theme.direction}>
             {orders.length!==0 ? (
-              orders.map((item) => <OrderItem key={item.id} order={item} />)
+              orders.map((item) => <OrderItem key={item._id} order={item} />)
             ) : (
               <Box  className="myorder__none">
                 <img
@@ -102,7 +95,8 @@ function Orders() {
             )}
           </TabPanel>
           {orderTabs.slice(1, orderTabs.length).map((item) => {
-            const tmp = getOrderByType(orders, item.id);
+            console.log(item);
+            const tmp = getOrderByType(orders, item.type);
             if (tmp.length === 0)
               return (
                 <TabPanel key={item.id} value={value} index={item.id} dir={theme.direction}>
@@ -160,7 +154,7 @@ function TabPanel(props) {
   );
 }
 
-const getOrderByType = (orders, id) =>
-  orders.filter((item) => item.type.id === id);
+const getOrderByType = (orders, type) =>
+  orders.filter((item) => item.type === type);
 
 export default Orders;

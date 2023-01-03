@@ -8,7 +8,7 @@ const SALT_WORK_FACTOR = 10;
 
 const userSchema = mongoose.Schema({
     fullName: {
-        type: String,
+        type: String, 
         required: true
     },
     birth_day: {

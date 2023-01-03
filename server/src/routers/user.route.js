@@ -21,7 +21,7 @@ userRouter.get('/', GetAllUsers);
 userRouter.get('/:id', FindUserWithId);
 userRouter.post('/register', CreateNewUser);
 userRouter.post('/login', UserLogin);
-userRouter.put('/:id', upload.single('avatar'), UpdateUser);
+userRouter.put('/:id', UpdateUser);
 userRouter.patch('/:id', UpdatePassword);
 userRouter.delete('/:id', DeleteUser);
 

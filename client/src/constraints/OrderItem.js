@@ -14,17 +14,17 @@ export const orderTabs = [
     },
     {
         id: 1,
-        type: "Chờ thanh toán",
-        icon: HourglassBottomIcon
-    },
-    {
-        id: 2,
         type: "Đang xử lý",
         icon: AutoModeIcon
     },
     {
+        id: 2,
+        type: "Đã xử lý",
+        icon: CancelIcon
+    },
+    {
         id: 3,
-        type: "Đang vận chuyển",
+        type: "Đã hủy",
         icon: RocketLaunchIcon
     },
     {
@@ -32,9 +32,5 @@ export const orderTabs = [
         type: "Đã giao",
         icon: LocalShippingIcon
     },
-    {
-        id: 5,
-        type: "Đã huỷ",
-        icon: CancelIcon
-    },
+
 ]

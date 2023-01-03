@@ -255,6 +255,8 @@ async function PaidProduct (req, res) {
 // --------------------    user
 
 async function GetOrderByUser (req, res) {
+  console.log(req.params.id);
+  
   const Order = await OrderModel.find({ idUser: req.params.id }).sort({
     createdAt: -1,
   });
@@ -262,6 +264,15 @@ async function GetOrderByUser (req, res) {
     res.send(Order);
   } else {
     res.status(401).send({ message: "no order by user" });
+  }
+}
+async function GetOrderById (req, res) {
+  const orderId = req.params.id;
+  const Order = await OrderModel.findById(orderId);
+  if (Order) {
+    return res.status(200).json(Order);
+  } else {
+    res.status(401).json({ error: "no order by orderId" });
   }
 }
 
@@ -346,5 +357,6 @@ module.exports = {
     GetOrderShippingByUser,
     GetOrderPaidByUser,
     GetAllOrderInAMonth,
-    UpdateOrderType
+    UpdateOrderType,
+    GetOrderById,
 }

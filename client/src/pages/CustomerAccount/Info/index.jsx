@@ -1,11 +1,11 @@
-  import {useState} from "react";
+  import {useEffect, useState} from "react";
 import { Link } from "react-router-dom";
 import { toast } from 'react-toastify';
 import { loginSuccess } from '../../../slices/authSlice'
 import { useDispatch } from 'react-redux';
+import moment from 'moment';
 
 import "./Info.scss";
-import avatar from "../../../assets/img/avatar.png"
 
 import {
   Typography,
@@ -23,10 +23,7 @@ import {
 } from "@mui/material";
 
 import LocalPhoneOutlinedIcon from "@mui/icons-material/LocalPhoneOutlined";
-import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import LockIcon from "@mui/icons-material/Lock";
-import FacebookRoundedIcon from "@mui/icons-material/FacebookRounded";
-import GoogleIcon from "@mui/icons-material/Google";
 import { useSelector } from "react-redux";
 
 import apiProfile from "../../../apis/apiProfile";
@@ -35,20 +32,13 @@ import Loading from "../../../components/Loading";
 
 
 function Info() {
-
-  const Month = Array.from({ length: 12 }, (x, i) => 1 + i);
-  const Year = Array.from({ length: 65 }, (x, i) => 1950 + i);
-  const Country = [{ id: "1", name: "Việt Nam" }, { id: "2", name: "America" }, { id: "3", name: "Úc" }];
-  const user = useSelector(state => state.auth.user);
+  const user = useSelector(state => state.auth.user)
   const dispatch = useDispatch();
-  const [listday, setListday] = useState(Array.from({ length: 31 }, (x, i) => 1 + i))
-  const [day, setDay] = useState(user.birth_day ? user.birth_day[2] : null);
-  const [month, setMonth] = useState(user.birth_day ? user.birth_day[1] : null);
-  const [year, setYear] = useState(user.birth_day ? user.birth_day[0] : null);
+  const [dob, setDob] = useState( moment.utc(user.birth_day).format('DD-MM-YYYY'))
   const [gender, setGender] = useState(user.gender)
   const [fullname, setFullName] = useState(user.fullName)
   const [updating, setUpdating] = useState(false);
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(user.email);
   const [message, setMessage] = useState("");
   const [fcolor, setColor] = useState("#ee0033");
 
@@ -63,36 +53,10 @@ function Info() {
     }
   };
 
-  const handleChangeDay = (event) => {
-    setDay(event.target.value);
-  };
-
-  const handleChangeMonth = (event) => {
-    setMonth(event.target.value);
-    let Maxday = maxDayofmonth(event.target.value, year);
-    setListday(Array.from({ length: Maxday }, (x, i) => 1 + i))
-    if (day > Maxday)
-      setDay(1)
-  };
-  const handleChangeYear = (event) => {
-    setYear(event.target.value);
-    let Maxday = maxDayofmonth(month, event.target.value);
-    setListday(Array.from({ length: Maxday }, (x, i) => 1 + i))
-    if (day > Maxday)
-      setDay(1)
-  };
-
-  const maxDayofmonth = (month, year) => {
-    if (month === 2) {
-      if ((year % 4 === 0 && year % 100 !== 0 && year % 400 !== 0) || (year % 100 === 0 && year % 400 === 0)) {
-        return 29;
-      }
-      else return 28;
-    }
-    else if ([4, 6, 9, 11].includes(month))
-      return 30;
-    else return 31;
+  const onChangeDob = (e)=>{
+    setDob(e.target.value);
   }
+
   const onChangeFullName = (event) => {
     setFullName(event.target.value);
   }
@@ -100,21 +64,23 @@ function Info() {
     setGender(event.target.value);
   }
   const onSaveChange = () => {
-    if (!(RegExp("\\d+").test(day) && RegExp("\\d+").test(month) && RegExp("\\d+").test(year)
-     && fullname && gender)) {
+    if (!(dob && fullname && gender && email)) {
       toast.warning("Vui lòng nhập đầy đủ thông tin !!");
       return
     }
-    let birth_day = `${year}-${('0' + month).slice(-2)}-${('0' + day).slice(-2)}`
+    let date1 = dob.split("-");// ["29", "1", "2016"]
+    var newDob = new Date(parseInt(date1[2]),parseInt(date1[1])-1,parseInt(date1[0]));
+    // Date {Fri Jan 29 2016 00:00:00 GMT+0530(utopia standard time)
+    console.log(newDob.toISOString());
     const params = {
-      birthDay: birth_day,
+      birth_day: newDob.toISOString(),
       fullName: fullname,
       gender: gender,
       email: email,
     };
     setUpdating(true)
     apiProfile
-      .putChangeInfo(params)
+      .putChangeInfo(params, user?._id)
       .then((response) => {
         toast.success("Thay đổi thành công");
         getUserProfile();
@@ -126,12 +92,16 @@ function Info() {
       .finally(()=>setUpdating(false))
   };
   const getUserProfile = () => {
-    apiProfile.getUserProfile()
+    apiProfile.getUserProfile(user?._id)
       .then((res) => {
-        let newUser = res.data.user
+        let newUser = res
         dispatch(loginSuccess({ ...user, ...newUser }))
       })
   }
+  useEffect(() => {
+    console.log(email);
+    getUserProfile();
+  }, []);
   return (
     <Stack className="customer-info" spacing={3}>
       <Typography variant="h6">Thông tin tài khoản</Typography>
@@ -164,56 +134,21 @@ function Info() {
                   onChange={onChangeEmail}
                 />
               </Stack>
+              <Typography color={fcolor} fontSize="14px" >{message}</Typography>
+              <Stack
+                direction="row"
+                spacing={5}
+                alignItems="center"
+                justifyContent="space-between"
+              >
+                <label>Ngày sinh</label>
+                <input id="input-name" placeholder="Thêm email" type="text"
+                  value={dob}
+                  onChange={onChangeDob}
+                />
+              </Stack>
             </Stack>         
           </Stack>
-          <Stack direction="row" spacing={9} alignItems="center">
-            <label>Ngày sinh</label>
-            <Stack direction="row" spacing={2} alignItems="center">
-              <Select
-                sx={{ maxHeight: 30, minWidth: 100 }}
-                value={day}
-                onChange={handleChangeDay}
-                displayEmpty
-              >
-                <MenuItem value="">
-                  <em>Ngày</em>
-                </MenuItem>
-                {listday.map(item =>
-                  <MenuItem key={item} value={item}>{item}</MenuItem>
-                )}
-              </Select>
-
-              <Select
-                sx={{ maxHeight: 30, minWidth: 100 }}
-                value={month}
-                onChange={handleChangeMonth}
-                displayEmpty
-              >
-                <MenuItem value="">
-                  <em>Tháng</em>
-                </MenuItem>
-                {Month.map(item =>
-                  <MenuItem key={item} value={item}>{item}</MenuItem>
-                )}
-              </Select>
-
-              <Select
-                sx={{ maxHeight: 30, minWidth: 100 }}
-                value={year}
-                onChange={handleChangeYear}
-                displayEmpty
-              >
-                <MenuItem value="">
-                  <em>Năm</em>
-                </MenuItem>
-                {Year.map(item =>
-                  <MenuItem key={item} value={item}>{item}</MenuItem>
-                )}
-
-              </Select>
-            </Stack>
-          </Stack>
-
           <Stack direction="row" spacing={5} alignItems="center">
             <label>Giới tính</label>
             <RadioGroup
@@ -223,10 +158,10 @@ function Info() {
               value={gender}
               onChange={onChangeGender}
             >
-              <FormControlLabel value="Male" control={<Radio />} label="Nam" />
-              <FormControlLabel value="Female" control={<Radio />} label="Nữ" />
+              <FormControlLabel value="male" control={<Radio />} label="Nam" />
+              <FormControlLabel value="female" control={<Radio />} label="Nữ" />
               <FormControlLabel
-                value="Other"
+                value="other"
                 control={<Radio />}
                 label="Khác"
               />

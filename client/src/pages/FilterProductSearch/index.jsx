@@ -17,7 +17,7 @@ import { useParams} from "react-router-dom";// de lay slug
 
 function FilterProductSearch(props) {
 
-  const slug = useParams().slug;
+  const slug = useParams().name;
   const [value, setValue] = useState(0);
 
   const [minPrice, setMinPrice] = useState(0);
@@ -33,7 +33,7 @@ function FilterProductSearch(props) {
   useEffect(() => {
     var querySearch = "";
     console.log(`props: ${props}`);
-    console.log(`Và ///// ${querySearch}`);
+    console.log(`Và ///// ${slug}`);
     const getData = async () => {
       // if (rating === 0) {
       //   if (!isApplyPrice) {
@@ -50,7 +50,7 @@ function FilterProductSearch(props) {
       // }
 
       apiProduct
-        .getProductsBySearch(props)
+        .getProductsBySearch(slug)
         .then((res) => {
           console.log("search product ", res);
           setFilteredProducts(res);
