@@ -19,7 +19,8 @@ const {
   PrintOrderGhn,
   clientCancelOrder,
   UpdateOrderType,
-  GetOrderByUser
+  GetOrderByUser,
+  GetOrderById
   
 } = require("../controllers/order.controller");
 
@@ -35,6 +36,7 @@ orderRouter.put("/:id",UpdateOrderType);
 // orderRouter.put("/paid/:id", PaidProduct);
 orderRouter.delete('/delete/:id', DeleteOrder);
 orderRouter.get("/:id", GetOrderByUser);
+orderRouter.get("/get/:id", GetOrderById);
 // orderRouter.get("/", GetAllOrder);
 // orderRouter.get("/orderPaypal", GetAllOrderPaypal);
 // orderRouter.get("/orderPendding", GetAllOrderPendding);
