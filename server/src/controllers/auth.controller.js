@@ -55,7 +55,7 @@ async function decodeToken(token, secretKey) {
 async function register(req, res) {
   const phone = req.body.phone;
   const user = await User.findOne({ phone: phone });
-  if (user) res.status(409).send("Tên tài khoản đã tồn tại.");
+  if (user) res.status(501).send("Tên tài khoản đã tồn tại.");
   else {
     const hashPassword = await bcrypt.hashSync(req.body.password, SALT_ROUNDS);
     const newUser = {
@@ -65,7 +65,7 @@ async function register(req, res) {
     const createUser = await User.create(newUser);
     if (!createUser) {
       return res
-        .status(400)
+        .status(501)
         .send("Có lỗi trong quá trình tạo tài khoản, vui lòng thử lại.");
     }
     return res.send({
@@ -87,6 +87,7 @@ async function login(req, res) {
   }
 
   const accessTokenLife = process.env.ACCESS_TOKEN_LIFE;
+  const refreshTokenLife = process.env.REFRESH_TOKEN_LIFE;
   const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
 
   const dataForAccessToken = {
@@ -106,7 +107,11 @@ async function login(req, res) {
       .send("Đăng nhập không thành công, vui lòng thử lại.");
   }
 
-  let refreshToken = randToken.generate(REFRESH_TOKEN_SIZE);
+  const refreshToken = await generateToken(
+    dataForAccessToken,
+    accessTokenSecret,
+    refreshTokenLife
+  );
   if (!user.refreshToken) {
     await updateRefreshToken(user.phone, refreshToken);
   } else {
@@ -156,21 +161,23 @@ async function refreshToken(req, res) {
   }
 
   const dataForAccessToken = {
-    phone,
+    sub: user._id,
+    rolePermissions: ["user:read", "user:write"],
+    roleNames: [user.roleNames],
   };
 
-  const accessToken = await generateToken(
+  const refreshToken = await generateToken(
     dataForAccessToken,
     accessTokenSecret,
     accessTokenLife
   );
-  if (!accessToken) {
+  if (!refreshToken) {
     return res
       .status(400)
-      .send("Tạo access token không thành công, vui lòng thử lại.");
+      .send("Tạo refreshToken không thành công, vui lòng thử lại.");
   }
-  return res.json({
-    accessToken,
+  return res.status(201).json({
+      refreshToken,
   });
 }
 module.exports = {

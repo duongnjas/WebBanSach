@@ -4,18 +4,19 @@ import { Button, Modal, Box, Stack, Typography } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close';
 import apiAddress from '../../apis/apiAddress'
 import PropTypes from 'prop-types';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setAddress } from '../../slices/paymentSlice';
 
-function ChooseAddress(props) {
+function ChooseAddress(props) { //Chọn address khi mua hàng
+    const userId = useSelector((state) => state.auth.user)._id;
     const [addresses, setAddresses] = useState([]);
     const dispatch = useDispatch()
     
     useEffect(() => {
         const getAddresses = () => {
-            apiAddress.getUserAddress()
+            apiAddress.getUserAddress(userId)
                 .then(res => {
-                    setAddresses(res.data.addressList)
+                    setAddresses(res)
                 })
         }
         getAddresses()
@@ -44,12 +45,12 @@ function ChooseAddress(props) {
                                 direction="row"
                                 width="100%"
                                 className="items"
-                                key={item.id}
+                                key={item?._id}
                             >
                                 <Stack className="info">
-                                    <Typography className="name">{item.fullName}</Typography>
-                                    <Typography className="address">Địa chỉ: {`${item.addressDetail}, ${item.commune.name}, ${item.district.name}, ${item.province.name}`}</Typography>
-                                    <Typography className="number">Điện thoại: {item.phoneNumber}</Typography>
+                                    <Typography className="name">{item?.name}</Typography>
+                                    <Typography className="address">Địa chỉ: {`${item?.details}, ${item?.ward}, ${item?.district}, ${item?.province}`}</Typography>
+                                    <Typography className="number">Điện thoại: {item.phone}</Typography>
                                 </Stack>
 
                                 <Stack direction="row" className="action">

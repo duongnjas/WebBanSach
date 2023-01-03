@@ -1,7 +1,6 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import authReducer from "../slices/authSlice";
 import cartReducer from "../slices/cartSlice"
-import searchReducer from "../slices/searchSlice"
 import {
   persistStore,
   persistReducer,
@@ -16,7 +15,7 @@ import storage from 'redux-persist/lib/storage'
 import paymentSlice from '../slices/paymentSlice';
 
 
-const rootReducer = combineReducers({ auth: authReducer, cart: cartReducer, search: searchReducer,payment:paymentSlice })
+const rootReducer = combineReducers({ auth: authReducer, cart: cartReducer,payment:paymentSlice })
 
 const persistConfig = {
   key: 'root',

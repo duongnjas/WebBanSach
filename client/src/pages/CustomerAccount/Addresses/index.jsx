@@ -6,32 +6,36 @@ import AddIcon from "@mui/icons-material/Add";
 import apiAddress from '../../../apis/apiAddress';
 import EmptyNotify from '../../../components/EmptyNotify';
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 
 function Addresses() {
+  const userId = useSelector((state) => state.auth.user)._id;
   const [itemdelete, setItemdelete] = useState(null)
   const [addresses, setAddresses] = useState([]);
   const [dialogDelete, setDialogDelete] = useState(false);
 
   useEffect(() => {
     const getData = async () => {
-      apiAddress.getUserAddress()
+      apiAddress.getUserAddress(userId)
         .then(res => {
-          setAddresses(res.data.addressList);
-          console.log(res.data.addressList)
+          setAddresses(res);
+          console.log(res)
         })
     };
     getData();
+    
   }, []);
 
   const handleDelete = () => {
 
     const newaddress = addresses.filter(item => {
-      return itemdelete.id !== item.id
+      return itemdelete._id !== item._id
     }
     )
     setAddresses(newaddress)
     closeDialogDeleteAll()
-    apiAddress.deleteAddressById({ id: itemdelete.id })
+    console.log(itemdelete._id)
+    apiAddress.deleteAddressById(itemdelete._id)
       .then(res => {
         toast.success("Xóa thành công")
       })
@@ -61,21 +65,20 @@ function Addresses() {
           <EmptyNotify title="Bạn chưa có địa chỉ" />
           : addresses.map((item) => {
             return (
-              <Stack key={item.id}
+              <Stack key={item?._id}
                 direction="row"
                 width="100%"
                 className="items"
               >
                 <Stack className="info">
-                  <Typography className="name">{item.fullName}</Typography>
-                  <Typography className="name">{item.companyName}</Typography>
-                  <Typography className="address">Địa chỉ: {`${item.addressDetail}, ${item.commune.name}, ${item.district.name}, ${item.province.name}`}</Typography>
-                  <Typography className="number">Điện thoại: {item.phoneNumber}</Typography>
+                  <Typography className="name">{item.name}</Typography>
+                  <Typography className="address">Địa chỉ: {`${item?.details}, ${item?.ward}, ${item?.district}, ${item?.province}`}</Typography>
+                  <Typography className="number">Điện thoại: {item?.phone}</Typography>
                 </Stack>
 
                 <Stack direction="row" className="action">
-                  <Link to={`edit/${item.id}`}
-                    state={{ id: item.id }}>
+                  <Link to={`edit/${item._id}`}
+                    state={{ id: item._id }}>
                     <Button className="Modify" variant="text">
                       Chỉnh sửa
                     </Button></Link>

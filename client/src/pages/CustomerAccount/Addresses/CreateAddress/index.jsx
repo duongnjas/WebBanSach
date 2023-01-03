@@ -4,14 +4,10 @@ import {
   Box,
   Typography,
   Stack,
-  Checkbox,
-  RadioGroup,
-  FormControlLabel,
-  Radio,
   Button,
   InputBase
 } from "@mui/material";
-import SelectBoxAddress from "../../../../components/SelectBoxAddress";
+import { useSelector } from "react-redux";
 import "./CreateAddress.scss";
 import { styled } from '@mui/material/styles';
 import { useState } from "react";
@@ -23,10 +19,8 @@ import { toast } from "react-toastify";
 function CreateAddress(props) {
 
   const [fullName, setFullName] = useState("")
-  const [companyName, setCompanyName] = useState("")
   const [phone, setPhone] = useState("")
   const [addressDetail, setAddressDetail] = useState("")
-  const [addressType, setAddressType] = useState("")
   const [addressid, setAddressid] = useState("")
   const [edit, setEdit] = useState(props.edit)
   const [province, setProvince] = React.useState("");
@@ -34,72 +28,53 @@ function CreateAddress(props) {
   const [commune, setCommune] = React.useState("");
   const navigate = useNavigate();
   const params = useParams();
+  const userId = useSelector((state) => state.auth.user)._id;
 
   useEffect(() => {
+
     const loaddata = () => {
       if (edit === true) {
-        apiAddress.getUserAddress()
+        apiAddress.getUserAddress(userId)
           .then(res => {
-            const addresses = res.data.addressList
+            console.log(params);
+            const addresses = res;
             if (addresses) {
-              const address = addresses.find((item) => item.id === params.id)
-
+              const address = addresses.find((item) => item._id === params.id)
               if (address) {
-                setFullName(address.fullName)
-                setCompanyName(address.companyName)
-                setPhone(address.phoneNumber)
-                setAddressDetail(address.addressDetail)
-                setAddressType(address.addressType.id)
-                setCommune(address.commune.id)
-                setDistrict(address.district.id)
-                setProvince(address.province.id)
+                setFullName(address.name);
+                setPhone(address.phone);
+                setAddressDetail(address.details);
+                setCommune(address.ward);
+                setDistrict(address.district);
+                setProvince(address.province);
+                setAddressid(params.id);
               }
               else {
-                navigate("/customer/address/create")
-                toast.error("Địa chỉ này không tồn tại!")
+                navigate("/customer/address/create");
+                toast.error("Địa chỉ này không tồn tại!");
               }
             }
             else {
-              navigate("/customer/address/create")
-              toast.error("Địa chỉ này không tồn tại!")
+              navigate("/customer/address/create");
+              toast.error("Địa chỉ này không tồn tại!");
             }
-
           })
-      }
-      setAddressid(params.id)
+      }   
     }
     loaddata()
      // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [edit])
-
-
-  const handleChangeProvince = (value) => {
-
-    setProvince(value);
-  };
-
-  const handleChangeDistrict = (value) => {
-
-    setDistrict(value);
-  };
-
-
-  const handleChangeCommune = (value) => {
-    setCommune(value);
-  };
   const handleSave = () => {
     const params = {
-      "addressDetail": addressDetail,
-      "addressType": Number(addressType),
-      "commune": commune,
-      "companyName": companyName,
+      "details": addressDetail,
+      "ward": commune,
       "district": district,
-      "fullName": fullName,
+      "name": fullName,
+      "userId":userId,
       "phone": phone,
-      "province": province
-
+      "province": province,
     }
-    if(!(addressDetail&& addressType && commune && companyName && district && fullName && phone && province)) {
+    if(!(addressDetail && commune  && district && fullName && phone && province)) {
       toast.warning("Vui lòng nhập đầy đủ thông tin !!");
       return
     }
@@ -108,10 +83,8 @@ function CreateAddress(props) {
       .then(res => {
         toast.success("Thêm địa chỉ thành công")
         setFullName("")
-        setCompanyName("")
         setPhone("")
         setAddressDetail("")
-        setAddressType(1)
         setCommune("")
         setDistrict("")
         setProvince("")
@@ -123,27 +96,29 @@ function CreateAddress(props) {
   }
 
   const handleUpdate = () => {
+    
     const params = {
-      "addressDetail": addressDetail,
-      "addressType": Number(addressType),
-      "commune": commune,
-      "companyName": companyName,
+      "details": addressDetail,
+      "ward": commune,
       "district": district,
-      "fullName": fullName,
+      "name": fullName,
+      "userId":userId,
       "phone": phone,
-      "province": province
+      "province": province,
     }
-    if(!(addressDetail&& addressType && commune && companyName && district && fullName && phone && province)) {
+    if(!(addressDetail&& commune && district && fullName && phone && province)) {
       toast.warning("Vui lòng nhập đầy đủ thông tin !!");
       return
     }
-    apiAddress.updateUserAddressById(params, addressid)
+    else{
+      apiAddress.updateUserAddressById(params, addressid)
       .then(res => {
         toast.success("Cập nhật thành công")
       })
       .catch(error => {
         toast.error("Cập nhật thất bại!")
       })
+    }
   }
 
   return (
@@ -164,21 +139,6 @@ function CreateAddress(props) {
             ></InputCustom>
           </Stack>
         </Stack>
-
-        <Stack direction="row">
-          <Typography className="create-address__label">
-            Công ty:
-          </Typography>
-          <Stack className="create-address__input">
-            <InputCustom value={companyName} onChange={(event) => {
-              setCompanyName(event.target.value)
-            }}
-              size="small"
-              placeholder="Nhập công ty"
-            ></InputCustom>
-          </Stack>
-        </Stack>
-
         <Stack direction="row">
           <Typography className="create-address__label">
             Số điện thoại:
@@ -193,11 +153,47 @@ function CreateAddress(props) {
           </Stack>
         </Stack>
 
-        <SelectBoxAddress province={province} district={district} commune={commune}
-          onChangeProvince={handleChangeProvince}
-          onChangeDistrict={handleChangeDistrict}
-          onChangeCommune={handleChangeCommune}
-        />
+        <Stack direction="row">
+          <Typography className="create-address__label">
+            Tỉnh/Thành Phố
+          </Typography>
+          <Stack className="create-address__input">
+            <InputCustom value={province} onChange={(event) => {
+              setProvince(event.target.value)
+            }}
+              size="small"
+              placeholder="Nhập tỉnh/thành phố"
+            ></InputCustom>
+          </Stack>
+        </Stack>
+
+        <Stack direction="row">
+          <Typography className="create-address__label">
+            Quận/Huyện
+          </Typography>
+          <Stack className="create-address__input">
+            <InputCustom value={district} onChange={(event) => {
+              setDistrict(event.target.value)
+            }}
+              size="small"
+              placeholder="Nhập quận/huyện"
+            ></InputCustom>
+          </Stack>
+        </Stack>
+
+        <Stack direction="row">
+          <Typography className="create-address__label">
+            Phường/Xã
+          </Typography>
+          <Stack className="create-address__input">
+            <InputCustom value={commune} onChange={(event) => {
+              setCommune(event.target.value)
+            }}
+              size="small"
+              placeholder="Nhập phường/xã"
+            ></InputCustom>
+          </Stack>
+        </Stack>
         <Stack direction="row">
           <Typography className="create-address__label">
             Địa chỉ
@@ -212,33 +208,6 @@ function CreateAddress(props) {
             ></InputCustom>
           </Stack>
         </Stack>
-
-        <Stack direction="row">
-          <Typography className="create-address__label">
-            Loại địa chỉ:
-          </Typography>
-          <RadioGroup value={addressType} onChange={(event) => { setAddressType(event.target.value) }} row>
-            <FormControlLabel
-              value="1"
-              control={<Radio />}
-              label="Nhà riêng/ Chung cư"
-            />
-            <FormControlLabel
-              value="2"
-              control={<Radio />}
-              label="Cơ quan/ Công ty"
-            />
-          </RadioGroup>
-        </Stack>
-
-        <Stack direction="row">
-          <Typography className="create-address__label"></Typography>
-          <Checkbox defaultChecked />
-          <Typography sx={{ margin: "auto 0" }}>
-            Đặt làm địa chỉ mặc định
-          </Typography>
-        </Stack>
-
         <Stack direction="row">
           <Typography className="create-address__label"></Typography>
           <Button

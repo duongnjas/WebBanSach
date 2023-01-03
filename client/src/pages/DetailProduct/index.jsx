@@ -1,220 +1,78 @@
-import React, { useState, useRef, useCallback, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import imgDefault from '../../assets/img/img_default.jpg'
-import ReviewProduct from "./ReviewProduct";
-
+import imgDefault from "../../assets/img/img_default.jpg";
 import {
   Rating,
   Button,
   Grid,
   Box,
   Stack,
-  Typography,
   Modal,
-  FormControlLabel,
   IconButton,
   Tooltip,
   Skeleton,
-} from "@mui/material";
-
+}from "@mui/material";
 import "./DetailProduct.scss";
 import CheckIcon from "@mui/icons-material/Check";
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-
 import CardProduct from "../../components/CardProduct";
 import apiProduct from "../../apis/apiProduct";
 import { addItem } from "../../slices/cartSlice";
 import apiMain from "../../apis/apiMain";
-import apiAddress from "../../apis/apiAddress";
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
-
 import { numWithCommas, roundPrice } from "../../constraints/Util";
-import SelectBoxAddress from "../../components/SelectBoxAddress";
-
 import { toast } from "react-toastify";
-
 import SliderImage from "./SliderImage";
-
-import apiAccount from "../../apis/apiAccount";
+import ReviewProduct from "./ReviewProduct";
 
 function DetailProduct() {
-  const user = useSelector((state) => state.auth.user);
-
+  // const user = useSelector((state) => state.auth.user);
   const [product, setProduct] = useState(null);
   const { slug } = useParams();
 
   useEffect(() => {
     const getProduct = async () => {
       const response = await apiProduct.getProductsBySlug(slug);
+      console.log(response);
       if (response) {
-        if (response.length !== 0) setProduct(prev => prev=response[0]);
+        if (response.length !== 0) setProduct(response);
       }
     };
     getProduct();
+    console.log(`Product: ${product}`);
   }, [slug]);
 
   const [isFavorite, setIsFavorite] = useState(false);
-
-  console.log(slug)
-
-  useEffect(() => {
-    const checkFavorite = async () => {
-      let param = {
-        userId: user.id,
-        productSlug: slug,
-      };
-      await apiAccount.checkWishItem(param).then((res) => {
-        console.log(res);
-        if (res.length > 0) {
-          setIsFavorite(true);
-        }
-      }).catch(err => console.log(err));
-    };
-
-    checkFavorite();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const handleClickFavorite = async () => {
-    if (user === null) {
-      toast.warning("Vui lòng đăng nhập để thực hiện chức năng này");
-    } else {
-      let param = {
-        userId: user.id,
-        productId: product.id,
-        productImg: product.image,
-        productName: product.name,
-        productPrice: product.price,
-        productDiscount: product.discount,
-        productRate: product.rate,
-        productSold: product.sold,
-        productSlug: product.slug,
-      };
-      setIsFavorite((prev) => !prev);
-
-      if (isFavorite === false) {
-        await apiAccount
-          .postWishItem(param)
-          .then(toast.success("Đã thêm vào danh sách yêu thích"))
-          .catch((err) => toast.error(err));
-      } else {
-        var itemId;
-
-        await apiAccount.checkWishItem(param).then((res) => {
-          itemId = res[0].id;
-        });
-
-        await apiAccount
-          .deleteWishItem(itemId)
-          .then(toast.info("Đã xóa khỏi danh sách yêu thích"))
-          .catch((err) => toast.error(err));
-      }
-    }
-  };
-
   const [expandContent, setExpandContent] = useState(false);
   const [productSimilars, setProductSimilars] = useState([]);
-
   const [quantity, setQuantity] = useState(1);
-  const [address, setAddress] = useState("");
-  const [listAddress, setListAddress] = useState([
-    { id: 0, text: "Chọn địa chỉ khác" },
-  ]);
-  const [addressCustom, setAddressCustom] = useState("");
-
   const descriptionRef = useRef(null);
-
-  const [province, setProvince] = useState("");
-  const [district, setDistrict] = useState("");
-  const [commune, setCommune] = useState("");
-
-  const [value, setValue] = React.useState("0");
   const [modalSlider, setModelSlider] = useState(false);
   const [loading, setLoading] = React.useState(true);
-  const [choose, setChoose] = useState({});
   const [indexImg, setIndexImg] = useState(0);
   const dispatch = useDispatch();
 
+  //xem hinh ảnh
   const openModalSlider = () => setModelSlider(true);
 
   const closeModalSlider = () => {
     setModelSlider(false);
   };
 
-  const handleChangeAddress = (event) => {
-    setValue(event.target.value);
-  };
-
-  const [modal, setModal] = useState(false);
-  const openModal = () => setModal(true);
-
-  const closeModal = () => {
-    setModal(false);
-  };
-
-  useEffect(() => {
-    const onChangeValue = () => {
-      if (value === "0") {
-        setAddress(addressCustom);
-      } else {
-        let addressSelect = listAddress.find((item) => item.id === value);
-        if (addressSelect) {
-          setAddress(
-            `${addressSelect.commune.name}, ${addressSelect.district.name}, ${addressSelect.province.name}`
-          );
-        }
-      }
-    };
-    onChangeValue();
-  }, [value, addressCustom, listAddress]);
-
-  useEffect(() => {
-    const getListAddress = async () => {
-      if (user)
-        apiAddress
-          .getUserAddress()
-          .then((response) => {
-            setListAddress((pre) => [...response.data.addressList, ...pre]);
-          })
-          .catch((err) => {
-            setListAddress((pre) => [...pre]);
-          });
-      else setListAddress((pre) => [...pre]);
-    };
-    getListAddress();
-  }, [user]);
-
-  const setAddressDetails = useCallback((newAddress) => {
-    setAddressCustom(newAddress);
-  }, []);
-
-  const handleChangeProvince = useCallback((value) => {
-    setProvince(value);
-  }, []);
-
-  const handleChangeDistrict = useCallback((value) => {
-    setDistrict(value);
-  }, []);
-
-  const handleChangeCommune = useCallback((value) => {
-    setCommune(value);
-  }, []);
-
   useEffect(() => {
     const getData = async () => {
-      let param = {
-        _page: 1,
-        _limit: 6,
-      };
-      const response = await apiMain.getProducts(param);
+      // let param = {
+      //   _page: 1,
+      //   _limit: 6,
+      // };
+      const response = await apiMain.getProducts();
       if (response) {
-        setProductSimilars((pre) => [...pre, ...response.data]);
+        setProductSimilars(response);
       }
     };
     getData();
@@ -224,11 +82,11 @@ function DetailProduct() {
     dispatch(
       addItem({
         choose: false,
-        id: product.id,
+        id: product._id,
         name: product.name,
         slug: product.slug,
-        image: product.image,
-        price: product.price,
+        images: product.images,
+        price: product.price*(1-product.discount/100),
         quantity,
       })
     );
@@ -250,15 +108,6 @@ function DetailProduct() {
     setExpandContent((pre) => !pre);
   };
 
-  const onChangeOption = (optionId, itemId) => {
-    let optionSelect = product.details.options.find(
-      (item) => item.id === optionId
-    );
-    let newChoose = { ...choose };
-    newChoose[optionSelect.name] = itemId;
-    setChoose(newChoose);
-  };
-
   const onChangeimg = (index) => {
     setIndexImg(index);
   };
@@ -266,27 +115,8 @@ function DetailProduct() {
   useEffect(() => {
     //xử lý hiển thị nội dung mô tả sản phẩm
     descriptionRef.current.innerHTML = product?.details?.description || "";
-    document.title =
-      product?.name ||
-      "Web bán sách";
-      if(product){
-        let newChoose = {}
-        product.details.options.forEach(item => {
-          newChoose[item.name] = item.values[0].id
-        })
-        setChoose(newChoose)
-      }
+    document.title = product?.name || "Web bán sách";
   }, [product]);
-
-  // const color = [
-  //   { name: "đỏ", value: "#FF0000" },
-  //   { name: "cam", value: "#FFA500" },
-  //   { name: "vàng", value: "#FFFF00" },
-  //   { name: "xanh lá", value: "#00FF00" },
-  //   { name: "xanh dương", value: "#00FFFF" },
-  //   { name: "trắng", value: "#FFFFFF" },
-  //   { name: "đen", value: "#000000" },
-  // ];
 
   return (
     <>
@@ -304,7 +134,7 @@ function DetailProduct() {
                 onLoad={() => setLoading(false)}
                 src={product?.details.images[indexImg]}
                 alt=""
-                onError={err=>err.target.src=imgDefault}
+                onError={(err) => (err.target.src = imgDefault)}
               />
             </Box>{" "}
             <Stack
@@ -324,7 +154,11 @@ function DetailProduct() {
                             indexImg === index ? "selected" : ""
                           }`}
                         >
-                          <img src={imgs} alt="" onError={err=>err.target.src= imgDefault} />
+                          <img
+                            src={imgs}
+                            alt=""
+                            onError={(err) => (err.target.src = imgDefault)}
+                          />
                         </Box>
                       ) : (
                         <Box
@@ -402,62 +236,26 @@ function DetailProduct() {
                 <Skeleton animation="wave" height={40} width="100%" />
               )}
             </Box>
-            {product?.details.options.map((itemOpt) => {
-              let select = itemOpt.values.find(
-                (item) => choose[itemOpt.name] === item.id
-              );
-              return (
-                <Box className="product-option">
-                  <Box className="product-option__title">
-                    {itemOpt.name} : <span>{select && select.name}</span>
-                  </Box>
-                  <Box className="product-option__list">
-                    {itemOpt.values.map((item) => {
-                      let selected = choose[itemOpt.name] === item.id;
-                      return (
-                        <Box
-                          key={item.id}
-                          onClick={() => onChangeOption(itemOpt.id, item.id)}
-                          className={`product-option__item ${
-                                              itemOpt.name === "Màu sắc"
-                                                ? "product-option__item--color"
-                                                : "product-option__item--size"
-                                            } ${selected ? "selected" : ""}`}
-                        >
-                          {/* {itemOpt.name === "colors" && (
-                            <img src={item.imgUrl} alt="" />
-                          )} */}
-                          {item.value}
-                          <span>
-                            <CheckIcon
-                              sx={{ fontSize: "12px", color: "#fff" }}
-                            />
-                          </span>
-                        </Box>
-                      );
-                    })}
-                  </Box>
+            <Box className="product-option">
+              <Box className="product-option__title" >
+                {product?.details?.options?.name}
+              </Box>
+              <Box className="product-option__list">
+                <Box className="product-option__item">
+                  {product?.details?.options?.values}
+                  <span>
+                    <CheckIcon sx={{ fontSize: "12px", color: "#fff" }} />
+                  </span>
                 </Box>
-              );
-            })}
-            <Box className="product-coupon">
-              <Box className="product-coupon__title">8 Mã giảm giá</Box>
-              <Box className="product-coupon__list">
-                <Box className="product-coupon__item">Giảm 80k</Box>
-                <Box className="product-coupon__item">Giảm 20k</Box>
-                <ArrowForwardIosIcon sx={{ color: "#1890ff" }} />
               </Box>
             </Box>
-
-            <Box className="detailProduct__address">
-              <span>Giao đến </span>
-              <span>
-                {address ? address : "TP. Nha Trang, P. Vĩnh Trường, Khánh Hòa"}
-              </span>
-              <span> - </span>
-              <span onClick={openModal} style={{ cursor: "pointer" }}>
-                Đổi địa chỉ
-              </span>
+            <Box className="product-coupon">
+              <Box className="product-coupon__title">Chương trình giảm giá của sản phẩm:</Box>
+              <Box className="product-coupon__list">
+                <ArrowBackIosNewIcon sx={{ color: "#ff7337" }} />
+                <Box className="product-coupon__item">Giảm {product?.discount}%</Box>   
+                <ArrowForwardIosIcon sx={{ color: "#ff7337" }} />
+              </Box>
             </Box>
 
             <Box className="product-quanlity">
@@ -504,7 +302,7 @@ function DetailProduct() {
                 sx={{ border: "1px solid silver" }}
                 color="error"
                 size="large"
-                onClick={handleClickFavorite}
+                //onClick={handleClickFavorite}
               >
                 {isFavorite ? (
                   <Tooltip title="Xóa khỏi danh sách yêu thích">
@@ -530,29 +328,6 @@ function DetailProduct() {
             ))}
           </Grid>
         </Box>
-
-        <Box
-          className="productSpecification"
-          bgcolor="white"
-          p={2}
-          borderRadius="4px"
-          mb={1}
-        >
-          <Box className="productSpecification__title">Thông Tin Chi Tiết</Box>
-          <Box className="productSpecification__table">
-            <table>
-              <tbody>
-                {product?.details.specifications.map((spec) => (
-                  <tr>
-                    <td>{spec.name}</td>
-                    <td>{spec.value}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </Box>
-        </Box>
-
         <Box
           className="descriptionProduct"
           bgcolor="white"
@@ -575,56 +350,6 @@ function DetailProduct() {
           </Box>
         </Box>
       </Box>
-
-      <Modal sx={{ overflowY: "scroll" }} open={modal} onClose={closeModal}>
-        <Box className="modal-login" width="800px">
-          <Stack spacing="16px">
-            <Typography style={{ fontSize: "24px" }}>
-              {" "}
-              Địa chỉ giao hàng
-            </Typography>
-            <Typography>
-              {" "}
-              Hãy chọn địa chỉ nhận hàng để được dự báo thời gian giao hàng cùng
-              phí đóng gói, vận chuyển một cách chính xác nhất.
-            </Typography>
-
-            <RadioGroup
-              aria-labelledby="demo-controlled-radio-buttons-group"
-              name="radio-buttons-group"
-              value={value}
-              onChange={handleChangeAddress}
-            >
-              {listAddress.map((addr) => (
-                <FormControlLabel
-                  value={addr.id}
-                  control={<Radio />}
-                  label={
-                    addr.id === 0
-                      ? addr.text
-                      : `${addr.commune.name}, ${addr.district.name}, ${addr.province.name}`
-                  }
-                />
-              ))}
-            </RadioGroup>
-            <Stack
-              sx={{ display: `${value === "0" ? "flex" : "none"}` }}
-              spacing={2}
-            >
-              <SelectBoxAddress
-                province={province}
-                district={district}
-                commune={commune}
-                onChangeProvince={handleChangeProvince}
-                onChangeDistrict={handleChangeDistrict}
-                onChangeCommune={handleChangeCommune}
-                setAddressDetails={setAddressDetails}
-              />
-            </Stack>
-          </Stack>
-        </Box>
-      </Modal>
-
       <Modal open={modalSlider} onClose={closeModalSlider}>
         <Box className="modal-images" sx={{ width: "100%" }}>
           <SliderImage
@@ -634,7 +359,7 @@ function DetailProduct() {
         </Box>
       </Modal>
 
-      <ReviewProduct product={product}/>
+      <ReviewProduct product={product} />
     </>
   );
 }

@@ -6,7 +6,6 @@ import apiCart from "../../../../apis/apiCart";
 import { toast } from "react-toastify";
 import { numWithCommas } from "../../../../constraints/Util";
 import { orderTabs } from "../../../../constraints/OrderItem";
-import apiNotify from "../../../../apis/apiNotify";
 
 function DetailOrder() {
   const id = useParams().id;
@@ -41,16 +40,6 @@ function DetailOrder() {
       .changeTypeOrder(params, id)
       .then((res) => {
         toast.success("Xác nhận thành công");
-        let notify = {
-          userId: order.idUser,
-          orderId: order.id,
-          type: "order",
-          text: "Đơn hàng của bạn đã được giao",
-          date: Date.now(),
-          seen: false,
-          link:"",
-        };
-        apiNotify.postNotify(notify);
       })
       .catch((error) => {
         toast.error("Xác nhận không thành công");
@@ -67,18 +56,7 @@ function DetailOrder() {
     apiCart
       .changeTypeOrder(params, id)
       .then((res) => {
-        toast.success("Hủy thành công");
-        let notify = {
-          userId: order.idUser,
-          orderId: order.id,
-          type: "order",
-          text: "Đơn hàng của bạn đã bị hủy",
-          date: Date.now(),
-          seen: false,
-          link:"",
-        };
-       
-        apiNotify.postNotify(notify);
+        toast.success("Hủy thành công");    
       })
       .catch((error) => {
         toast.error("Hủy không thành công");

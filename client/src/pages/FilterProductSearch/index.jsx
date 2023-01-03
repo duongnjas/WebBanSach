@@ -10,18 +10,15 @@ import {
   Tab,
   Tabs,
 } from "@mui/material";
-import "./FilterProductSearch.scss";
 import StarIcon from "@mui/icons-material/Star";
 import CardProduct from "../../components/CardProduct";
 import apiProduct from "../../apis/apiProduct";
-import { useParams } from "react-router-dom";
+import { useParams} from "react-router-dom";// de lay slug
 
 function FilterProductSearch(props) {
 
   const slug = useParams().slug;
-
   const [value, setValue] = useState(0);
-
 
   const [minPrice, setMinPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(0);
@@ -35,27 +32,27 @@ function FilterProductSearch(props) {
 
   useEffect(() => {
     var querySearch = "";
+    console.log(`props: ${props}`);
+    console.log(`Và ///// ${querySearch}`);
     const getData = async () => {
-      console.log(minPrice);
-      console.log(maxPrice);
-      if (rating === 0) {
-        if (!isApplyPrice) {
-          querySearch = `?q=${slug}`;
-        } else {
-          querySearch = `?q=${slug}&price_gte=${minPrice}&price_lte=${maxPrice}`;
-        }
-      } else {
-        if (minPrice === 0 && maxPrice === 0) {
-          querySearch = `?q=${slug}&rate=${rating}`;
-        } else {
-          querySearch = `?q=${slug}&rate=${rating}&price_gte=${minPrice}&price_lte=${maxPrice}`;
-        }
-      }
+      // if (rating === 0) {
+      //   if (!isApplyPrice) {
+      //     querySearch = `?q=${slug}`;
+      //   } else {
+      //     querySearch = `?q=${slug}&price_gte=${minPrice}&price_lte=${maxPrice}`;
+      //   }
+      // } else {
+      //   if (minPrice === 0 && maxPrice === 0) {
+      //     querySearch = `?q=${slug}&rate=${rating}`;
+      //   } else {
+      //     querySearch = `?q=${slug}&rate=${rating}&price_gte=${minPrice}&price_lte=${maxPrice}`;
+      //   }
+      // }
 
       apiProduct
-        .getProductsBySearch(querySearch)
+        .getProductsBySearch(props)
         .then((res) => {
-          console.log("search slug: ", res);
+          console.log("search product ", res);
           setFilteredProducts(res);
         })
         .catch((error) => {
@@ -66,25 +63,6 @@ function FilterProductSearch(props) {
     getData();
      // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slug, rating, isApplyPrice]);
-
-  const handleApplyPrice = () => {
-    // setIsApplyPrice((prev) => !prev);
-    // console.log(isApplyPrice);
-    // if (isApplyPrice) {
-    //   setMinPrice((prev) => (prev = watch("minPrice")));
-    //   setMaxPrice((prev) => (prev = watch("maxPrice")));
-    // } else {
-    //   setMinPrice(0);
-    //   setMaxPrice(0);
-    // }
-    if (!isApplyPrice) {
-      setIsApplyPrice(true);
-    } else {
-      setMinPrice(0);
-      setMaxPrice(0);
-      setIsApplyPrice(false);
-    }
-  };
 
 
   const onChangeMinPrice = (e) => {
@@ -150,7 +128,7 @@ function FilterProductSearch(props) {
           </Box>
 
           <Button
-            onClick={handleApplyPrice}
+            //onClick={handleApplyPrice}
             variant="outlined"
             sx={{ width: "100px", height: "26px", fontWeight: 400 }}
           >

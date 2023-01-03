@@ -37,7 +37,6 @@ navigate('/')
       });
   }
 
-
   return (
     <Stack direction="row">
       <Stack sx={{ flex: 5 }} spacing={2}>
@@ -55,14 +54,14 @@ navigate('/')
           <Stack spacing={2}>
             <Stack>
               <TextField
-                {...register("email", {
-                  required: "Hãy nhập địa chỉ email",
+                {...register("sđt", {
+                  required: "Hãy nhập địa chỉ sđt",
                   pattern: {
-                    value: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
-                    message: "Địa chỉ email không hợp lệ",
+                    //value: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
+                    message: "Số điện thoại không có tài khoản ",
                   }
                 })}
-                label="Email"
+                label="Số điện thoại"
                 variant="standard"
               />
               {errors.email && (

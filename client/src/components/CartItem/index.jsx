@@ -7,7 +7,7 @@ import { useDispatch } from "react-redux";
 import { removeItem, updateItem } from "../../slices/cartSlice";
 import {Link} from "react-router-dom";
 
-function CartItem(props) {
+function CartItem(props) { //các item của cart
   const [data, setData] = useState(props.data);
   const [quantity, setQuantity] = useState(props.data.quantity);
 
@@ -88,7 +88,7 @@ function CartItem(props) {
       <Box className="cart-item cart">
         <Stack direction="row" alignItems="center" className="cart-item__cell cart-item__description">
           <Checkbox checked={data?.choose} onChange={handleChangeChoose} className="cart__checkbox" />
-          <img src={data?.image} alt="" />
+          <img src={data?.images} alt="" />
           <Stack className="cart-item__content">
             <Link to={data?.slug?`/product/${data.slug}`:''}>
               <Typography fontSize="13px" className="text-overflow-2-lines" variant="h5">
