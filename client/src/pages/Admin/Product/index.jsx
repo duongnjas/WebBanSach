@@ -1,243 +1,189 @@
-import React from 'react'
-import {
-    Box,
-    Typography,
-    Stack,
-    Button,
-    TextField,
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableRow,
-    Pagination,
-    MenuItem,
-    FormControl,
-    Select,
-    Checkbox,
-    Modal
-} from '@mui/material';
-import "./Product.scss"
-import { Link } from 'react-router-dom';
-import EditIcon from '@mui/icons-material/Edit';
-import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import SearchIcon from "@mui/icons-material/Search";
+import { useEffect, useMemo, useState } from "react";
+import { Avatar, Box, Typography, Button, Stack } from "@mui/material";
+import { DataGrid, gridClasses } from "@mui/x-data-grid";
+import apiProduct from "../../../apis/apiProduct";
+import { useNavigate } from "react-router-dom";
+import moment from "moment";
+import { grey } from "@mui/material/colors";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogTitle from "@mui/material/DialogTitle";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 
 function Product() {
-    const [modalDelete, setModalDelete] = React.useState(false);
-    const openModalDelete = () => setModalDelete(true);
-    const closeModalDelete = () => setModalDelete(false);
-    const [print, setPrint] = React.useState('');
+  const [products, setProducts] = useState([]);
+  const [pageSize, setPageSize] = useState(5);
+  const [open, setOpen] = useState(false);
+  const [productId, setProductsId] = useState([]);
+  const navigate = useNavigate();
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const handleDelete = () => {
+    if (open === true) {
+      apiProduct
+        .removeProduct(productId)
+        .then((res) => {
+          toast.success("Xóa thành công");
+        })
+        .catch((error) => {
+          toast.error("Xóa thất bại!");
+        });
+    }
+    setOpen(false);
+  };
+  const handleUpdate = () => {
+    navigate(`edit/${productId}`)
+  };
 
-    const handleChangePrint = (event) => {
-        setPrint(event.target.value);
+  const onRowsSelectionHandler = (ids) => {
+    const selectedRowsData = ids.map((id) =>
+      products.find((row) => row._id === id)
+    );
+    //console.log(selectedRowsData[0]?._id);
+    setProductsId(selectedRowsData[0]?._id);
+  };
+
+
+  useEffect(() => {
+    const getUsers = async () => {
+      try {
+        const response = await apiProduct.getAllProducts();
+        //console.log(response);
+        setProducts(response);
+      } catch (err) {
+        console.log(err);
+      }
     };
-    const [update, setUpdate] = React.useState('');
+    getUsers();
+  }, [products]);
+  const columns = useMemo(
+    () => [
+      {
+        field: "images",
+        headerName: "Avatar",
+        width: 60,
+        renderCell: (params) => (
+          <Avatar
+            src={
+              "https://www.nicepng.com/png/detail/12-120709_png-file-human-icon-png.png"
+            }
+          />
+        ),
+        sortable: false,
+        filterable: false,
+      },
+      { field: "name", headerName: "Name", width: 170 },
+      { field: "rate", headerName: "Rate", width: 70 },
+      { field: "price", headerName: "Price", width: 70 },
+      { field: "discount", headerName: "Discount", width: 70},
+      { field: "slug", headerName: "Slug", width: 250},
+      {
+        field: "createdAt",
+        headerName: "Created At",
+        width: 200,
+        renderCell: (params) =>
+          moment(params.row.createdAt).format("DD-MM-YYYY HH:MM:SS"),
+      },
+      { field: "_id", headerName: "Id", width: 220 },
+      // {
+      //   field: "Delete",
+      //   width: 150,
+      //   renderCell: (cellValue) => {
+      //     return (
+      //       <div>
+      //     </div>
+      //     );
+      //   },
+      // },
+    ],
+    []
+  );
 
-    const handleChangeUpdate = (event) => {
-        setUpdate(event.target.value);
-    };
-    const [select, setSelect] = React.useState('');
-
-    const handleChangeSelect = (event) => {
-        setSelect(event.target.value);
-    };
-    return (
-        <>
-            <Box className="productAdmin">
-                <Stack direction="row" mb={1} justifyContent="space-between" alignItems="center" sx={{ backgroundColor: "#FFF", height: "80px" }} px={2}>
-                    <Typography >Quản lý sản phẩm</Typography>
-                    <Link to='/admin/product/create'>
-                        <Button variant="outlined" pr={2}>Tạo sản phẩm</Button>
-                    </Link>
-                </Stack>
-                
-
-                <Box sx={{ backgroundColor: "#fff" }} p={2}>
-                    <Stack direction="row">
-                        <FormControl sx={{ m: 1, minWidth: 120, flex: 1 }}>
-                            <Select
-                                value={print}
-                                onChange={handleChangePrint}
-                                displayEmpty
-                                inputProps={{ 'aria-label': 'Without label' }}
-                                cursor="pointer"
-                            >
-                                <MenuItem value="">
-                                    Xuất danh sách tất cả sản phẩm
-                                </MenuItem>
-                                <MenuItem value={10}>Hạn sử dụng</MenuItem>
-                                <MenuItem value={20}>Xuất nhập tồn</MenuItem>
-                                <MenuItem value={30}>Thông tin chi tiết</MenuItem>
-                            </Select>
-                        </FormControl>
-
-                        <FormControl sx={{ m: 1, minWidth: 120, flex: 1 }}>
-                            <Select
-                                value={select}
-                                onChange={handleChangeSelect}
-                                displayEmpty
-                                inputProps={{ 'aria-label': 'Without label' }}
-                                disabled
-                            >
-                                <MenuItem value="">
-                                    Xuất danh sách sản phẩm đã chọn
-                                </MenuItem>
-                                {/* <MenuItem value={10}></MenuItem>
-                        <MenuItem value={20}></MenuItem>
-                        <MenuItem value={30}></MenuItem> */}
-                            </Select>
-                        </FormControl>
-
-                        <FormControl sx={{ m: 1, minWidth: 120, flex: 1 }}>
-                            <Select
-                                value={update}
-                                onChange={handleChangeUpdate}
-                                displayEmpty
-                                inputProps={{ 'aria-label': 'Without label' }}
-                                cursor="pointer"
-                            >
-                                <MenuItem value="">
-                                    Cập nhật danh sách sản phẩm
-                                </MenuItem>
-                                <MenuItem value={10}>Thay đổi giá, trạng thái sản phẩm</MenuItem>
-                                <MenuItem value={20}>Thay đổi kiểu nhập kho, số lượng</MenuItem>
-                                <MenuItem value={30}>Thêm mincode của sản phẩm</MenuItem>
-                                <MenuItem value={40} disabled>Ẩn sản phẩm</MenuItem>
-                                <MenuItem value={50} disabled>Bật sản phẩm hàng loạt</MenuItem>
-                                <MenuItem value={60} disabled>Tắt sản phẩm hàng loạt</MenuItem>
-                            </Select>
-                        </FormControl>
-                    </Stack>
-                    <Stack direction="row" justifyContent="center" alignItems="center" spacing={2} py={2}>
-                        <Typography sx={{ fontSize: "16px", fontWeight: "bold" }}>Tổng cộng có: 7 bản ghi</Typography>
-                        <Pagination count={7} color="primary" variant="outlined" shape="rounded" />
-                        {/* <TextField id="outlined-basic" label="Nhập số trang" variant="outlined" size='small' />
-                        <Typography sx={{ fontSize: "16px", fontWeight: "bold" }}>Hiển thị: </Typography>
-                        <FormControl sx={{ flex: 1 }} >
-                            <Select
-                                labelId="demo-simple-select-label"
-                                id="demo-simple-select"
-                                value={page}
-                                onChange={handleChange}
-                                size="small"
-                            >
-                                <MenuItem value={10} defaultValue>10/Trang</MenuItem>
-                                <MenuItem value={20}>20/Trang</MenuItem>
-                                <MenuItem value={30}>30/Trang</MenuItem>
-                            </Select>
-                        </FormControl> */}
-                        <Stack direction="row" sx={{ width: "500px", position: "relative" }}>
-                            <TextField
-                                id="outlined-basic"
-                                label="Search"
-                                variant="outlined"
-                                sx={{ width: "100%" }}
-                                size="small"
-                            />
-                            <span className="order__iconSearch">
-                                <SearchIcon sx={{ fontSize: "28px" }} />
-                            </span>
-                        </Stack>
-                    </Stack>
-                    <Table className="productTable" sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
-                        <TableHead>
-                            <TableRow>
-                                <TableCell justifyContent="center">
-                                    <Checkbox></Checkbox>
-                                </TableCell>
-                                <TableCell>Tên sản phẩm</TableCell>
-                                <TableCell>Giá bán</TableCell>
-                                <TableCell>Nhà cung cấp</TableCell>
-                                <TableCell>Danh mục</TableCell>
-                                <TableCell>Thương hiệu</TableCell>
-                                <TableCell>Trạng thái</TableCell>
-                                <TableCell>Ngày tạo</TableCell>
-                                <TableCell>Lợi nhuận</TableCell>
-                                <TableCell>Thao tác</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {[1, 2, 3, 4, 5, 6, 7].map(row => (
-                                <TableRow key={row} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                                    <TableCell>
-                                        <Checkbox></Checkbox>
-                                    </TableCell>
-                                    <TableCell>
-                                        <Stack>
-                                            <Typography sx={{ color: "#1890ff" }}>Điện Thoại OnePlus  Nord CE 5G (12GB/256G) - Hàng Chính Hãng</Typography>
-                                            <Typography>ID: 123456789</Typography>
-                                            <Typography>SKU: 123456789</Typography>
-                                            <Typography>MID: 123456789</Typography>
-                                        </Stack>
-                                    </TableCell>
-                                    <TableCell>
-                                        <Stack direction="row" justifyContent="center">
-                                            <Typography sx={{ margin: "auto 0" }}>7.898.000</Typography>
-                                            <EditIcon sx={{ width: "12px" }} />
-                                        </Stack>
-                                    </TableCell>
-                                    <TableCell align='center'>
-                                        <Typography>One Plus</Typography>
-                                    </TableCell>
-                                    <TableCell align='center'>
-                                        <Typography>Điện thoại</Typography>
-                                    </TableCell>
-                                    <TableCell align='center'>
-                                        <Typography>One Plus</Typography>
-                                    </TableCell>
-                                    <TableCell align='center'>
-                                        <Typography>Đang bán</Typography>
-                                    </TableCell>
-                                    <TableCell>
-                                        <Typography>21/07/2022</Typography>
-                                        <Typography>11:04:00</Typography>
-                                    </TableCell>
-                                    <TableCell align='center'>
-                                        <Typography>0 - 0</Typography>
-                                    </TableCell>
-                                    <TableCell align='center'>
-                                        <Stack spacing={1} justifyContent="center" py={1}>
-                                            <Button variant="contained">Sửa</Button>
-                                            <Button onClick={openModalDelete} variant="outlined" color="error">
-                                                Xóa
-                                            </Button>
-                                        </Stack>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                    <Modal
-                        sx={{ overflowY: "scroll" }}
-                        open={modalDelete}
-                        onClose={closeModalDelete}
-                    >
-                        <Stack className="modal-info" direction="row" spacing={2} justifyContent='center' width='26rem' >
-                            <Stack>
-                                <InfoOutlinedIcon color="primary" />
-                            </Stack>
-
-                            <Stack spacing={3}>
-                                <Stack>
-                                    <Typography fontWeight="bold">
-                                        Bạn có chắc muốn xoá sản phẩm?
-                                    </Typography>
-                                </Stack>
-
-                                <Stack direction="row" justifyContent="flex-end" spacing={1}>
-                                    <Button onClick={closeModalDelete} variant="outlined">Hủy</Button>
-                                    <Button variant="contained">Xóa bỏ</Button>
-                                </Stack>
-                            </Stack>
-                        </Stack>
-                    </Modal>
-                </Box>
-            </Box>
-
-
-        </>
-    )
+  return (
+    <>
+      <Box className="productAdmin">
+        <Stack
+          direction="row"
+          mb={1}
+          justifyContent="space-between"
+          alignItems="center"
+          sx={{ backgroundColor: "#FFF", height: "80px" }}
+          px={2}
+        >
+          <Typography>Quản lý sản phẩm</Typography>
+          <Link to="/admin/product/create">
+            <Button variant="outlined" pr={2}>
+              Tạo sản phẩm
+            </Button>
+          </Link>
+        </Stack>
+        <Box
+          sx={{
+            height: 470,
+            width: "100%",
+          }}
+        >
+          <DataGrid
+            columns={columns}
+            rows={products}
+            getRowId={(row) => row._id}
+            rowsPerPageOptions={[5, 10, 20]}
+            pageSize={pageSize}
+            checkboxSelection
+            disableSelectionOnClick
+            onSelectionModelChange={(ids) => onRowsSelectionHandler(ids)}
+            onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+            getRowSpacing={(params) => ({
+              top: params.isFirstVisible ? 0 : 5,
+              bottom: params.isLastVisible ? 0 : 5,
+            })}
+            sx={{
+              [`& .${gridClasses.row}`]: {
+                bgcolor: (theme) =>
+                  theme.palette.mode === "light" ? grey[200] : grey[900],
+              },
+            }}
+          />
+          <Button
+            variant="outlined"
+            startIcon={<DeleteIcon />}
+            onClick={handleClickOpen}
+          >
+            Delete
+          </Button>
+          <Button
+            variant="outlined"
+            startIcon={<DeleteIcon />}
+            onClick={handleUpdate}
+          >
+            Sửa
+          </Button>
+          <Dialog
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">
+              {"Bạn có muốn xóa hay không?"}
+            </DialogTitle>
+            <DialogActions>
+              <Button onClick={handleClose} autoFocus>
+                Hủy
+              </Button>
+              <Button onClick={() => handleDelete()}>Xóa</Button>
+            </DialogActions>
+          </Dialog>
+        </Box>
+      </Box>
+    </>
+  );
 }
 
-export default Product
+export default Product;

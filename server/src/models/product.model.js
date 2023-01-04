@@ -11,7 +11,7 @@ const productSchema = mongoose.Schema({
     },
     rate: {
         type: Number, 
-        required: true,
+        required: false,
         min: 0
     },
     price: {
@@ -30,7 +30,7 @@ const productSchema = mongoose.Schema({
     },
     sold: {
         type: Number, 
-        required: true,
+        required: false,
         min: 0,
     },
     details: {
@@ -55,7 +55,7 @@ const productSchema = mongoose.Schema({
         },
         description: {
             type: String,
-            required: false
+            required: true
         }
     },
 }, {

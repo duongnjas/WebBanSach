@@ -37,7 +37,7 @@ orderRouter.put("/:id",UpdateOrderType);
 orderRouter.delete('/delete/:id', DeleteOrder);
 orderRouter.get("/:id", GetOrderByUser);
 orderRouter.get("/get/:id", GetOrderById);
-// orderRouter.get("/", GetAllOrder);
+orderRouter.get("/", GetAllOrder);
 // orderRouter.get("/orderPaypal", GetAllOrderPaypal);
 // orderRouter.get("/orderPendding", GetAllOrderPendding);
 // orderRouter.get("/orderShipping", GetAllOrderShipping);

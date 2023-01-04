@@ -1,135 +1,212 @@
-import * as React from "react";
-import "./Dashboard.scss";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Stack from "@mui/material/Stack";
-import GroupsIcon from "@mui/icons-material/Groups";
-import InventoryIcon from "@mui/icons-material/Inventory";
-import DescriptionIcon from "@mui/icons-material/Description";
+import { Group } from "@mui/icons-material";
+import DvrIcon from "@mui/icons-material/Dvr";
 import PaidIcon from "@mui/icons-material/Paid";
+import DevicesOtherIcon from "@mui/icons-material/DevicesOther";
 import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-} from "chart.js";
-import { Bar } from "react-chartjs-2";
-import {numWithCommas} from "../../../constraints/Util"
+  Avatar,
+  Box,
+  Divider,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Paper,
+  Stack,
+  Typography,
+} from "@mui/material";
+import React, { useEffect, useState } from "react";
+import moment from "moment";
+import apiUser from "../../../apis/apiUser";
+import apiProduct from "../../../apis/apiProduct";
+import apiCart from "../../../apis/apiCart";
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
-);
-const labels = ["January", "February", "March", "April", "May", "June", "July"];
-export const options = {
-  responsive: true,
-  plugins: {
-    legend: {
-      position: "top",
-    },
-    title: {
-      display: false,
-      text: "Biểu đồ doanh thu",
-    },
-  },
-};
-export const data = {
-  labels,
-  datasets: [
-    {
-      label: "Khách hàng",
-      data: [35, 65, 95, 35, 67, 70, 40],
-      backgroundColor: "rgba(255, 99, 132, 0.5)",
-    },
-    {
-      label: "Doanh thu",
-      data: [350, 450, 750, 650, 470, 769, 570],
-      backgroundColor: "rgba(53, 162, 235, 0.5)",
-    },
-  ],
-};
+const Dashboard = () => {
+  const [users, setUsers] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [orders, setOrdrers] = useState([]);
+  // const [page, setPage] = useState(1);
+  // const [totalPage, setTotalPage] = useState(1);
+  // const size = 5
 
-function Dashboard() {
+  useEffect(() => {
+
+    const getUsers = async () => {
+      const response = await apiUser.getUsers();
+      // console.log(response);
+      //setTotalPage(Math.ceil(response.length / size));
+      setUsers(response);
+    };
+    getUsers();
+
+    const getProducts = async () => {
+      const response = await apiProduct.getAllProducts();
+      //console.log(response);
+      setProducts(response);
+    };
+    getProducts();
+
+    const getOrders = async () => {
+      const response = await apiCart.getAllOrders();
+      //console.log(response);
+      setOrdrers(response);
+    };
+    getOrders();
+  }, []);
+
+
+  const TotalBills = () => {
+    let total = 0;
+    orders.forEach(function (item) {
+      total += item.totalPrice + item.feeShip;
+    });
+    return total;
+  };
+  const format = (n) => {
+    return "$" + n.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+  };
+
   return (
-    <Box>
-      <Stack spacing={3} pl="5rem" mt="2rem">
-        <Stack direction="row" spacing={4}>
-          {
-            items.map(item => {
-              let iconColor = item.iconColor
-              return (
-                <Stack className="dashboard__item" key={item.id} direction="row" >
-                  <Stack className="dashboard__icon" bgcolor={item.bgcolor}>
-                    <GroupsIcon sx={{ fontSize: 40, color: iconColor }} />
-                  </Stack>
-                  <Stack alignItems="center" justifyContent="center">
-                    <Typography className="dashboard__title">
-                      {item.title}
-                    </Typography>
-                    <Typography color="#2a2a2a" fontWeight={500}>
-                      {`${numWithCommas(item.value)} ${item.unit}`}
-                    </Typography>
-                  </Stack>
-                </Stack>
-              )
-            })
-          }
-        </Stack>
-        <Box width="65%" height="65%">
-          <Stack alignItems="center" justifyContent="center">
-            <Typography sx={{ fontSize: "18px", fontWeight: "500" }}>Thống kê doanh thu</Typography>
-          </Stack>
-          <Bar options={options} data={data} />
+    <Box
+      sx={{
+        display: { xs: "flex", md: "grid" },
+        gridTemplateColumns: "repeat(3,1fr)",
+        gridAutoRows: "minmax(100px, auto)",
+        gap: 3,
+        textAlign: "center",
+        flexDirection: "column",
+        padding: "15px",
+      }}
+    >
+      <Paper elevation={3} sx={{ p: 3 }}>
+        <Typography variant="h4">Total Users</Typography>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Group sx={{ height: 100, width: 100, opacity: 0.3, mr: 1 }} />
+          <Typography variant="h4">{users.length}</Typography>
         </Box>
-      </Stack>
+      </Paper>
+
+      <Paper elevation={3} sx={{ p: 3 }}>
+        <Typography variant="h4">Total Products</Typography>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <DevicesOtherIcon
+            sx={{ height: 100, width: 100, opacity: 0.3, mr: 1 }}
+          />
+          <Typography variant="h4">{products.length}</Typography>
+        </Box>
+      </Paper>
+      <Paper elevation={3} sx={{ p: 3 }}>
+        <Typography variant="h4">Total Orders</Typography>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <DvrIcon sx={{ height: 100, width: 100, opacity: 0.3, mr: 1 }} />
+          <Typography variant="h4">{orders.length}</Typography>
+        </Box>
+      </Paper>
+      <Paper elevation={3} sx={{ p: 3 }}>
+        <Typography variant="h4">Total Bills</Typography>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <PaidIcon sx={{ height: 100, width: 100, opacity: 0.3, mr: 1 }} />
+          <Typography variant="h4">{format(TotalBills())} VND</Typography>
+        </Box>
+      </Paper>
+      <Paper elevation={3} sx={{ p: 2, gridColumn: 3, gridRow: "1/4" }}>
+        <Box>
+          <Typography>Recently added Users</Typography>
+          <List>
+            {users.map((user, i) => {
+              if (i < 4) {
+                return (
+                  <Box key={user?._id}>
+                    <ListItem>
+                      <ListItemAvatar>
+                        <Avatar alt={user?.fullName} src={"https://www.nicepng.com/png/detail/12-120709_png-file-human-icon-png.png"} />
+                      </ListItemAvatar>
+                      <ListItemText
+                        primary={user?.fullName}
+                        secondary={`Time Created: ${moment(
+                          user?.createdAt
+                        ).format("DD-MM-YYYY ss:mm:H")}`}
+                      />
+                    </ListItem>
+                    {i !== 3 && <Divider variant="inset" />}
+                  </Box>
+                );
+              }
+            })}
+          </List>
+          {/* {totalPage > 1 ? (
+              <Stack spacing={2} mt="10px">
+                <Pagination
+                  count={totalPage}
+                  page={page}
+                  onChange={handleChangePage}
+                  color="primary"
+                />
+              </Stack>
+            ) : (
+              <></>
+            )} */}
+        </Box>
+        <Divider sx={{ mt: 3, mb: 3, opacity: 0.7 }} />
+        <Box>
+          <Typography>Recently added Products</Typography>
+          <List>
+            {products.map((item, i) => {
+              if (i < 4) {
+                return (
+                  <Box key={item.id}>
+                    <ListItem>
+                      <ListItemAvatar>
+                        <Avatar
+                          alt={item?.name}
+                          src={item?.images}
+                          variant="rounded"
+                        />
+                      </ListItemAvatar>
+                      <ListItemText
+                        primary={item?.name}
+                        secondary={`Price: ${format(item.price)} VND`}
+                      />
+                    </ListItem>
+                    {i !== 3 && <Divider variant="inset" />}
+                  </Box>
+                );
+              }
+            })}
+          </List>
+        </Box>
+      </Paper>
+      {/* <Paper elevation={3} sx={{p:2, gridColumn: "1/3"}}>
+        <Chart/>
+      </Paper>   */}
+      {/* <Paper elevation={3} sx={{p:2, gridColumn: "1/3"}}>
+        <AreaChartAdmin/> 
+      </Paper> */}
     </Box>
   );
-}
-
-const items = [
-  {
-    id: 1,
-    title: "Tổng khách hàng",
-    value: "256",
-    unit: "Khách hàng",
-    icon: GroupsIcon,
-    iconColor: "#22ad56",
-    bgcolor: "#b9ffd3"
-  },
-  {
-    id: 2,
-    title: "Tổng sản phẩm",
-    value: "256",
-    unit: "Sản phẩm",
-    icon: InventoryIcon,
-    iconColor: "#1d5aab",
-    bgcolor: "#adcbf3"
-  },
-  {
-    id: 1,
-    title: "Tổng đơn hàng",
-    value: "256",
-    unit: "Đơn hàng",
-    icon: DescriptionIcon,
-    iconColor: "#ff8b07",
-    bgcolor: "#fde1c3"
-  },
-  {
-    id: 1,
-    title: "Tổng doanh thu",
-    value: "256000000",
-    unit: "đ",
-    icon: PaidIcon,
-    iconColor: "#de2222",
-    bgcolor: "#f9baba"
-  },
-]
+};
 
 export default Dashboard;

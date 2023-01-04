@@ -9,14 +9,12 @@ import {
   Button,
   Typography,
   Modal,
-  TextField,
   Table,
   TableHead,
   TableBody,
   TableRow,
   TableCell
 } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
 
@@ -30,19 +28,20 @@ function Category() {
     const getData = async () => {
       apiCategory.showAllCategory()
         .then(res => {
-          setCategory(res.data.listCategory);
+          setCategory(res);
         })
     };
     getData();
   }, []);
   const handleDelete = () => {
     const newcategory = category.filter(item => {
-      return itemdelete.id !== item.id
+      return itemdelete?._id !== item?._id
     }
     )
     setCategory(newcategory)
     closeDialogDeleteAll()
-    apiCategory.deleteCategory({ id: itemdelete.id })
+    console.log(itemdelete?._id)
+    apiCategory.deleteCategory(itemdelete?._id)
       .then(res => {
         toast.success("Xóa thành công")
       })
@@ -67,20 +66,6 @@ function Category() {
             <Button variant="contained">Thêm danh mục</Button>
           </Link>
         </Stack>
-        <Stack direction="row" width="100%" position="relative">
-          <TextField
-            id="outlined-basic"
-            placeholder="Tìm danh mục"
-            variant="outlined"
-            width="100% !important"
-            onChange={(event) => setQuery(event.target.value)}
-
-          />
-          <span className="category__iconSearch">
-            <SearchIcon sx={{ fontSize: "28px" }} />
-          </span>
-        </Stack>
-
         <Table
           className="tableCategory"
           sx={{ minWidth: "650px" }}
@@ -92,6 +77,12 @@ function Category() {
               <TableCell sx={{ width: "15%", top: "64px" }}>
                 Tên danh mục
               </TableCell>
+              <TableCell sx={{ width: "15%", top: "64px" }}>
+                Slug
+              </TableCell>
+              <TableCell sx={{ width: "15%", top: "64px" }}>
+                CateId
+              </TableCell>
               {/* <TableCell sx={{ width: "15%", top: "64px" }}>Danh mục cha</TableCell> */}
               <TableCell align="center" sx={{ width: "10%", top: "64px" }}>
                 Thao tác&nbsp;
@@ -102,16 +93,21 @@ function Category() {
             { 
               category.filter((category) => (category.name.toLowerCase().includes(query)) || (category.parent.toLowerCase().includes(query))).map((item, id) => (
                 <TableRow
-                  key={item.id}
+                  key={item?._id}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
                   <TableCell component="th" scope="row">
                     {item.name}
                   </TableCell>
-                  {/* <TableCell align="left">{item.parent}</TableCell> */}
+                  <TableCell component="th" scope="row">
+                    {item.slug}
+                  </TableCell>
+                  <TableCell component="th" scope="row">
+                    {item._id}
+                  </TableCell>
                   <TableCell>
                     <Stack spacing={1} justifyContent="center" py={1}>
-                      <Link to={`edit/${item.id}`} >
+                      <Link to={`edit/${item._id}`} >
                         <Button sx={{ flex: 1 }} variant="contained" className="btn__update">Sửa</Button>
                       </Link>
                       <Button onClick={() => openDialogDeleteAll(item)} variant="outlined" color="error">

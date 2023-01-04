@@ -19,7 +19,6 @@ import StarBorderIcon from "@mui/icons-material/StarBorder";
 import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
 import Pagination from "@mui/material/Pagination";
 import StoreIcon from "@mui/icons-material/Store";
-import apiReviews from "../../apis/apiReviews";
 import Loading from "../../components/Loading";
 
 function ReviewProduct(props) {

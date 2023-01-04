@@ -8,7 +8,6 @@ import "./Header.scss";
 import Login from "../Login";
 import SignUp from "../SignUp";
 import ForgetPassword from "../ForgetPassword";
-import FilterProductSearch from "../../pages/FilterProductSearch";
 import { logoutSuccess } from "../../slices/authSlice";
 
 import logo from "../../assets/img/logo.png";

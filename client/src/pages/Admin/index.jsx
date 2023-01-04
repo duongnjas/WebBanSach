@@ -5,10 +5,10 @@ import { Routes, Route, Link } from "react-router-dom";
 import { sidebar } from "../../constraints/Admin";
 import { styled } from "@mui/material/styles";
 import "./Admin.scss";
-
 import MuiDrawer from "@mui/material/Drawer";
 import MuiAppBar from "@mui/material/AppBar";
 import "./Admin.scss";
+import { logoutSuccess } from "../../slices/authSlice";
 import {
   Box,
   Toolbar,
@@ -17,39 +17,30 @@ import {
   Typography,
   Divider,
   Stack,
-  ClickAwayListener,
-  Button,
-  Badge,
-  SwipeableDrawer,
   IconButton,
   ListItemIcon,
   ListItemText,
   ListItem,
   ListItemButton,
-  createTheme,
-  ThemeProvider,
+  Tooltip,
+  Avatar,
 } from "@mui/material";
 
 import MenuIcon from "@mui/icons-material/Menu";
-import CreateCoupon from "./Coupon/CreateCoupon";
 import AdminLogin from "./Login";
 import Category from "./Category";
 import CreateCategory from "./Category/CruCategory/index";
-import CouponAdmin from "./Coupon";
 import Dashboard from "./Dashboard";
 import Order from "./Order";
 import Product from "./Product";
 import CreateProduct from "./Product/CreateProduct";
-import Review from "./Review";
 import User from "./User";
-import DetailUser from "./User/DetailUser";
 import logo from "../../assets/img/book.png";
+import {Logout,} from "@mui/icons-material";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate, useLocation } from "react-router-dom";
 
-import { useSelector } from "react-redux";
-import { useState } from "react";
-import { useMemo } from "react";
-import { ThemeContext } from "@emotion/react";
-
+const privatePath = ["/customer/", "/admin/", "/payment"];
 const drawerWidth = 240;
 
 const openedMixin = (theme) => ({
@@ -119,17 +110,18 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 function Admin() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
 
-  const stylesAccount = {
-    position: "absolute",
-    top: 48,
-    right: 0,
-    zIndex: 1,
-    border: "1px solid #333",
-    bgcolor: "background.paper",
-    width: "16rem",
-    paddingTop: "4px",
+  const handleLogout = () => {
+    dispatch(logoutSuccess());
+    const isPrivate =
+      privatePath.findIndex((e) => location.pathname.includes(e)) >= 0
+        ? true
+        : false;
+    navigate("/login"); 
   };
 
   const [selectedTabId, setSelectedTabId] = React.useState(0);
@@ -141,176 +133,168 @@ function Admin() {
   };
 
   return (
-      <Stack direction="row">
-        <CssBaseline />
+    <Stack direction="row">
+      <CssBaseline />
 
-        <AppBar
-          sx={{ backgroundColor: "white", color: "black" }}
-          position="fixed"
-          open={open}
-        >
-          <Toolbar>
-            <Stack
-              width="100%"
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
+      <AppBar
+        sx={{ backgroundColor: "white", color: "black" }}
+        position="fixed"
+        open={open}
+      >
+        <Toolbar>
+          <Stack
+            width="100%"
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              onClick={() => setOpen(!open)}
+              edge="start"
+              sx={{
+                marginRight: 5,
+                // ...(open && { display: "none" }),
+              }}
             >
-              <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                onClick={() => setOpen(!open)}
-                edge="start"
-                sx={{
-                  marginRight: 5,
-                  // ...(open && { display: "none" }),
-                }}
-              >
-                <MenuIcon />
-              </IconButton>
-
-              <Stack direction="row" spacing={3} alignItems="center">
-                <ClickAwayListener>
-                  <Stack
-                    sx={{
-                      borderRadius: "16px",
-                      position: "relative",
-                      height: "32px",
-                      padding: "4px",
-                      cursor: "pointer",
-                    }}
-                    className="admin__dropdown"
-                    direction="row"
-                    alignItems="center"
-                    spacing={1}
-                  >
-                    <Box
-                      borderRadius="50%"
-                      alt=""
-                      component="img"
-                      src={logo}
-                      sx={{ width: "24px", height: "24px" }}
-                    />
-                    <Typography
-                      variant="caption"
-                      sx={{
-                        fontSize: "14px",
-                        paddingLeft: "6px",
-                        fontWeight: "Light",
-                      }}
-                    >
-                      {user.fullName}
-                    </Typography>
-                  </Stack>
-                </ClickAwayListener>
-              </Stack>
-            </Stack>
-          </Toolbar>
-        </AppBar>
-
-        <Drawer variant="permanent" open={open}>
-          <DrawerHeader>
-            <IconButton onClick={handleDrawerClose}>
-              <img
-                src={logo}
-                style={{ width: "39px", height: "39px" }}
-                alt=""
-              />
+              <MenuIcon />
             </IconButton>
-
-            <Typography sx={{ ml: "1rem", fontWeight: "bold" }} variant="h6">
-              Admin Center
+            <Typography variant="h6" noWrap sx={{ flexGrow: 1 }}>
+              ADMIN PAGE
             </Typography>
-          </DrawerHeader>
-
-          <Divider />
-
-          <List>
-            {sidebar.map((item) => (
-              <Link to={item.link}>
-                <ListItem
-                  key={item.id}
-                  disablePadding
-                  sx={{ display: "block" }}
-                  selected={selectedTabId === item.id}
-                  onClick={() => setSelectedTabId(item.id)}
-                >
-                  <ListItemButton
+                  {/* <Typography
+                    variant="caption"
                     sx={{
-                      minHeight: 48,
-                      justifyContent: open ? "initial" : "center",
-                      px: 2.5,
+                      fontSize: "14px",
+                      paddingLeft: "6px",
+                      fontWeight: "Light",
                     }}
                   >
-                    <ListItemIcon
-                      sx={{
-                        minWidth: 0,
-                        mr: open ? 3 : "auto",
-                        justifyContent: "center",
-                      }}
-                    >
-                      {<item.icon />}
-                    </ListItemIcon>
+                    {user.fullName}
+                  </Typography> */}
+          </Stack>
+        </Toolbar>
+      </AppBar>
+      <Drawer variant="permanent" open={open}>
+        <DrawerHeader>
+          <IconButton onClick={handleDrawerClose}>
+            <img src={logo} style={{ width: "39px", height: "39px" }} alt="" />
+          </IconButton>
+        </DrawerHeader>
 
-                    <ListItemText
-                      primary={item.text}
-                      sx={{ opacity: open ? 1 : 0 }}
-                    />
-                  </ListItemButton>
-                </ListItem>
-              </Link>
-            ))}
-          </List>
-        </Drawer>
+        <Divider />
 
-        <Box
-          component="main"
-          flexGrow={1}
-          p={0}
-          bgcolor="#f5f5fa"
-          minHeight="40rem"
-        >
-          <DrawerHeader />
-          <Routes>
-            <Route index element={<Dashboard />} />
-            <Route path="login" element={<AdminLogin />} />
-            <Route path="order/*" element={<Order />} />
-            <Route
-              path="product/*"
-              element={
-                <Routes>
-                  <Route index element={<Product />} />
-                  <Route path="create" element={<CreateProduct />} />
-                </Routes>
-              }
-            />
+        <List>
+          {sidebar.map((item) => (
+            <Link to={item.link}>
+              <ListItem
+                key={item.id}
+                disablePadding
+                sx={{ display: "block" }}
+                selected={selectedTabId === item.id}
+                onClick={() => setSelectedTabId(item.id)}
+              >
+                <ListItemButton
+                  sx={{
+                    minHeight: 48,
+                    justifyContent: open ? "initial" : "center",
+                    px: 2.5,
+                  }}
+                >
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 3 : "auto",
+                      justifyContent: "center",
+                    }}
+                  >
+                    {<item.icon />}
+                  </ListItemIcon>
 
-            <Route
-              path="category/*"
-              element={
-                <Routes>
-                  <Route index element={<Category />} />
-                  <Route path="create" element={<CreateCategory />} />
-                  <Route
-                    path="edit/:id"
-                    element={<CreateCategory edit={true} />}
+                  <ListItemText
+                    primary={item.text}
+                    sx={{ opacity: open ? 1 : 0 }}
                   />
-                </Routes>
-              }
+                </ListItemButton>
+              </ListItem>
+            </Link>
+          ))}
+        </List>
+        <Divider />
+        <Box sx={{ mx: "auto", mt: 3, mb: 1 }}>
+          <Tooltip title={"Avatar"}>
+            <Avatar
+              src={"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRH5i7Yp_fDaYiXeURxuMRjyQ4iohugmBELcQ&usqp=CAU"}
+            //   src={currentUser?.photoURL}
+              {...(open && { sx: { width: 100, height: 100 } })}
             />
-
-            <Route
-              path="user/*"
-              element={
-                <Routes>
-                  <Route index element={<User />} />
-                  <Route path="detail/:id" element={<DetailUser />} />
-                </Routes>
-              }
-            />
-          </Routes>
+          </Tooltip>
         </Box>
-      </Stack>
+        <Box sx={{ textAlign: "center" }}>
+          <Typography></Typography>
+          {open && (
+            <Typography variant="body2">{"Abookish.store@gmail.com"}</Typography>
+          )}
+          <Tooltip title="Logout" sx={{ mt: 1 }}>
+            <IconButton onClick={handleLogout}>
+              <Logout />
+            </IconButton>
+          </Tooltip>
+        </Box>
+      </Drawer>
+
+      <Box
+        component="main"
+        flexGrow={1}
+        p={0}
+        bgcolor="#f5f5fa"
+        minHeight="40rem"
+      >
+        <DrawerHeader />
+        <Routes>
+          <Route index element={<Dashboard />} />
+          <Route path="login" element={<AdminLogin />} />
+          <Route path="order/*" element={<Order />} />
+          <Route
+            path="product/*"
+            element={
+              <Routes>
+                <Route index element={<Product />} />
+                <Route path="create" element={<CreateProduct />} />
+                <Route
+                  path="edit/:id"
+                  element={<CreateProduct edit={true} />}
+                />
+              </Routes>
+            }
+          />
+
+          <Route
+            path="category/*"
+            element={
+              <Routes>
+                <Route index element={<Category />} />
+                <Route path="create" element={<CreateCategory />} />
+                <Route
+                  path="edit/:id"
+                  element={<CreateCategory edit={true} />}
+                />
+              </Routes>
+            }
+          />
+
+          <Route
+            path="user/*"
+            element={
+              <Routes>
+                <Route index element={<User />} />
+              </Routes>
+            }
+          />
+        </Routes>
+      </Box>
+    </Stack>
   );
 }
 

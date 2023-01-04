@@ -1,15 +1,15 @@
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
-import LaptopChromebookOutlinedIcon from '@mui/icons-material/LaptopChromebookOutlined';
-import LeaderboardOutlinedIcon from '@mui/icons-material/LeaderboardOutlined';
 import GroupOutlinedIcon from '@mui/icons-material/GroupOutlined';
-import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';
+import CategorySharpIcon from "@mui/icons-material/CategorySharp";
+import DevicesOtherIcon from '@mui/icons-material/DevicesOther';
+import {Dashboard,} from "@mui/icons-material";
 
 
 export const sidebar = [
     {
         id: 1,
         text: 'Trang chủ',
-        icon: LeaderboardOutlinedIcon,
+        icon: Dashboard,
         link: '/admin'
     },
     {
@@ -21,18 +21,18 @@ export const sidebar = [
     {
         id: 3,
         text: 'Sản phẩm',
-        icon: LaptopChromebookOutlinedIcon,
+        icon: DevicesOtherIcon,
         link: '/admin/product'
     },
     {
         id: 4,
-        text: 'Danh mục sản phẩm',
-        icon: CategoryOutlinedIcon,
+        text: 'Danh mục',
+        icon: CategorySharpIcon,
         link: '/admin/category'
     },
     {
         id: 5,
-        text: 'Quản lý người dùng',
+        text: 'Người dùng',
         icon: GroupOutlinedIcon,
         link: '/admin/user'
     },

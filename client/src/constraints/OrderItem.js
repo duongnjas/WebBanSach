@@ -1,5 +1,3 @@
-import LocalShippingIcon from '@mui/icons-material/LocalShipping';
-import HourglassBottomIcon from '@mui/icons-material/HourglassBottom';
 import AutoModeIcon from '@mui/icons-material/AutoMode';
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 import CancelIcon from '@mui/icons-material/Cancel';
@@ -27,10 +25,10 @@ export const orderTabs = [
         type: "Đã hủy",
         icon: RocketLaunchIcon
     },
-    {
-        id: 4,
-        type: "Đã giao",
-        icon: LocalShippingIcon
-    },
+    // {
+    //     id: 4,
+    //     type: "Đã giao",
+    //     icon: LocalShippingIcon
+    // },
 
 ]
