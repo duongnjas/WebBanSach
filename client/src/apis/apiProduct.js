@@ -14,11 +14,36 @@ const apiProduct = {
         //console.log(response);
         return handleResponse(response);
     },
+    findproductById : async (id) => {
+        const response = await fetch(
+            `${BASE_URL}/products/${id}`,
+            {
+                method: 'GET',
+                redirect: 'follow',
+            }
+        );
+        //console.log(response);
+        return handleResponse(response);
+    },
     insertProduct: async (params) => {
         const response = await fetch(
             `${BASE_URL}/products/`,
             {
                 method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(params)
+            }
+        );
+        return handleResponse(response);
+    },
+
+    updateProduct: async (params, id) => {
+        const response = await fetch(
+            `${BASE_URL}/products/${id}`,
+            {
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },

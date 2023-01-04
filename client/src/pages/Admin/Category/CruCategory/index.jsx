@@ -23,7 +23,6 @@ function CrudCategory(props) {
     const [id, setId] = useState("");
     const [name, setName] = useState("")
     const [slug, setSlug] = useState("")
-    const [listType, setListType] = useState([]);
     const [edit, setEdit] = useState(props.edit);
     const params = useParams();
     const navigate = useNavigate();
@@ -48,16 +47,6 @@ function CrudCategory(props) {
         }
         loaddata()
     }, [edit])
-
-    useEffect(() => {
-        const getData = async () => {
-            apiCategory.showAllCategory()
-                .then(res => {
-                    setListType(res);
-                })
-        };
-        getData();
-    }, []);
 
     const handleChangeType = (event) => {
         setParent(event.target.value);
