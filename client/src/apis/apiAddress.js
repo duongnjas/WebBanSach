@@ -6,6 +6,9 @@ const apiAddress = {
             `${BASE_URL}/users/address/${param}`,
             {
                 method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
                 redirect: 'follow',
             }
         );

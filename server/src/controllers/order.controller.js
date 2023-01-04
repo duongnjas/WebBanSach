@@ -165,7 +165,7 @@ async function GetAllOrder (req, res) {
   //await OrderModel.remove()
   const Order = await OrderModel.find({}).sort({ createdAt: -1 });
   if (Order) {
-    res.send(Order);
+    return res.status(200).json(Order);
   } else {
     res.status(401).send({ message: "no order" });
   }

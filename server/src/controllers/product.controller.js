@@ -82,10 +82,6 @@ async function CreateNewProduct(req, res) {
         details: {
             categoryId : req.body.details.categoryId,
             images : req.body.details.images,
-            options : {
-                name : req.body.details.options.name,
-                values : req.body.details.options.values
-            },
             description: req.body.details.description,
         }
     };
@@ -130,16 +126,9 @@ async function UpdateProduct (req, res) {
         slug: req.body.slug,
         sold: req.body.sold,
         details: {
-            category :{
-                id : req.body.details.category.id,
-                name : req.body.details.category.name
-            },
+            categoryId : req.body.details.categoryId,
             images : req.body.details.images,
-            options : {
-                name : req.body.details.options.name,
-                values : req.body.details.options.values
-            },
-            description: req.body.details.description
+            description: req.body.details.description,
         }
     };
 

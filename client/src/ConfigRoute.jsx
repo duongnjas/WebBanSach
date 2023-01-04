@@ -1,7 +1,6 @@
 import Home from "./pages/Home";
 import CustomerAccount from "./pages/CustomerAccount";
 import ShoppingCart from "./pages/ShoppingCart";
-import FilterProduct from "./pages/FilterProduct";
 import DetailProduct from "./pages/DetailProduct";
 import Admin from "./pages/Admin";
 import Payment from "./pages/Payment";
@@ -31,7 +30,6 @@ function ConfigRoute() {
       <Route element={<PrivateRoute roles={['ADMIN']} />}>
         <Route path="admin/*" element={<Admin />} />
       </Route>
-      <Route path="filter/:slug" element={<FilterProduct />} />
       <Route path="product/:slug" element={<DetailProduct />} />
       <Route path="/oauth2/redirect" element={<OAuth2RedirectHandler />} />
       <Route path="*" element={<Error />} />

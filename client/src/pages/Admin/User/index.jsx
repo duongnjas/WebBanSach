@@ -1,159 +1,175 @@
-import { Link } from "react-router-dom";
-import apiProfile from "../../../apis/apiProfile";
-import React, { useState,  useEffect } from 'react'
-import {
-  Stack,
-  Button,
-  Typography,
-  Modal,
-  TextField,
-} from "@mui/material";
-
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
+import { useEffect, useMemo, useState } from "react";
+import { Avatar, Box, Typography, Button } from "@mui/material";
+import { DataGrid, gridClasses } from "@mui/x-data-grid";
+import apiUser from "../../../apis/apiUser";
+import moment from "moment";
+import { grey } from "@mui/material/colors";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogTitle from "@mui/material/DialogTitle";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { toast } from "react-toastify";
 
-import SearchIcon from "@mui/icons-material/Search";
-import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+const Users = () => {
+  const [users, setUsers] = useState([]);
+  const [pageSize, setPageSize] = useState(5);
+  const [open, setOpen] = useState(false);
+  const [deletaId, setDeleteId] = useState([]);
 
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
 
-function User() {
-  const [modalDelete, setModalDelete] = React.useState(false);
-  const closeModalDelete = () => setModalDelete(false);
+  const handleClose = () => {
+    setOpen(false);
+  };
 
-  const [users, setUsers] = useState([])
+  const handleDelete = () => {
+    if (open === true) {
+      apiUser
+        .removeUsers(deletaId)
+        .then((res) => {
+          toast.success("Xóa thành công");
+        })
+        .catch((error) => {
+          toast.error("Xóa thất bại!");
+        });
+    }
+    setOpen(false);
+  };
+
+  const onRowsSelectionHandler = (ids) => {
+    const selectedRowsData = ids.map((id) =>
+      users.find((row) => row._id === id)
+    );
+    //console.log(selectedRowsData[0]?._id);
+    setDeleteId(selectedRowsData[0]?._id);
+  };
 
   useEffect(() => {
-    const getData = async () => {
-      
-      apiProfile.getAllUser()
-        .then(res => {
-          setUsers(res.data.listUser)
-        })
-        .catch(error=>{
-          toast.error("không có user")
-          // setUsers(data)
-        })
+    const getUsers = async () => {
+      try {
+        const response = await apiUser.getUsers();
+        //console.log(response);
+        setUsers(response);
+      } catch (err) {
+        console.log(err);
+      }
     };
-    getData();
-  }, []);
+    getUsers();
+  }, [users]);
+
+  const columns = useMemo(
+    () => [
+      {
+        field: "photoURL",
+        headerName: "Avatar",
+        width: 60,
+        renderCell: (params) => <Avatar src={"https://www.nicepng.com/png/detail/12-120709_png-file-human-icon-png.png"} />,
+        sortable: false,
+        filterable: false,
+      },
+      { field: "fullName", headerName: "Name", width: 170 },
+      {
+        field: "birth_day",
+        headerName: "Date of Birth",
+        width: 140,
+        renderCell: (params) =>
+          moment(params.row.createdAt).format("DD-MM-YYYY"),
+      },
+      { field: "email", headerName: "Email", width: 200 },
+      {
+        field: "phone",
+        headerName: "Phone",
+        width: 130,
+      },
+      {
+        field: "createdAt",
+        headerName: "Created At",
+        width: 200,
+        renderCell: (params) =>
+          moment(params.row.createdAt).format("DD-MM-YYYY HH:MM:SS"),
+      },
+      { field: "_id", headerName: "Id", width: 220 },
+      {
+        field: "roleNames",
+        headerName: "RoleNames",
+        width: 400,
+      },
+      // {
+      //   field: "Delete",
+      //   width: 150,
+      //   renderCell: (cellValue) => {
+      //     return (
+      //       <div>
+      //     </div>
+      //     );
+      //   },
+      // },
+    ],
+    []
+  );
 
   return (
-    <Stack direction="row" sx={{ backgroundColor: "#fff" }} p={3}>
-      <Stack spacing={2}>
-        <Stack direction="row" justifyContent="space-between">
-          <Typography>Danh sách người dùng</Typography>
-        </Stack>
-
-        <Stack direction="row" justifyContent="flex-end"></Stack>
-
-        <Stack direction="row" sx={{ width: "100%", position: "relative" }}>
-          <TextField
-            id="outlined-basic"
-            label="Search"
-            variant="outlined"
-            sx={{ width: "100%" }}
-          />
-          <span className="brand__iconSearch">
-            <SearchIcon sx={{ fontSize: "28px" }} />
-          </span>
-        </Stack>
-
-        <Table
-          className="tableBrand"
-          sx={{ minWidth: "50rem" }}
-          stickyHeader
-          size="small"
-        >
-          <TableHead>
-            <TableRow>
-              <TableCell align="center" sx={{ width: "20%", top: "64px" }}>
-                ID
-              </TableCell>
-              <TableCell align="center" sx={{ width: "20%", top: "64px" }}>
-                Tên khách hàng
-              </TableCell>
-              <TableCell align="center" sx={{ width: "20%", top: "64px" }}>
-                Ngày đăng ký
-              </TableCell>
-              <TableCell align="center" sx={{ width: "20%", top: "64px" }}>
-                Số điện thoại
-              </TableCell>
-              <TableCell align="center" sx={{ width: "20%", top: "64px" }}>
-                Thao tác
-              </TableCell>
-            </TableRow>
-          </TableHead>
-
-          <TableBody>
-            {users.map((item) => (
-              <TableRow
-                key={item.id}
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-              >
-                <TableCell align="center">{item.id}</TableCell>
-
-                <TableCell align="center">{item.fullName}</TableCell>
-
-                <TableCell align="center">{item.registerDate}</TableCell>
-
-                <TableCell align="center">
-                  <Typography>{item.phone}</Typography>
-                </TableCell>
-
-                <TableCell align="center" >
-                  <Stack spacing={1} justifyContent="center" py={1}>
-                    <Link to={`/admin/user/detail/${item.id}`}>
-                      <Button variant="contained">Xem</Button>
-                    </Link>
-                  </Stack>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </Stack>
-
-      <Modal
-        sx={{ overflowY: "scroll" }}
-        open={modalDelete}
-        onClose={closeModalDelete}
+    <Box
+      sx={{
+        height: 470,
+        width: "100%",
+      }}
+    >
+      <Typography
+        variant="h3"
+        component="h3"
+        sx={{ textAlign: "center", mt: 3, mb: 3 }}
       >
-        <Stack
-          className="modal-info"
-          direction="row"
-          spacing={2}
-          justifyContent="center"
-          width="26rem"
-        >
-          <Stack>
-            <InfoOutlinedIcon color="primary" />
-          </Stack>
-
-          <Stack spacing={3}>
-            <Stack>
-              <Typography sx={{ fontWeight: "bold" }}>
-                Bạn có chắc muốn xoá ảnh đại diện ?
-              </Typography>
-              <Typography>
-                Hình ảnh đại diện sẽ quay về mặc định của Tiki
-              </Typography>
-            </Stack>
-
-            <Stack direction="row" justifyContent="flex-end" spacing={1}>
-              <Button onClick={closeModalDelete} variant="outlined">
-                Hủy
-              </Button>
-              <Button variant="contained">Xóa bỏ</Button>
-            </Stack>
-          </Stack>
-        </Stack>
-      </Modal>
-    </Stack>
+        Manage Users
+      </Typography>
+      <DataGrid
+        columns={columns}
+        rows={users}
+        getRowId={(row) => row._id}
+        rowsPerPageOptions={[5, 10, 20]}
+        pageSize={pageSize}
+        checkboxSelection
+        disableSelectionOnClick
+        onSelectionModelChange={(ids) => onRowsSelectionHandler(ids)}
+        onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+        getRowSpacing={(params) => ({
+          top: params.isFirstVisible ? 0 : 5,
+          bottom: params.isLastVisible ? 0 : 5,
+        })}
+        sx={{
+          [`& .${gridClasses.row}`]: {
+            bgcolor: (theme) =>
+              theme.palette.mode === "light" ? grey[200] : grey[900],
+          },
+        }}
+      />
+      {/* <Button
+        variant="outlined"
+        startIcon={<DeleteIcon />}
+        onClick={handleClickOpen}
+      >
+        Delete
+      </Button> */}
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Bạn có muốn xóa hay không?"}
+        </DialogTitle>
+        <DialogActions>
+          <Button onClick={handleClose} autoFocus>
+            Hủy
+          </Button>
+          <Button onClick={() => handleDelete()}>Xóa</Button>
+        </DialogActions>
+      </Dialog>
+    </Box>
   );
-}
+};
 
-export default User;
+export default Users;

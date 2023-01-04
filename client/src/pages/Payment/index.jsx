@@ -11,8 +11,6 @@ import {
 } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import InfoIcon from "@mui/icons-material/Info";
-import DiscountIcon from "@mui/icons-material/Discount";
 import { numWithCommas } from "../../constraints/Util";
 import { useDispatch, useSelector } from "react-redux";
 import ChooseAddress from "../../components/ChooseAddress";
@@ -108,13 +106,9 @@ function Payment() {
       toast.warning("Vui lòng chọn địa chỉ giao hàng");
       return;
     }
-    let state = orderTabs[2];
-    if (payment === "3")
-      //thanh toán momo
-      state = orderTabs[1];
     const payload = {
       idUser: user?._id,
-      type:state.type,
+      type:"Đang xử lý",
       feeShip,
       totalPrice,
       address: {
@@ -143,48 +137,6 @@ function Payment() {
     setLoading(true);
     apiCart
       .saveOrder(payload)
-      .then((res) => {
-        if (payment === "3") {
-          let amount = Math.round(res.totalPrice + res.feeShip - res.discount);
-          amount = amount >= 0 ? amount : 0;
-          let orderId = res.id;
-          apiCart
-            .makePaymentMomo({
-              orderId,
-              amount,
-            })
-            .then((res) => {
-              setLoading(false);
-              if (res.payUrl) {
-                dispatch(deleteItemsPayment());
-                window.location.replace(res.payUrl);
-              } else {
-                handleCancel(orderId);
-                toast.warning(
-                  "Có lỗi trong quá trình giao dịch. Vui lòng thực hiện lại"
-                );
-              }
-            })
-            .catch((err) => {
-              toast.error(err.response.data.error);
-            });
-        } else {
-          toast.success("Đặt hàng thành công!");
-          let notify = {
-            userId: user?._id,
-            orderId: res?.id,
-            type: "order",
-            text: "Bạn đã đặt hàng thành công, đơn hàng của bạn đang được xử lý",
-            date: Date.now(),
-            seen: false,
-            link: "",
-          };
-          // apiNotify.postNotify(notify);
-          dispatch(deleteItemsPayment());
-          //navigate('/customer/order/history')
-          return;
-        }
-      })
       .catch((error) => {
         toast.error("Đặt hàng không thành công. Vui lòng thử lại");
       })
@@ -192,18 +144,6 @@ function Payment() {
         setLoading(false);
       });
   };
-
-  const handleCancel = (id) => {
-    let params = {
-      //...order,
-      type: {
-        id: orderTabs[5].id,
-        name: orderTabs[5].type,
-      },
-    };
-    apiCart.changeTypeOrder(params, id);
-  };
-
   return (
     <>
       <Box className="container">
@@ -369,15 +309,6 @@ function Payment() {
                     <Typography style={{ fontWeight: 500, color: "#333" }}>
                       Đơn hàng
                     </Typography>
-                    <Typography
-                      sx={{
-                        color: "#1890ff",
-                        fontSize: "14px",
-                        cursor: "pointer",
-                      }}
-                    >
-                      Thay đổi
-                    </Typography>
                   </Stack>
                   <Stack direction="row" alignItems={"baseline"} spacing={1}>
                     <Typography sx={{ fontSize: "14px", color: "#888" }}>
@@ -473,18 +404,18 @@ const paymentMethods = [
   },
   {
     id: "2",
-    display: "Thanh toán bằng Momo",
+    display: "Thanh toán bằng Momo (chưa phát triển)",
     value: "3",
     image:
       "https://frontend.tikicdn.com/_desktop-next/static/img/icons/checkout/icon-payment-method-momo.svg",
   },
-  {
-    id: "3",
-    display: "Thanh toán bằng ZaloPay (chưa phát triển)",
-    value: "4",
-    image:
-      "https://frontend.tikicdn.com/_desktop-next/static/img/icons/checkout/icon-payment-method-zalo-pay.svg",
-  },
+  // {
+  //   id: "3",
+  //   display: "Thanh toán bằng ZaloPay (chưa phát triển)",
+  //   value: "4",
+  //   image:
+  //     "https://frontend.tikicdn.com/_desktop-next/static/img/icons/checkout/icon-payment-method-zalo-pay.svg",
+  // },
   // {
   //   id: '4',
   //   display: "Thanh toán bằng Viettel Money",

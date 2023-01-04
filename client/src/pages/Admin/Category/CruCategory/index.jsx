@@ -1,7 +1,6 @@
  /* eslint-disable */
 import React from "react";
 import { useEffect, useState } from "react";
-import "./CruCategory.scss";
 import apiCategory from "../../../../apis/apiCategory";
 import { toast } from "react-toastify";
 import { useParams, useNavigate } from "react-router-dom";
@@ -23,20 +22,19 @@ import {
 function CrudCategory(props) {
     const [id, setId] = useState("");
     const [name, setName] = useState("")
-    const [parent, setParent] = useState("")
-    const [listType, setListType] = useState([]);
+    const [slug, setSlug] = useState("")
     const [edit, setEdit] = useState(props.edit);
     const params = useParams();
     const navigate = useNavigate();
     useEffect(() => {
         const loaddata = () => {
             if (edit === true) {
-                apiCategory.findCategoryById({ id: params.id })
+                apiCategory.findCategoryById(params.id)
                     .then(res => {
-                        const category = res.data
+                        const category = res
                         if (category) {
                             setName(category.name)
-                            setParent(category.parent)
+                            setSlug(category.slug)
                         }
                         else {
                             navigate("/admin/category")
@@ -50,30 +48,19 @@ function CrudCategory(props) {
         loaddata()
     }, [edit])
 
-    useEffect(() => {
-        const getData = async () => {
-            apiCategory.showAllCategory()
-                .then(res => {
-                    setListType(res.data.listCategory);
-                })
-        };
-        getData();
-    }, []);
-
     const handleChangeType = (event) => {
         setParent(event.target.value);
     };
     const handleUpdate = () => {
-        const params = {
-            "id": id,
+        const param = {
             "name": name,
-            "parent": parent
+            "slug": slug
         }
-        if (!(name && parent)) {
+        if (!(name && slug)) {
             toast.warning("Vui lòng nhập đầy đủ thông tin !!");
             return
         }    
-        apiCategory.updateCategory(params)
+        apiCategory.updateCategory(param,params.id)
             .then(res => {
                 toast.success("Cập nhật thành công")
             })
@@ -84,9 +71,9 @@ function CrudCategory(props) {
     const handleSave = () => {
         const params = {
             "name": name,
-            "parent": parent
+            "slug": slug
         }
-        if (!(name && parent)) {
+        if (!(name && slug)) {
             toast.warning("Vui lòng nhập đầy đủ thông tin !!");
             return
         }
@@ -95,7 +82,7 @@ function CrudCategory(props) {
                 .then(res => {
                     toast.success("Thêm sản phẩm thành công")
                     setName("")
-                    setParent("")
+                    setSlug("")
                 })
                 .catch(error => {
                     toast.error("Thêm sản phẩm thất bại!")
@@ -106,26 +93,15 @@ function CrudCategory(props) {
         <Box>
             <Stack p={3} justifyContent="center" sx={{ width: "700px" }} spacing={3}>
                 <Stack direction="row" p={2} >
-                    <Typography sx={{ width: "200px" }}>Danh mục cha</Typography>
-                    <FormControl className="create-address__input" sx={{ flex: 1 }}>
-                        <Select
-                            size="small"
-                            labelId="demo-simple-select-helper-label"
-                            id="demo-simple-select-helper"
-                            value={parent}
-                            onChange={handleChangeType}
-                            input={<InputCustom placeholder="Chọn Loại" />}
-                        >
-                            {
-                                listType.map(item => item.name !== name && <MenuItem value={item.id} >{item.name}</MenuItem>)
-                            }
-                        </Select>
-                    </FormControl>
-                </Stack>
-                <Stack direction="row" p={2} >
                     <Typography sx={{ width: "200px" }}>Tên danh mục</Typography>
                     <TextField value={name} onChange={(event) => {
                         setName(event.target.value)
+                    }} size="small" id="outlined-basic" variant="outlined" sx={{ flex: 1 }} />
+                </Stack>
+                <Stack direction="row" p={2} >
+                    <Typography sx={{ width: "200px" }}>Slug</Typography>
+                    <TextField value={slug} onChange={(event) => {
+                        setSlug(event.target.value)
                     }} size="small" id="outlined-basic" variant="outlined" sx={{ flex: 1 }} />
                 </Stack>
                 <Stack justifyContent="center" alignItems="center">

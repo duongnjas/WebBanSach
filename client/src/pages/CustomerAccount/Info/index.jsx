@@ -73,7 +73,7 @@ function Info() {
     // Date {Fri Jan 29 2016 00:00:00 GMT+0530(utopia standard time)
     console.log(newDob.toISOString());
     const params = {
-      birth_day: newDob.toISOString(),
+      dob: newDob.toISOString(),
       fullName: fullname,
       gender: gender,
       email: email,

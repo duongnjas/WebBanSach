@@ -59,7 +59,7 @@ async function RemoveCategory (req, res) {
     if(!existCategory)
         return res.status(404).json({ error: "Category not found!" });
 
-    const result =  await Category.remove({ _id: categoryId });
+    const result =  await Category.remove({_id: categoryId });
     if(result) {
         return res.status(200).json(result);
     } 

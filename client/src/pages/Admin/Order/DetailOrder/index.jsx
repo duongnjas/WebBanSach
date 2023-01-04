@@ -9,16 +9,14 @@ import { orderTabs } from "../../../../constraints/OrderItem";
 
 function DetailOrder() {
   const id = useParams().id;
+  console.log(id);
   const [order, setOrder] = useState(null);
   useEffect(() => {
     const getData = () => {
-      let params = {
-        id,
-      };
       apiCart
-        .getOrders(params)
+        .getOrderById(id)
         .then((res) => {
-          setOrder(res[0]);
+          setOrder(res);
         })
         .catch((error) => {
           setOrder(null);
@@ -30,11 +28,7 @@ function DetailOrder() {
 
   const handleComfirm = () => {
     let params = {
-      // ...order,
-      type: {
-        id: orderTabs[4].id,
-        name: orderTabs[4].type,
-      },
+      type: "Đã xác nhận"
     };
     apiCart
       .changeTypeOrder(params, id)
@@ -47,11 +41,7 @@ function DetailOrder() {
   };
   const handleCancel = () => {
     let params = {
-      //...order,
-      type: {
-        id: orderTabs[5].id,
-        name: orderTabs[5].type,
-      },
+      type: "Đã hủy",
     };
     apiCart
       .changeTypeOrder(params, id)
@@ -67,8 +57,7 @@ function DetailOrder() {
     <Box>
       <Stack bgcolor="white" p={2}>
         <Typography mt={2.5} mx={2} fontSize="22px" fontWeight={300}>
-          Chi tiết đơn hàng #825345038 -{" "}
-          <span style={{ fontWeight: 500 }}>Huỷ</span>
+          Chi tiết đơn hàng # {order?._id}
         </Typography>
         <Typography sx={{ fontSize: "13px", textAlign: "end" }}>
           Ngày đặt hàng: {order?.createdAt}
@@ -86,15 +75,15 @@ function DetailOrder() {
           <Typography>ĐỊA CHỈ NHẬN HÀNG</Typography>
           <Box p={1.25} className="detailOrder__content">
             <Typography style={{ color: "#000", fontWeight: 500 }}>
-              {order?.address?.fullName}
+              {order?.address?.name}
             </Typography>
             <Typography>
               Địa chỉ:{" "}
-              {`${order?.address?.addressDetail}, ${order?.address?.commune?.name},
-                                  ${order?.address?.district?.name},
-                                  ${order?.address?.province?.name}`}
+              {`${order?.address?.details}, ${order?.address?.ward},
+                                  ${order?.address?.district},
+                                  ${order?.address?.province}`}
             </Typography>
-            <Typography>Điện thoại: {order?.address?.phoneNumber}</Typography>
+            <Typography>Điện thoại: {order?.address?.phone}</Typography>
           </Box>
         </Stack>
 
@@ -108,7 +97,7 @@ function DetailOrder() {
                 src="https://salt.tikicdn.com/ts/upload/2a/47/46/0e038f5927f3af308b4500e5b243bcf6.png"
                 alt=""
               />
-              {order?.shipping?.display}
+              {order?.shipping}
             </Typography>
             <Typography>Phí vận chuyển: {order?.feeShip}đ</Typography>
           </Box>
@@ -116,7 +105,7 @@ function DetailOrder() {
         <Stack className="detailOrder__boxInfo">
           <Typography>HÌNH THỨC THANH TOÁN</Typography>
           <Box p={1.25} className="detailOrder__content">
-            <Typography>{order?.payment?.display}</Typography>
+            <Typography>{order?.payment}</Typography>
             <Typography style={{ color: "#fda223" }}>
               Thanh toán thất bại. Vui lòng thanh toán lại hoặc chọn phương thức
               thanh toán khác
@@ -137,44 +126,20 @@ function DetailOrder() {
           <Stack key={item} direction="row" className="detailOrder-Table__row">
             <Stack direction="row" className="orderDetail__item">
               <Box mr={1.875}>
-                <img height="60px" width="60px" src={item.image} alt="" />
+                <img height="60px" width="60px" src={item?.images} alt="" />
               </Box>
               <Stack spacing={1.5}>
                 <Link to={"/"}>
-                  <Typography fontSize="14px">{item.name}</Typography>
+                  <Typography fontSize="14px">{item?.name}</Typography>
                 </Link>
-                <Typography fontSize="13px">Sku: 4816587252819</Typography>
                 <Stack direction="row" spacing={1}>
-                  <Button
-                    variant="outlined"
-                    sx={{
-                      fontSize: "12px",
-                      width: "102px",
-                      height: "30px",
-                      padding: 0,
-                    }}
-                  >
-                    Viết nhận xét
-                  </Button>
-                  <Button
-                    variant="outlined"
-                    sx={{
-                      fontSize: "12px",
-                      width: "71px",
-                      height: "30px",
-                      padding: 0,
-                    }}
-                  >
-                    Mua lại
-                  </Button>
                 </Stack>
               </Stack>
             </Stack>
             <Box>{numWithCommas(item.price || 0)}₫</Box>
             <Box>{numWithCommas(item.quantity || 0)}</Box>
-            <Box>{numWithCommas(item.discount || 0)} ₫</Box>
             <Box>
-              {numWithCommas(item.price * item.quantity - item.discount || 0)} ₫
+              {numWithCommas(item.price * item.quantity || 0)} ₫
             </Box>
           </Stack>
         ))}
@@ -196,14 +161,6 @@ function DetailOrder() {
           </Stack>
           <Stack py={0.625} direction="row">
             <Typography className="detailOrder__summary-label">
-              Giảm giá
-            </Typography>
-            <Typography className="detailOrder__summary-value">
-              {numWithCommas(order?.discount || 0)} ₫
-            </Typography>
-          </Stack>
-          <Stack py={0.625} direction="row">
-            <Typography className="detailOrder__summary-label">
               Phí vận chuyển
             </Typography>
             <Typography className="detailOrder__summary-value">
@@ -216,7 +173,7 @@ function DetailOrder() {
             </Typography>
             <Typography className="detailOrder__summary-value detailOrder__summary-value--final">
               {numWithCommas(
-                order.totalPrice + order.feeShip - order.discount || 0
+                order.totalPrice + order.feeShip || 0
               )}{" "}
               ₫
             </Typography>
@@ -224,7 +181,7 @@ function DetailOrder() {
         </Stack>
       )}
       <Stack direction="row" spacing="16px" justifyContent="flex-end" p={2}>
-        {order?.type?.id === 2 && (
+        {order?.type === "Đang xử lý" && (
           <>
             <Button variant="contained" onClick={handleComfirm}>
               Xác nhận

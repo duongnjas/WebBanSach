@@ -1,25 +1,75 @@
-import {  axiosClientWithToken } from "./axiosClient";
+import { BASE_URL, handleResponse } from "./apiconfig";
 
 const apiCategory = {
-    showAllCategory: async (params) => {
-        const res = await axiosClientWithToken.get('/admin/category/all', params)
-        return res.data;
+    showAllCategory: async (param) => {
+        const response = await fetch(
+            `${BASE_URL}/categories/`,
+            {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                redirect: 'follow',
+            }
+        );
+        //console.log(handleResponse(response))
+        return handleResponse(response);
     },
-    deleteCategory: async (params) => {
-        const res = await axiosClientWithToken.delete(`/admin/category/${params.id}`)
-        return res.data;
+    findCategoryById: async (param) => {
+        const response = await fetch(
+            `${BASE_URL}/categories/${param}`,
+            {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                redirect: 'follow',
+            }
+        );
+        //console.log(handleResponse(response))
+        return handleResponse(response);
     },
-    findCategoryById: async (params) => {
-        const res = await axiosClientWithToken.get(`/admin/category/${params.id}`)
-        return res.data;
+    updateCategory: async (param,id) => {
+        const response = await fetch(
+            `${BASE_URL}/categories/${id}`,
+            {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(param),
+                redirect: 'follow'
+            }
+        );
+        //console.log(handleResponse(response))
+        return handleResponse(response);
     },
     insertCategory: async (params) => {
-        const res = await axiosClientWithToken.post(`/admin/category/insert`,params)
-        return res.data;
+        const response = await fetch(
+            `${BASE_URL}/categories/`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(params)
+            }
+        );
+        return handleResponse(response);
     },
-    updateCategory: async (params) => {
-        const res = await axiosClientWithToken.put(`/admin/category/update/${params.id}`)
-        return res.data;
-    }
+    deleteCategory: async (param) => {
+        const response = await fetch(
+            `${BASE_URL}/categories/${param}`,
+            {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                redirect: 'follow',
+            }
+        );
+        //console.log(handleResponse(response))
+        return handleResponse(response);
+    },
 }
 export default apiCategory;
