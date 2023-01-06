@@ -54,24 +54,6 @@ function ReviewProduct(props) {
 
   const size = 5;
 
-  useEffect(() => {
-    const getMyReviews = async () => {
-      if (!props.product) return;
-      let param = {
-        _page: page,
-        _limit: size,
-        rating_gte: selected,
-        productId: props.product.id,
-      };
-      const response = await apiReviews.getMyReviews(param);
-      if (response) {
-        setReviews(response.data);
-      }
-    };
-    getMyReviews();
-
-  }, [page, props.product, selected, updateCmt]);
-
   const getMyReviews = useCallback(async () => {
     if (!props.product) return;
     let param = {

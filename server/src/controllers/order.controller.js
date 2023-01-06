@@ -3,64 +3,67 @@ const axios = require("axios");
 
 require("dotenv").config();
 
-async function createOrder (req, res) {
+async function createOrder(req, res) {
+  try {
     const newOrder = {
-      idUser : req.body.idUser,
-      feeShip : req.body.feeShip,
-      totalPrice : req.body.totalPrice,
-      type : req.body.type,
-      payment : req.body.payment,
-      shipping : req.body.shipping,
-      address:{
-        id : req.body.address.id,
-        name : req.body.address.name,
-        phone : req.body.address.phone,
-        province : req.body.address.province,
-        updatedAt : req.body.address.updatedAt,
-        ward : req.body.address.ward,
-        createdAt : req.body.address.createdAt,
-        details : req.body.address.details,
-        district : req.body.address.district
+      idUser: req.body.idUser,
+      feeShip: req.body.feeShip,
+      totalPrice: req.body.totalPrice,
+      type: req.body.type,
+      payment: req.body.payment,
+      shipping: req.body.shipping,
+      address: {
+        id: req.body.address.id,
+        name: req.body.address.name,
+        phone: req.body.address.phone,
+        province: req.body.address.province,
+        updatedAt: req.body.address.updatedAt,
+        ward: req.body.address.ward,
+        createdAt: req.body.address.createdAt,
+        details: req.body.address.details,
+        district: req.body.address.district,
       },
-      products: req.body.products
+      products: req.body.products,
     };
     const createOrder = await OrderModel.create(newOrder);
-    if(createOrder) {
+    if (createOrder) {
       return res.status(201).json(createOrder);
+    }
+  } catch (err) {
+    console.log(err);
   }
   return res.status(501).json({ error: "Invalid data!" });
 }
 
-async function UpdateOrderType (req, res) {
+async function UpdateOrderType(req, res) {
   const orderId = req.params.id;
-  const oldOrder = await OrderModel.findOne( { _id: orderId }) 
-  if(!oldOrder) {
-      return res.status(404).json({ error: "Order not found!"});
+  const oldOrder = await OrderModel.findOne({ _id: orderId });
+  if (!oldOrder) {
+    return res.status(404).json({ error: "Order not found!" });
   }
 
   const newOrder = {
-      type: req.body.type,
-  }
+    type: req.body.type,
+  };
 
   const result = await OrderModel.updateOne({ _id: orderId }, newOrder);
-  if(result) {
-      return res.status(200).json(result);
+  if (result) {
+    return res.status(200).json(result);
   }
   return res.status(501).json({ error: "Failed to update!" });
 }
 
+async function clientCancelOrder(req, res) {
+  const updateOrder = await OrderModel.findById({ _id: req.params.id });
 
-async function clientCancelOrder (req, res){
-  const updateOrder = await OrderModel.findById({_id: req.params.id})
-
-   if(updateOrder){
-    updateOrder.cancelOrder = true
-    await updateOrder.save()
-   }
-   res.send(updateOrder)
+  if (updateOrder) {
+    updateOrder.cancelOrder = true;
+    await updateOrder.save();
+  }
+  res.send(updateOrder);
 }
 
-async function updateOrder (req, res) {
+async function updateOrder(req, res) {
   let updateOrder = await OrderModel.findById({ _id: req.params.id });
 
   if (updateOrder) {
@@ -93,7 +96,8 @@ async function updateOrder (req, res) {
       note: "",
       required_note: "KHONGCHOXEMHANG",
 
-      cod_amount: updateOrder.paymentMethod === "payOnline" ? 0 : updateOrder.totalPrice,
+      cod_amount:
+        updateOrder.paymentMethod === "payOnline" ? 0 : updateOrder.totalPrice,
       items,
     };
     updateOrder.order_code = req.params.id;
@@ -123,7 +127,7 @@ async function updateOrder (req, res) {
     res.send({ msg: "product not found" });
   }
 }
-async function PrintOrderGhn (req, res) {
+async function PrintOrderGhn(req, res) {
   const Order = await OrderModel.findById({ _id: req.params.id });
   if (Order) {
     let token;
@@ -153,15 +157,13 @@ async function PrintOrderGhn (req, res) {
         }
       );
       res.send(result.config.url);
-    } catch (error) {
-    }
-    
+    } catch (error) {}
   } else {
-    res.send({message: 'order not found'})
+    res.send({ message: "order not found" });
   }
 }
 
-async function GetAllOrder (req, res) {
+async function GetAllOrder(req, res) {
   //await OrderModel.remove()
   const Order = await OrderModel.find({}).sort({ createdAt: -1 });
   if (Order) {
@@ -171,7 +173,7 @@ async function GetAllOrder (req, res) {
   }
 }
 
-async function GetAllOrderPaypal (req, res) {
+async function GetAllOrderPaypal(req, res) {
   const Order = await OrderModel.find({ paymentMethod: "payOnline" }).sort({
     createdAt: -1,
   });
@@ -182,7 +184,7 @@ async function GetAllOrderPaypal (req, res) {
   }
 }
 
-async function GetAllOrderPendding (req, res) {
+async function GetAllOrderPendding(req, res) {
   const Order = await OrderModel.find({
     $or: [{ status: "pendding" }, { paymentMethod: "payOnline" }],
   }).sort({
@@ -195,7 +197,7 @@ async function GetAllOrderPendding (req, res) {
   }
 }
 
-async function GetAllOrderShipping (req, res) {
+async function GetAllOrderShipping(req, res) {
   const Order = await OrderModel.find({ status: "shipping" }).sort({
     createdAt: -1,
   });
@@ -206,7 +208,7 @@ async function GetAllOrderShipping (req, res) {
   }
 }
 
-async function GetAllOrderPaid (req, res) {
+async function GetAllOrderPaid(req, res) {
   const Order = await OrderModel.find({ status: "paid" }).sort({
     createdAt: -1,
   });
@@ -217,8 +219,8 @@ async function GetAllOrderPaid (req, res) {
   }
 }
 
-async function DeleteOrder (req, res) {
-  const deleteOrder = await OrderModel.findById({_id: req.params.id});
+async function DeleteOrder(req, res) {
+  const deleteOrder = await OrderModel.findById({ _id: req.params.id });
   if (deleteOrder) {
     await deleteOrder.remove();
     res.send({ message: "product deleted" });
@@ -227,7 +229,7 @@ async function DeleteOrder (req, res) {
   }
 }
 
-async function ShippingProduct (req, res) {
+async function ShippingProduct(req, res) {
   const status = "shipping";
   const Order = await OrderModel.findById({ _id: req.params.id });
   if (Order) {
@@ -239,7 +241,7 @@ async function ShippingProduct (req, res) {
   }
 }
 
-async function PaidProduct (req, res) {
+async function PaidProduct(req, res) {
   const status = "paid";
   const Order = await OrderModel.findByIdAndUpdate(
     { _id: req.params.id },
@@ -254,9 +256,9 @@ async function PaidProduct (req, res) {
 
 // --------------------    user
 
-async function GetOrderByUser (req, res) {
+async function GetOrderByUser(req, res) {
   console.log(req.params.id);
-  
+
   const Order = await OrderModel.find({ idUser: req.params.id }).sort({
     createdAt: -1,
   });
@@ -266,7 +268,7 @@ async function GetOrderByUser (req, res) {
     res.status(401).send({ message: "no order by user" });
   }
 }
-async function GetOrderById (req, res) {
+async function GetOrderById(req, res) {
   const orderId = req.params.id;
   const Order = await OrderModel.findById(orderId);
   if (Order) {
@@ -276,7 +278,7 @@ async function GetOrderById (req, res) {
   }
 }
 
-async function GetOrderPaypalByUser (req, res) {
+async function GetOrderPaypalByUser(req, res) {
   const Order = await OrderModel.find({
     user: req.params.id,
     paymentMethod: "payOnline",
@@ -288,7 +290,7 @@ async function GetOrderPaypalByUser (req, res) {
   }
 }
 
-async function GetOrderPenddingByUser (req, res) {
+async function GetOrderPenddingByUser(req, res) {
   const Order = await OrderModel.find({
     user: req.params.id,
     status: "pendding",
@@ -300,7 +302,7 @@ async function GetOrderPenddingByUser (req, res) {
   }
 }
 
-async function GetOrderShippingByUser (req, res) {
+async function GetOrderShippingByUser(req, res) {
   const Order = await OrderModel.find({
     user: req.params.id,
     status: "shipping",
@@ -312,7 +314,7 @@ async function GetOrderShippingByUser (req, res) {
   }
 }
 
-async function GetOrderPaidByUser (req, res) {
+async function GetOrderPaidByUser(req, res) {
   const Order = await OrderModel.find({
     user: req.params.id,
     status: "paid",
@@ -324,7 +326,7 @@ async function GetOrderPaidByUser (req, res) {
   }
 }
 
-async function GetAllOrderInAMonth (req, res) {
+async function GetAllOrderInAMonth(req, res) {
   const Order = await OrderModel.find({
     createdAt: {
       $gte: new Date(2021, 7, 11),
@@ -339,24 +341,24 @@ async function GetAllOrderInAMonth (req, res) {
   }
 }
 module.exports = {
-    createOrder,
-    clientCancelOrder,
-    updateOrder,
-    PrintOrderGhn,
-    GetAllOrder,
-    GetAllOrderPaypal,
-    GetAllOrderPendding,
-    GetAllOrderShipping,
-    GetAllOrderPaid,
-    DeleteOrder,
-    ShippingProduct,
-    PaidProduct,
-    GetOrderByUser,
-    GetOrderPaypalByUser,
-    GetOrderPenddingByUser,
-    GetOrderShippingByUser,
-    GetOrderPaidByUser,
-    GetAllOrderInAMonth,
-    UpdateOrderType,
-    GetOrderById,
-}
+  createOrder,
+  clientCancelOrder,
+  updateOrder,
+  PrintOrderGhn,
+  GetAllOrder,
+  GetAllOrderPaypal,
+  GetAllOrderPendding,
+  GetAllOrderShipping,
+  GetAllOrderPaid,
+  DeleteOrder,
+  ShippingProduct,
+  PaidProduct,
+  GetOrderByUser,
+  GetOrderPaypalByUser,
+  GetOrderPenddingByUser,
+  GetOrderShippingByUser,
+  GetOrderPaidByUser,
+  GetAllOrderInAMonth,
+  UpdateOrderType,
+  GetOrderById,
+};

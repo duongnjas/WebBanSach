@@ -14,6 +14,7 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { numWithCommas } from "../../constraints/Util";
 import { useDispatch, useSelector } from "react-redux";
 import ChooseAddress from "../../components/ChooseAddress";
+import { deleteItemsPayment } from "../../slices/cartSlice";
 import { Link, useNavigate } from "react-router-dom";
 import apiCart from "../../apis/apiCart";
 import { toast } from "react-toastify";
@@ -35,7 +36,8 @@ function Payment() {
   const feeShip = ship === "shipping1" ? 30000 : 23000;
   const discountFeeShip = 0;
 
-  useEffect(() => { //trang thanh toan
+  useEffect(() => {
+    //trang thanh toan
     const calcPrice = () => {
       const total = CartItems.reduce(
         (t, num) => (num.choose ? t + num.price * num.quantity : t),
@@ -93,7 +95,7 @@ function Payment() {
       : 0;
   };
 
-  const handleSubmitOrderFake = () => {
+  const handleSubmitOrderFake = async () => {
     if (loading) {
       toast.info(
         "Thanh toán đang được thực hiện. Vui lòng không thao tác quá nhanh"
@@ -106,41 +108,38 @@ function Payment() {
     }
     const payload = {
       idUser: user?._id,
-      type:"Đang xử lý",
+      type: "Đang xử lý",
       feeShip,
       totalPrice,
       address: {
-        createdAt:addressShip.createdAt,
-        details:addressShip.details,
-        district:addressShip.district,
-        name:addressShip.name,
-        phone:addressShip.phone,
-        province:addressShip.province,
-        updatedAt:addressShip.updatedAt,
-        ward:addressShip.ward,
-        id:addressShip._id,
-        
+        createdAt: addressShip.createdAt,
+        details: addressShip.details,
+        district: addressShip.district,
+        name: addressShip.name,
+        phone: addressShip.phone,
+        province: addressShip.province,
+        updatedAt: addressShip.updatedAt,
+        ward: addressShip.ward,
+        id: addressShip._id,
       },
       shipping: shippingMethods.find((item) => item.id === ship).display,
       payment: paymentMethods.find((item) => item.id === payment).display,
 
       products: CartItems.filter((item) => item.choose).map((item) => {
-        return { ...item};
+        return { ...item };
       }),
     };
-    console.log(addressShip);
-    console.log("aaaaaaaaaaaaaaaaaaaaa");
-    console.log(payload);
-    
     setLoading(true);
-    apiCart
-      .saveOrder(payload)
-      .catch((error) => {
-        toast.error("Đặt hàng không thành công. Vui lòng thử lại");
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    console.log(payload);
+    try {
+      const res = await apiCart.saveOrder(payload);
+      console.log(res);
+      dispatch(deleteItemsPayment());
+      toast.success("Đặt hàng thành công!");
+    } catch {
+      toast.error("Đặt hàng không thành công. Vui lòng thử lại");
+    }
+    setLoading(false);
   };
   return (
     <>
