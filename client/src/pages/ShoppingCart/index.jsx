@@ -11,7 +11,6 @@ import { unchooseAll, chooseAll, deleteAll } from '../../slices/cartSlice'
 import { useNavigate } from "react-router-dom"
 import ChooseAddress from '../../components/ChooseAddress';
 import {toast} from 'react-toastify'
-import { clearCoupon } from '../../slices/paymentSlice';
 
 function ShoppingCart() { //Cart
   const [open, setOpen] = useState(false);
@@ -19,7 +18,6 @@ function ShoppingCart() { //Cart
   const [dialogDelete, setDialogDelete] = useState(false);
   const [totalPrice, setTotalPrice] = useState(0);
   const [checkAll, setCheckAll] = useState(false)
-  const [couponValue, setCouponValue] = useState(0)
   const CartItems = useSelector(state => state.cart.items)
   const dispatch = useDispatch()
   const user = useSelector(state => state.auth.user)
@@ -47,22 +45,6 @@ function ShoppingCart() { //Cart
     }
     loadTitle()
   },[])
-  useEffect(()=>{
-    const handle = ()=>{
-      if(coupon){
-        let value = 0
-        if(coupon.unit === 'đ'){
-          value = coupon.value / 1000
-        }
-        else {
-          if(totalPrice>0)
-            value = (coupon.value * totalPrice / 100)/1000
-        }
-        setCouponValue(value)
-      }
-    }
-    handle()
-  },[coupon,totalPrice])
 
   const handleChooseAll = () => {
     if (checkAll) {
@@ -97,9 +79,6 @@ function ShoppingCart() { //Cart
   }, [user]);
   const handleCloseAddress = useCallback(() => setOpenAddress(false), []);
   
-  const unchooseCoupon = () => {
-    dispatch(clearCoupon())
-  }
 const navigate = useNavigate()
   const handleBuy = ()=>{
     if(CartItems.filter(item=>item.choose).length===0){

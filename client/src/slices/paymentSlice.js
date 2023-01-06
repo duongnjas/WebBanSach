@@ -7,15 +7,15 @@ export const paymentSlice = createSlice({
         address:null
     },
     reducers: {
-        setCoupon: (state, action) => {
-            state.coupon = action.payload
-        },
+        // setCoupon: (state, action) => {
+        //     state.coupon = action.payload
+        // },
         setAddress: (state, action) => {
             state.address = action.payload
         },
-        clearCoupon: (state) => {
-            state.coupon = null
-        },
+        // clearCoupon: (state) => {
+        //     state.coupon = null
+        // },
         clearAddress: (state) => {
             state.address = null
         },
@@ -24,9 +24,9 @@ export const paymentSlice = createSlice({
 
 
 export const {
-    setCoupon,
+    // setCoupon,
     setAddress,
-    clearCoupon,
+    // clearCoupon,
     clearAddress
 } = paymentSlice.actions
 

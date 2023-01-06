@@ -97,7 +97,7 @@ function OrderList() {
                             {/* <TableCell align="center">{handleDate(row?.updatedAt)}</TableCell> */}
                             <TableCell align="center">{row?.updatedAt}</TableCell>
                             <TableCell align="center">{row?.totalPrice + row?.feeShip}đ</TableCell>
-                            <TableCell align="left">{row?.shipping}đ</TableCell>
+                            <TableCell align="left">{row?.shipping}</TableCell>
                             <TableCell align="center">
                                 <Stack spacing={1} justifyContent="center" py={1}>
                                     <Link to={`detail/${row._id}`}>
