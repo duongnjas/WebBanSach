@@ -38,7 +38,7 @@ function Product() {
     setOpen(false);
   };
   const handleUpdate = () => {
-    navigate(`edit/${productId}`)
+    navigate(`edit/${productId}`);
   };
 
   const onRowsSelectionHandler = (ids) => {
@@ -48,7 +48,6 @@ function Product() {
     //console.log(selectedRowsData[0]?._id);
     setProductsId(selectedRowsData[0]?._id);
   };
-
 
   useEffect(() => {
     const getUsers = async () => {
@@ -81,8 +80,8 @@ function Product() {
       { field: "name", headerName: "Name", width: 170 },
       { field: "rate", headerName: "Rate", width: 70 },
       { field: "price", headerName: "Price", width: 70 },
-      { field: "discount", headerName: "Discount", width: 70},
-      { field: "slug", headerName: "Slug", width: 250},
+      { field: "discount", headerName: "Discount", width: 70 },
+      { field: "slug", headerName: "Slug", width: 250 },
       {
         field: "createdAt",
         headerName: "Created At",
@@ -150,20 +149,22 @@ function Product() {
               },
             }}
           />
-          <Button
-            variant="outlined"
-            startIcon={<DeleteIcon />}
-            onClick={handleClickOpen}
-          >
-            Delete
-          </Button>
-          <Button
-            variant="outlined"
-            startIcon={<DeleteIcon />}
-            onClick={handleUpdate}
-          >
-            Sửa
-          </Button>
+          <Stack direction= "row" spacing={2}>
+            <Button
+              variant="outlined"
+              startIcon={<DeleteIcon />}
+              onClick={handleClickOpen}
+            >
+              Delete
+            </Button>
+            <Button
+              variant="outlined"
+              startIcon={<DeleteIcon />}
+              onClick={handleUpdate}
+            >
+              Sửa
+            </Button>
+          </Stack>
           <Dialog
             open={open}
             onClose={handleClose}

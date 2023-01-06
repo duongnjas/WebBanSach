@@ -12,14 +12,10 @@ import {
   Stack,
   ListItemText,
   Button,
-  Select,
-  MenuItem,
   RadioGroup,
   Radio,
   FormControlLabel,
   Divider,
-  InputBase,
-  Box,
 } from "@mui/material";
 
 import LocalPhoneOutlinedIcon from "@mui/icons-material/LocalPhoneOutlined";
@@ -57,9 +53,6 @@ function Info() {
     setDob(e.target.value);
   }
 
-  const onChangeFullName = (event) => {
-    setFullName(event.target.value);
-  }
   const onChangeGender = (event) => {
     setGender(event.target.value);
   }
@@ -72,9 +65,12 @@ function Info() {
     var newDob = new Date(parseInt(date1[2]),parseInt(date1[1])-1,parseInt(date1[0]));
     // Date {Fri Jan 29 2016 00:00:00 GMT+0530(utopia standard time)
     console.log(newDob.toISOString());
+    console.log(fullname);
+    console.log(gender);
+    console.log(email);
     const params = {
       dob: newDob.toISOString(),
-      fullName: fullname,
+      name: fullname,
       gender: gender,
       email: email,
     };
@@ -99,7 +95,6 @@ function Info() {
       })
   }
   useEffect(() => {
-    console.log(email);
     getUserProfile();
   }, []);
   return (
@@ -119,7 +114,8 @@ function Info() {
                 <label>Họ & tên</label>
                 <input id="input-name" placeholder="Thêm họ tên" type="text"
                   value={fullname}
-                  onChange={onChangeFullName}
+                  onChange={(event) => {
+                    setFullName(event.target.value)}}
                 />
               </Stack>
               <Stack
