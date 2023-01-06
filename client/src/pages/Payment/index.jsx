@@ -17,8 +17,6 @@ import ChooseAddress from "../../components/ChooseAddress";
 import { Link, useNavigate } from "react-router-dom";
 import apiCart from "../../apis/apiCart";
 import { toast } from "react-toastify";
-import { deleteItemsPayment } from "../../slices/cartSlice";
-import { orderTabs } from "../../constraints/OrderItem";
 import apiAddress from "../../apis/apiAddress";
 import Loading from "../../components/Loading";
 
