@@ -1,21 +1,6 @@
-// import {  axiosClientWithToken} from "./axiosClient";
 import { BASE_URL, handleResponse } from "./apiconfig";
 
 const apiProfile = {
-
-    // putChangePassword: async (params, id) => {
-    //     const response = await fetch(
-    //         `${BASE_URL}/users/${id}`,
-    //         {
-    //             method: 'POST',
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //             },
-    //             body: JSON.stringify(params),
-    //         }
-    //     );
-    //     return handleResponse(response);
-    // },
     putChangeInfo: async (params, id) => {
         const response = await fetch(
             `${BASE_URL}/users/${id}`,
